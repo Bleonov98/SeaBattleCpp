@@ -44,11 +44,8 @@ void Game::DrawArea()
 
 				if (0 != dwResourceSize)
 				{
-					int row = 0, col = 0;
-					for (int i = 0; i < strnlen(area, COLS * (ROWS * 20)); i++) {
-						for (int i = 0; i < strnlen(area, 9000); i++) {
-							cout << area[i];
-						}
+					for (int i = 0; i < strnlen(area, 650); i++) {
+						cout << area[i];
 					}
 				}
 			}
@@ -103,7 +100,7 @@ void Game::DrawEndInfo(bool& restart)
 
 void Game::DrawInfo()
 {
-	SetPos(COLS + 1, 15);
+	SetPos(COLS + 10, 3);
 	cout << "SCORE: " << score;
 }
 

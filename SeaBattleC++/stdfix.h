@@ -19,7 +19,7 @@
 #define ESC "\x1b"
 #define CSI "\x1b["
 #define ROWS 50
-#define COLS 90
+#define COLS 120
 
 using namespace std;
 using namespace chrono;
