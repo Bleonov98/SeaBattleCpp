@@ -26,7 +26,7 @@ public:
 
 	bool IsObjectDelete();
 
-private:
+protected:
 
 	wd* wData;
 
@@ -38,5 +38,25 @@ private:
 		delete this;
 	}
 
+
+};
+
+class Ship : public GameObject 
+{
+public:
+
+	Ship(wd* wData, int x, int y, int speed, int color): GameObject(wData, x, y, speed, color){};
+
+	void DrawObject() override;
+
+	void EraseObject() override;
+
+	void MoveCursor();
+
+	bool Shot();
+
+private:
+
+	bool _shot = false;
 
 };

@@ -9,11 +9,13 @@ private:
     char16_t prevBuf[ROWS][COLS];
     char coord[100];
 
-    bool worldIsRun = true, win = false;
+    bool worldIsRun = true, win = false, nextPlayer = false;
 
     int score = 0;
 
     HINSTANCE hInstance;
+
+    vector <GameObject*> allObjectList;
 
     class VirtualTerminal {
     public:

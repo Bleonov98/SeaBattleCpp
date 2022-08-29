@@ -169,7 +169,7 @@ void Game::DrawChanges()
 
 void Game::DrawToMem()
 {
-	/*for (int i = 0; i < allObjectList.size(); i++)
+	for (int i = 0; i < allObjectList.size(); i++)
 	{
 		if (allObjectList[i]->IsObjectDelete()) {
 			wData.vBuf[allObjectList[i]->GetY()][allObjectList[i]->GetX()] = u' ';
@@ -182,7 +182,7 @@ void Game::DrawToMem()
 	for (int i = 0; i < allObjectList.size(); i++)
 	{
 		allObjectList[i]->DrawObject();
-	}*/
+	}
 }
 
 void Game::RunWorld(bool& restart)
