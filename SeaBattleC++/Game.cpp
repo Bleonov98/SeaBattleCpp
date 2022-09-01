@@ -170,12 +170,14 @@ void Game::DrawChanges()
 void Game::Timer()
 {
 	int sec = 0;
-	sec++;
-	if (sec == 60) {
-		nextPlayer = !nextPlayer;
-		sec = 0;
+	while (worldIsRun == true) {
+		if (sec == 60) {
+			nextPlayer = !nextPlayer;
+			sec = 0;
+		}
+		this_thread::sleep_for(milliseconds(60000));
+		sec++;
 	}
-	this_thread::sleep_for(milliseconds(60000));
 }
 
 void Game::DrawToMem()

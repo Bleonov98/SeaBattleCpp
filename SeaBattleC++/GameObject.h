@@ -18,10 +18,6 @@ public:
 
 	void SetY(int y);
 
-	virtual void DrawObject() = 0;
-
-	virtual void EraseObject() = 0;
-
 	void DeleteObject();
 
 	bool IsObjectDelete();
@@ -41,15 +37,15 @@ protected:
 
 };
 
-class Ship : public GameObject 
+class Player : public GameObject
 {
 public:
 
-	Ship(wd* wData, int x, int y, int speed, int color): GameObject(wData, x, y, speed, color){};
+	Player(wd* wData, int x, int y, int speed, int color) : GameObject(wData, x, y, speed, color) {};
 
-	void DrawObject() override;
+	void DrawCursor();
 
-	void EraseObject() override;
+	void EraseCursor();
 
 	void MoveCursor();
 
@@ -58,5 +54,24 @@ public:
 private:
 
 	bool _shot = false;
+};
+
+class Ship : public GameObject 
+{
+public:
+
+	Ship(wd* wData, int x, int y, int speed, int color): GameObject(wData, x, y, speed, color){};
+
+	void DrawObject();
+
+	void EraseObject();
+
+	void GetShipType();
+
+	void SetShipPos();
+
+private:
+
+	
 
 };

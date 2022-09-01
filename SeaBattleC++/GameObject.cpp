@@ -22,7 +22,6 @@ void GameObject::SetY(int y)
 
 void GameObject::DeleteObject()
 {
-    EraseObject();
     _deleteObject = true;
 }
 
@@ -31,19 +30,19 @@ bool GameObject::IsObjectDelete()
     return _deleteObject;
 }
 
-void Ship::DrawObject()
+void Player::DrawCursor()
 {
     wData->vBuf[_y][_x] = u'*' | (_color << 8);
 }
 
-void Ship::EraseObject()
+void Player::EraseCursor()
 {
-    wData->vBuf[_y][_x] = ' ';
+    wData->vBuf[_y][_x] = u' ';
 }
 
-void Ship::MoveCursor()
+void Player::MoveCursor()
 {
-    EraseObject();
+    EraseCursor();
 
     if (GetAsyncKeyState(VK_RIGHT) & 0x8000) _x++;
     else if (GetAsyncKeyState(VK_LEFT) & 0x8000) _x--;
@@ -52,7 +51,7 @@ void Ship::MoveCursor()
     else if (GetAsyncKeyState(VK_RETURN) & 0x8000) Shot();
 }
 
-bool Ship::Shot()
+bool Player::Shot()
 {
     _shot = true;
     return _shot;
