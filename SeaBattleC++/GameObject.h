@@ -22,27 +22,6 @@ public:
 
 	bool IsObjectDelete();
 
-protected:
-
-	wd* wData;
-
-	int _x, _y, _color;
-
-	bool _deleteObject = false;
-
-	virtual ~GameObject() {
-		delete this;
-	}
-
-
-};
-
-class Player : public GameObject
-{
-public:
-
-	Player(wd* wData, int x, int y, int speed, int color) : GameObject(wData, x, y, speed, color) {};
-
 	void DrawCursor();
 
 	void EraseCursor();
@@ -51,27 +30,28 @@ public:
 
 	bool Shot();
 
-private:
+protected:
 
-	bool _shot = false;
+	wd* wData;
+
+	int _x, _y, _color;
+
+	bool _deleteObject = false, _shot = false;
+
+	virtual ~GameObject() {
+		delete this;
+	}
+
 };
 
-class Ship : public GameObject 
+class Player : public GameObject 
 {
 public:
 
-	Ship(wd* wData, int x, int y, int speed, int color): GameObject(wData, x, y, speed, color){};
+	Player(wd* wData, int x, int y, int speed, int color): GameObject(wData, x, y, speed, color){};
 
-	void DrawObject();
 
-	void EraseObject();
-
-	void GetShipType();
-
-	void SetShipPos();
 
 private:
-
-	
 
 };

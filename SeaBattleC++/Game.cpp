@@ -194,7 +194,7 @@ void Game::DrawToMem()
 
 	for (int i = 0; i < allObjectList.size(); i++)
 	{
-		allObjectList[i]->DrawObject();
+		allObjectList[i]->DrawCursor();
 	}
 }
 

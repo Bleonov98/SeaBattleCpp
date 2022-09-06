@@ -30,17 +30,17 @@ bool GameObject::IsObjectDelete()
     return _deleteObject;
 }
 
-void Player::DrawCursor()
+void GameObject::DrawCursor()
 {
     wData->vBuf[_y][_x] = u'*' | (_color << 8);
 }
 
-void Player::EraseCursor()
+void GameObject::EraseCursor()
 {
     wData->vBuf[_y][_x] = u' ';
 }
 
-void Player::MoveCursor()
+void GameObject::MoveCursor()
 {
     EraseCursor();
 
@@ -51,7 +51,7 @@ void Player::MoveCursor()
     else if (GetAsyncKeyState(VK_RETURN) & 0x8000) Shot();
 }
 
-bool Player::Shot()
+bool GameObject::Shot()
 {
     _shot = true;
     return _shot;
