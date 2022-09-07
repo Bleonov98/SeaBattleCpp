@@ -9,13 +9,14 @@ private:
     char16_t prevBuf[ROWS][COLS];
     char coord[100];
 
-    bool worldIsRun = true, win = false, nextPlayer = false;
+    bool worldIsRun = true, win = false;
 
     int score = 0;
 
     HINSTANCE hInstance;
 
     vector <GameObject*> allObjectList;
+    vector <Player*> playerList;
 
     class VirtualTerminal {
     public:
@@ -118,6 +119,8 @@ private:
             SetCurrentConsoleFontEx(hOut, 0, &cfi);
         }
     };
+
+    Player* player;
 
     VirtualTerminal term; // console setting
 

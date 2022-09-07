@@ -100,7 +100,7 @@ void Game::DrawEndInfo(bool& restart)
 
 void Game::DrawInfo()
 {
-	SetPos(COLS + 10, 3);
+	SetPos(40, 3);
 	cout << "SCORE: " << score;
 }
 
@@ -169,29 +169,15 @@ void Game::DrawChanges()
 
 void Game::Timer()
 {
-	int sec = 0;
-	while (worldIsRun == true) {
-		if (sec == 60) {
-			nextPlayer = !nextPlayer;
-			sec = 0;
-		}
+	while (worldIsRun) {
 		this_thread::sleep_for(milliseconds(60000));
-		sec++;
+	
+		player->nextPlayer();
 	}
 }
 
 void Game::DrawToMem()
 {
-	for (int i = 0; i < allObjectList.size(); i++)
-	{
-		if (allObjectList[i]->IsObjectDelete()) {
-			wData.vBuf[allObjectList[i]->GetY()][allObjectList[i]->GetX()] = u' ';
-			allObjectList.erase(allObjectList.begin() + i);
-
-			i = -1;
-		}
-	}
-
 	for (int i = 0; i < allObjectList.size(); i++)
 	{
 		allObjectList[i]->DrawCursor();
@@ -216,6 +202,10 @@ void Game::RunWorld(bool& restart)
 
 	int tick = 0;
 
+	player = new Player(&wData, 3, 3, Blue);
+	playerList.push_back(player);
+	allObjectList.push_back(player);
+
 	while (worldIsRun) {
 
 		if (pause) {
@@ -231,6 +221,8 @@ void Game::RunWorld(bool& restart)
 			cout << "      ";
 
 		}
+		
+		player->MoveCursor();
 
 		DrawToMem();
 
@@ -238,7 +230,7 @@ void Game::RunWorld(bool& restart)
 
 		DrawInfo();
 
-		Sleep(15);
+		Sleep(60);
 
 		tick++;
 	}

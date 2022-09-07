@@ -5,7 +5,7 @@ class GameObject
 {
 public:
 
-	GameObject(wd* wData, int x, int y, int speed, int color) {
+	GameObject(wd* wData, int x, int y, int color) {
 		this->wData = wData;
 		_x = x, _y = y, _color = color;
 	};
@@ -25,8 +25,6 @@ public:
 	void DrawCursor();
 
 	void EraseCursor();
-
-	void MoveCursor();
 
 	bool Shot();
 
@@ -48,10 +46,24 @@ class Player : public GameObject
 {
 public:
 
-	Player(wd* wData, int x, int y, int speed, int color): GameObject(wData, x, y, speed, color){};
+	Player(wd* wData, int x, int y, int color): GameObject(wData, x, y, color){};
 
+	void MoveCursor();
 
+	//void GetShipType();
+
+	//void ChangeShipType();
+
+	//void SetShipPos();
+
+	//int ShipCounter();
+
+	void nextPlayer();
+
+	bool PlayerW();
 
 private:
+
+	bool _player = true;
 
 };

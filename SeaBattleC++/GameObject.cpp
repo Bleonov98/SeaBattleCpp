@@ -40,19 +40,48 @@ void GameObject::EraseCursor()
     wData->vBuf[_y][_x] = u' ';
 }
 
-void GameObject::MoveCursor()
-{
-    EraseCursor();
-
-    if (GetAsyncKeyState(VK_RIGHT) & 0x8000) _x++;
-    else if (GetAsyncKeyState(VK_LEFT) & 0x8000) _x--;
-    else if (GetAsyncKeyState(VK_UP) & 0x8000) _y--;
-    else if (GetAsyncKeyState(VK_DOWN) & 0x8000) _y++;
-    else if (GetAsyncKeyState(VK_RETURN) & 0x8000) Shot();
-}
-
 bool GameObject::Shot()
 {
     _shot = true;
     return _shot;
 }
+
+void Player::MoveCursor()
+{
+    EraseCursor();
+
+    if (_player) {
+        if ((GetAsyncKeyState(VK_RIGHT) & 0x8000) && _x <= 11) _x++;
+        else if ((GetAsyncKeyState(VK_LEFT) & 0x8000) && _x >= 4) _x--;
+        else if ((GetAsyncKeyState(VK_UP) & 0x8000) && _y >= 4) _y--;
+        else if ((GetAsyncKeyState(VK_DOWN) & 0x8000) && _y <= 10) _y++;
+        else if (GetAsyncKeyState(VK_RETURN) & 0x8000) Shot();
+    }
+    else {
+        if ((GetAsyncKeyState(VK_RIGHT) & 0x8000) && _x <= 26) _x++;
+        else if ((GetAsyncKeyState(VK_LEFT) & 0x8000) && _x > 18) _x--;
+        else if ((GetAsyncKeyState(VK_UP) & 0x8000) && _y >= 4) _y--;
+        else if ((GetAsyncKeyState(VK_DOWN) & 0x8000) && _y <= 10) _y++;
+        else if (GetAsyncKeyState(VK_RETURN) & 0x8000) Shot();
+    }
+}
+
+void Player::nextPlayer()
+{
+    _player = !_player;
+    EraseCursor();
+    if (_player) {
+        _x = 4;
+        _y = 3;
+    }
+    else {
+        _x = 18;
+        _y = 3;
+    }
+}
+
+bool Player::PlayerW()
+{
+    return _player;
+}
+
