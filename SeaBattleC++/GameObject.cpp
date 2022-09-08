@@ -66,6 +66,27 @@ void Player::MoveCursor()
     }
 }
 
+int Player::GetShipType()
+{
+    return _shipType;
+}
+
+void Player::ChangeShipType()
+{
+    if (_shipType <= 2) {
+        _shipType++;
+    }
+    else _shipType = 0;
+}
+
+void Player::RotateShip()
+{
+    if (_position == 0) {
+        _position++;
+    }
+    else _position = 0;
+}
+
 void Player::nextPlayer()
 {
     _player = !_player;

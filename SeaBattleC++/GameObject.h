@@ -50,11 +50,13 @@ public:
 
 	void MoveCursor();
 
-	//void GetShipType();
+	int GetShipType();
 
-	//void ChangeShipType();
+	void ChangeShipType();
 
 	//void SetShipPos();
+
+	void RotateShip();
 
 	//int ShipCounter();
 
@@ -66,4 +68,5 @@ private:
 
 	bool _player = true;
 
+	int _shipType = SINGLE, _shipCnt = 6, _position = VERTICAL;
 };
