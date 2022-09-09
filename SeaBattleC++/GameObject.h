@@ -50,15 +50,22 @@ public:
 
 	void MoveCursor();
 
+	
+	void DrawShip();
+
+	void EraseShip();
+
+	void RotateShip();
+
+	void SetShip();
+
+	int ShipCounter();
+
+
 	int GetShipType();
 
 	void ChangeShipType();
 
-	//void SetShipPos();
-
-	void RotateShip();
-
-	//int ShipCounter();
 
 	void nextPlayer();
 
@@ -66,7 +73,33 @@ public:
 
 private:
 
-	bool _player = true;
+	bool _player = true, _prepare = true;
 
-	int _shipType = SINGLE, _shipCnt = 6, _position = VERTICAL;
+	int _shipType = TRPL, _shipCnt = 7, _position = VERTICAL;
+
+	char16_t dblShipVert[2][2]{
+		u"#",
+		u"#"
+	};
+	char16_t trplShipVert[3][2]{
+		u"#",
+		u"#",
+		u"#"
+	};
+	char16_t bigShipVert[4][2]{
+		u"#",
+		u"#",
+		u"#",
+		u"#"
+	};
+
+	char16_t dblShipHor[1][3]{
+		u"##"
+	};
+	char16_t trplShipHor[1][4]{
+		u"###"
+	};
+	char16_t bigShipHor[1][5]{
+		u"####"
+	};
 };

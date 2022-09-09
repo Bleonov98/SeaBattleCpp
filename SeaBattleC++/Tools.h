@@ -24,8 +24,8 @@ enum Colors {
 
 enum ShipType {
 	SINGLE,
-	DOUBLE,
-	TRIPLE,
+	DBL,
+	TRPL,
 	BIG
 };
 
