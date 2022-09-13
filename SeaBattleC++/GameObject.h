@@ -67,6 +67,8 @@ public:
 	void ChangeShipType();
 
 
+	bool Prepare();
+
 	void nextPlayer();
 
 	bool PlayerW();
@@ -75,7 +77,7 @@ private:
 
 	bool _player = true, _prepare = true;
 
-	int _shipType = TRPL, _shipCnt = 7, _position = VERTICAL;
+	int _shipType = SINGLE, _shipCnt = 0, _position = VERTICAL;
 
 	char16_t dblShipVert[2][2]{
 		u"#",

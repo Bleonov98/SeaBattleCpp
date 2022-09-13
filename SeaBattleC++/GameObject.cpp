@@ -51,20 +51,16 @@ void Player::MoveCursor()
     if (_prepare) {
         EraseShip();
 
-        if (_player) {
-            if ((GetAsyncKeyState(VK_RIGHT) & 0x8000) && _x <= 11) _x++;
-            else if ((GetAsyncKeyState(VK_LEFT) & 0x8000) && _x >= 4) _x--;
-            else if ((GetAsyncKeyState(VK_UP) & 0x8000) && _y >= 4) _y--;
-            else if ((GetAsyncKeyState(VK_DOWN) & 0x8000) && _y <= 10) _y++;
-            else if (GetAsyncKeyState(VK_RETURN) & 0x8000) SetShip();
+        if ((GetAsyncKeyState(VK_RIGHT) & 0x8000) && _x <= 11) _x++;
+        else if ((GetAsyncKeyState(VK_LEFT) & 0x8000) && _x >= 4) _x--;
+        else if ((GetAsyncKeyState(VK_UP) & 0x8000) && _y >= 4) _y--;
+        else if ((GetAsyncKeyState(VK_DOWN) & 0x8000) && _y <= 10) _y++;
+        else if (GetAsyncKeyState(VK_RETURN) & 0x8000) {
+            Sleep(200);
+            SetShip();
         }
-        else {
-            if ((GetAsyncKeyState(VK_RIGHT) & 0x8000) && _x <= 26) _x++;
-            else if ((GetAsyncKeyState(VK_LEFT) & 0x8000) && _x > 18) _x--;
-            else if ((GetAsyncKeyState(VK_UP) & 0x8000) && _y >= 4) _y--;
-            else if ((GetAsyncKeyState(VK_DOWN) & 0x8000) && _y <= 10) _y++;
-            else if (GetAsyncKeyState(VK_RETURN) & 0x8000) SetShip();
-        }
+       
+       
 
         if (GetAsyncKeyState(VK_SPACE) & 0x8000) {
             RotateShip();
@@ -230,6 +226,11 @@ void Player::SetShip()
 int Player::ShipCounter()
 {
     return _shipCnt;
+}
+
+bool Player::Prepare()
+{
+    return _prepare;
 }
 
 void Player::nextPlayer()
