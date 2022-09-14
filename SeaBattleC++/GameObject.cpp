@@ -32,7 +32,7 @@ bool GameObject::IsObjectDelete()
 
 void GameObject::DrawCursor()
 {
-    wData->vBuf[_y][_x] = u'#' | (_color << 8);
+    wData->vBuf[_y][_x] = u'#' | (Red << 8);
 }
 
 void GameObject::EraseCursor()
@@ -48,20 +48,64 @@ bool GameObject::Shot()
 
 void Player::MoveCursor()
 {
+    ShowShips();
     if (_prepare) {
         EraseShip();
 
-        if ((GetAsyncKeyState(VK_RIGHT) & 0x8000) && _x <= 11) _x++;
-        else if ((GetAsyncKeyState(VK_LEFT) & 0x8000) && _x >= 4) _x--;
-        else if ((GetAsyncKeyState(VK_UP) & 0x8000) && _y >= 4) _y--;
-        else if ((GetAsyncKeyState(VK_DOWN) & 0x8000) && _y <= 10) _y++;
-        else if (GetAsyncKeyState(VK_RETURN) & 0x8000) {
+        if (_shipType == SINGLE) {
+            if ((GetAsyncKeyState(VK_RIGHT) & 0x8000) && _x <= 11) _x++;
+            else if ((GetAsyncKeyState(VK_LEFT) & 0x8000) && _x >= 4) _x--;
+            else if ((GetAsyncKeyState(VK_UP) & 0x8000) && _y >= 4) _y--;
+            else if ((GetAsyncKeyState(VK_DOWN) & 0x8000) && _y <= 10) _y++;
+        }
+        else if (_shipType == DBL) {
+            if (_position == VERTICAL) {
+                if ((GetAsyncKeyState(VK_RIGHT) & 0x8000) && _x <= 11) _x++;
+                else if ((GetAsyncKeyState(VK_LEFT) & 0x8000) && _x >= 4) _x--;
+                else if ((GetAsyncKeyState(VK_UP) & 0x8000) && _y >= 4) _y--;
+                else if ((GetAsyncKeyState(VK_DOWN) & 0x8000) && _y <= 9) _y++;
+            }
+            else {
+                if ((GetAsyncKeyState(VK_RIGHT) & 0x8000) && _x <= 10) _x++;
+                else if ((GetAsyncKeyState(VK_LEFT) & 0x8000) && _x >= 4) _x--;
+                else if ((GetAsyncKeyState(VK_UP) & 0x8000) && _y >= 4) _y--;
+                else if ((GetAsyncKeyState(VK_DOWN) & 0x8000) && _y <= 10) _y++;
+            }
+        }
+        else if (_shipType == TRPL) {
+            if (_position == VERTICAL) {
+                if ((GetAsyncKeyState(VK_RIGHT) & 0x8000) && _x <= 11) _x++;
+                else if ((GetAsyncKeyState(VK_LEFT) & 0x8000) && _x >= 4) _x--;
+                else if ((GetAsyncKeyState(VK_UP) & 0x8000) && _y >= 4) _y--;
+                else if ((GetAsyncKeyState(VK_DOWN) & 0x8000) && _y <= 8) _y++;
+            }
+            else {
+                if ((GetAsyncKeyState(VK_RIGHT) & 0x8000) && _x <= 9) _x++;
+                else if ((GetAsyncKeyState(VK_LEFT) & 0x8000) && _x >= 4) _x--;
+                else if ((GetAsyncKeyState(VK_UP) & 0x8000) && _y >= 4) _y--;
+                else if ((GetAsyncKeyState(VK_DOWN) & 0x8000) && _y <= 10) _y++;
+            }
+        }
+        else if (_shipType == BIG) {
+            if (_position == VERTICAL) {
+                if ((GetAsyncKeyState(VK_RIGHT) & 0x8000) && _x <= 11) _x++;
+                else if ((GetAsyncKeyState(VK_LEFT) & 0x8000) && _x >= 4) _x--;
+                else if ((GetAsyncKeyState(VK_UP) & 0x8000) && _y >= 4) _y--;
+                else if ((GetAsyncKeyState(VK_DOWN) & 0x8000) && _y <= 7) _y++;
+            }
+            else {
+                if ((GetAsyncKeyState(VK_RIGHT) & 0x8000) && _x <= 8) _x++;
+                else if ((GetAsyncKeyState(VK_LEFT) & 0x8000) && _x >= 4) _x--;
+                else if ((GetAsyncKeyState(VK_UP) & 0x8000) && _y >= 4) _y--;
+                else if ((GetAsyncKeyState(VK_DOWN) & 0x8000) && _y <= 10) _y++;
+            }
+        }
+
+
+        if (GetAsyncKeyState(VK_RETURN) & 0x8000) {
             Sleep(200);
             SetShip();
         }
-       
-       
-
         if (GetAsyncKeyState(VK_SPACE) & 0x8000) {
             RotateShip();
         }
@@ -208,6 +252,14 @@ void Player::ChangeShipType()
     }
 }
 
+void Player::ShowShips()
+{
+    for (int i = 0; i < shipsCoord.size(); i++)
+    {
+        wData->vBuf[shipsCoord[i].second][shipsCoord[i].first] = u'#' | (_color << 8);
+    }
+}
+
 void Player::RotateShip()
 {
     if (_position == 0) {
@@ -217,8 +269,54 @@ void Player::RotateShip()
 }
 
 void Player::SetShip()
-{
+{   
     _shipCnt++;
+
+    if (_shipType == SINGLE) shipsCoord.push_back(make_pair(_x,_y));
+    else if (_shipType == DBL) {
+        if (_position == VERTICAL) {
+            for (int height = 0; height < 2; height++)
+            {
+                shipsCoord.push_back(make_pair(_x, _y + height));
+            }
+        }
+        else {
+            for (int width = 0; width < 2; width++)
+            {
+                shipsCoord.push_back(make_pair(_x + width, _y));
+            }
+        }
+    } 
+    else if (_shipType == TRPL) {
+        if (_position == VERTICAL) {
+            for (int height = 0; height < 3; height++)
+            {
+                shipsCoord.push_back(make_pair(_x, _y + height));
+            }
+        }
+        else {
+            for (int width = 0; width < 3; width++)
+            {
+                shipsCoord.push_back(make_pair(_x + width, _y));
+            }
+        }
+    }
+    else if (_shipType == BIG) {
+        if (_position == VERTICAL) {
+            for (int height = 0; height < 4; height++)
+            {
+                shipsCoord.push_back(make_pair(_x, _y + height));
+            }
+        }
+        else {
+            for (int width = 0; width < 4; width++)
+            {
+                shipsCoord.push_back(make_pair(_x + width, _y));
+            }
+        }
+    }
+
+    _x = 7, _y = 7;
 
     ChangeShipType();
 }

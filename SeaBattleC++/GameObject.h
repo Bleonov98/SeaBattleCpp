@@ -66,6 +66,8 @@ public:
 
 	void ChangeShipType();
 
+	void ShowShips();
+
 
 	bool Prepare();
 
@@ -104,4 +106,6 @@ private:
 	char16_t bigShipHor[1][5]{
 		u"####"
 	};
+
+	vector <pair<int, int>> shipsCoord;
 };
