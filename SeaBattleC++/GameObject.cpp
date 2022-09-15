@@ -270,6 +270,112 @@ void Player::RotateShip()
 
 void Player::SetShip()
 {   
+
+    for (int i = 0; i < shipsCoord.size(); i++)
+    {
+        if (_shipType == SINGLE) {
+            if ((_x == shipsCoord[i].first && _y == shipsCoord[i].second) ||
+                (_x == shipsCoord[i].first + 1 && _y == shipsCoord[i].second) ||
+                (_x == shipsCoord[i].first - 1 && _y == shipsCoord[i].second) ||
+                (_x == shipsCoord[i].first && _y == shipsCoord[i].second + 1) ||
+                (_x == shipsCoord[i].first && _y == shipsCoord[i].second - 1) ||
+                (_x == shipsCoord[i].first + 1 && _y == shipsCoord[i].second + 1) ||
+                (_x == shipsCoord[i].first - 1 && _y == shipsCoord[i].second - 1) ||
+                (_x == shipsCoord[i].first + 1 && _y == shipsCoord[i].second - 1) ||
+                (_x == shipsCoord[i].first - 1 && _y == shipsCoord[i].second + 1)) return;
+        }
+        else if (_shipType == DBL) {
+            if (_position == VERTICAL) {
+                for (int j = 0; j < 2; j++)
+                {
+                    if ((_x == shipsCoord[i].first && _y + j == shipsCoord[i].second) ||
+                        (_x == shipsCoord[i].first + 1 && _y + j == shipsCoord[i].second) ||
+                        (_x == shipsCoord[i].first - 1 && _y + j == shipsCoord[i].second) ||
+                        (_x == shipsCoord[i].first && _y + j == shipsCoord[i].second + 1) ||
+                        (_x == shipsCoord[i].first && _y + j == shipsCoord[i].second - 1) ||
+                        (_x == shipsCoord[i].first + 1 && _y + j == shipsCoord[i].second + 1) ||
+                        (_x == shipsCoord[i].first - 1 && _y + j == shipsCoord[i].second - 1) ||
+                        (_x == shipsCoord[i].first + 1 && _y + j == shipsCoord[i].second - 1) ||
+                        (_x == shipsCoord[i].first - 1 && _y + j == shipsCoord[i].second + 1)) return;
+                } 
+            }
+            else {
+                for (int j = 0; j < 2; j++)
+                {
+                    if ((_x + j == shipsCoord[i].first && _y == shipsCoord[i].second) ||
+                        (_x + j == shipsCoord[i].first + 1 && _y == shipsCoord[i].second) ||
+                        (_x + j == shipsCoord[i].first - 1 && _y == shipsCoord[i].second) ||
+                        (_x + j == shipsCoord[i].first && _y == shipsCoord[i].second + 1) ||
+                        (_x + j == shipsCoord[i].first && _y == shipsCoord[i].second - 1) ||
+                        (_x + j == shipsCoord[i].first + 1 && _y == shipsCoord[i].second + 1) ||
+                        (_x + j == shipsCoord[i].first - 1 && _y == shipsCoord[i].second - 1) ||
+                        (_x + j == shipsCoord[i].first + 1 && _y == shipsCoord[i].second - 1) ||
+                        (_x + j == shipsCoord[i].first - 1 && _y == shipsCoord[i].second + 1)) return;
+                }
+            }
+        }
+        else if (_shipType == TRPL) {
+            if (_position == VERTICAL) {
+                for (int j = 0; j < 3; j++)
+                {
+                    if ((_x == shipsCoord[i].first && _y + j == shipsCoord[i].second) ||
+                        (_x == shipsCoord[i].first + 1 && _y + j == shipsCoord[i].second) ||
+                        (_x == shipsCoord[i].first - 1 && _y + j == shipsCoord[i].second) ||
+                        (_x == shipsCoord[i].first && _y + j == shipsCoord[i].second + 1) ||
+                        (_x == shipsCoord[i].first && _y + j == shipsCoord[i].second - 1) ||
+                        (_x == shipsCoord[i].first + 1 && _y + j == shipsCoord[i].second + 1) ||
+                        (_x == shipsCoord[i].first - 1 && _y + j == shipsCoord[i].second - 1) ||
+                        (_x == shipsCoord[i].first + 1 && _y + j == shipsCoord[i].second - 1) ||
+                        (_x == shipsCoord[i].first - 1 && _y + j == shipsCoord[i].second + 1)) return;
+                }
+            }
+            else {
+                for (int j = 0; j < 3; j++)
+                {
+                    if ((_x + j == shipsCoord[i].first && _y == shipsCoord[i].second) ||
+                        (_x + j == shipsCoord[i].first + 1 && _y == shipsCoord[i].second) ||
+                        (_x + j == shipsCoord[i].first - 1 && _y == shipsCoord[i].second) ||
+                        (_x + j == shipsCoord[i].first && _y == shipsCoord[i].second + 1) ||
+                        (_x + j == shipsCoord[i].first && _y == shipsCoord[i].second - 1) ||
+                        (_x + j == shipsCoord[i].first + 1 && _y == shipsCoord[i].second + 1) ||
+                        (_x + j == shipsCoord[i].first - 1 && _y == shipsCoord[i].second - 1) ||
+                        (_x + j == shipsCoord[i].first + 1 && _y == shipsCoord[i].second - 1) ||
+                        (_x + j == shipsCoord[i].first - 1 && _y == shipsCoord[i].second + 1)) return;
+                }
+            }
+        }
+        else if (_shipType == BIG) {
+            if (_position == VERTICAL) {
+                for (int j = 0; j < 4; j++)
+                {
+                    if ((_x == shipsCoord[i].first && _y + j == shipsCoord[i].second) ||
+                        (_x == shipsCoord[i].first + 1 && _y + j == shipsCoord[i].second) ||
+                        (_x == shipsCoord[i].first - 1 && _y + j == shipsCoord[i].second) ||
+                        (_x == shipsCoord[i].first && _y + j == shipsCoord[i].second + 1) ||
+                        (_x == shipsCoord[i].first && _y + j == shipsCoord[i].second - 1) ||
+                        (_x == shipsCoord[i].first + 1 && _y + j == shipsCoord[i].second + 1) ||
+                        (_x == shipsCoord[i].first - 1 && _y + j == shipsCoord[i].second - 1) ||
+                        (_x == shipsCoord[i].first + 1 && _y + j == shipsCoord[i].second - 1) ||
+                        (_x == shipsCoord[i].first - 1 && _y + j == shipsCoord[i].second + 1)) return;
+                }
+            }
+            else {
+                for (int j = 0; j < 4; j++)
+                {
+                    if ((_x + j == shipsCoord[i].first && _y == shipsCoord[i].second) ||
+                        (_x + j == shipsCoord[i].first + 1 && _y == shipsCoord[i].second) ||
+                        (_x + j == shipsCoord[i].first - 1 && _y == shipsCoord[i].second) ||
+                        (_x + j == shipsCoord[i].first && _y == shipsCoord[i].second + 1) ||
+                        (_x + j == shipsCoord[i].first && _y == shipsCoord[i].second - 1) ||
+                        (_x + j == shipsCoord[i].first + 1 && _y == shipsCoord[i].second + 1) ||
+                        (_x + j == shipsCoord[i].first - 1 && _y == shipsCoord[i].second - 1) ||
+                        (_x + j == shipsCoord[i].first + 1 && _y == shipsCoord[i].second - 1) ||
+                        (_x + j == shipsCoord[i].first - 1 && _y == shipsCoord[i].second + 1)) return;
+                }
+            }
+        }
+    }
+
     _shipCnt++;
 
     if (_shipType == SINGLE) shipsCoord.push_back(make_pair(_x,_y));
