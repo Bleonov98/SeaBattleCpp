@@ -75,11 +75,18 @@ public:
 
 	bool PlayerW();
 
+
+
+	void Computer();
+
+	void SetCompShips();
+
 private:
 
 	bool _player = true, _prepare = true;
 
 	int _shipType = SINGLE, _shipCnt = 0, _position = VERTICAL;
+	int _cmShipType = SINGLE, _cmShipCnt = 0, _cmPos = VERTICAL;
 
 	char16_t dblShipVert[2][2]{
 		u"#",
@@ -108,4 +115,5 @@ private:
 	};
 
 	vector <pair<int, int>> shipsCoord;
+	vector <pair<int, int>> cmShipsCoord;
 };

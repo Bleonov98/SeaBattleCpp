@@ -258,6 +258,11 @@ void Player::ShowShips()
     {
         wData->vBuf[shipsCoord[i].second][shipsCoord[i].first] = u'#' | (_color << 8);
     }
+
+    for (int i = 0; i < cmShipsCoord.size(); i++)
+    {
+        wData->vBuf[cmShipsCoord[i].second][cmShipsCoord[i].first] = u'#' | (_color << 8);
+    }
 }
 
 void Player::RotateShip()
@@ -454,5 +459,29 @@ void Player::nextPlayer()
 bool Player::PlayerW()
 {
     return _player;
+}
+
+void Player::Computer()
+{
+    if (!_player) {
+
+    }
+}
+
+void Player::SetCompShips()
+{
+    for (int i = 0; i < 7; i++)
+    {
+        _cmPos = rand() % 2;
+
+        if (_cmShipType == SINGLE) {
+            cmShipsCoord.push_back(make_pair(rand() % , 2));
+        }
+
+
+        if (i % 2 == 0) {
+            _cmShipType++;
+        }
+    }
 }
 
