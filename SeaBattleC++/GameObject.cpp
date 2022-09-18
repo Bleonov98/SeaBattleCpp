@@ -115,7 +115,7 @@ void Player::MoveCursor()
     else {
         EraseCursor();
 
-        if (_player) {
+        if (!_player) {
             if ((GetAsyncKeyState(VK_RIGHT) & 0x8000) && _x <= 11) _x++;
             else if ((GetAsyncKeyState(VK_LEFT) & 0x8000) && _x >= 4) _x--;
             else if ((GetAsyncKeyState(VK_UP) & 0x8000) && _y >= 4) _y--;
@@ -470,17 +470,204 @@ void Player::Computer()
 
 void Player::SetCompShips()
 {
+    srand(time(NULL));
+    int cX = 18 + rand() % 8, cY = 4 + rand() % 6;
     for (int i = 0; i < 7; i++)
     {
-        _cmPos = rand() % 2;
-
-        if (_cmShipType == SINGLE) {
-            cmShipsCoord.push_back(make_pair(rand() % , 2));
+        if (i % 2 == 0 && i > 0) {
+            _cmShipType++;
         }
 
+        _cmPos = rand() % 2;
 
-        if (i % 2 == 0) {
-            _cmShipType++;
+        cX = 18 + rand() % 8, cY = 4 + rand() % 6;
+
+        for (int j = 0; j < cmShipsCoord.size(); j++)
+        {
+            if (_cmShipType == SINGLE) {
+                if ((cX == cmShipsCoord[j].first && cY == cmShipsCoord[j].second) ||
+                    (cX == cmShipsCoord[j].first + 1 && cY == cmShipsCoord[j].second) ||
+                    (cX == cmShipsCoord[j].first - 1 && cY == cmShipsCoord[j].second) ||
+                    (cX == cmShipsCoord[j].first && cY == cmShipsCoord[j].second + 1) ||
+                    (cX == cmShipsCoord[j].first && cY == cmShipsCoord[j].second - 1) ||
+                    (cX == cmShipsCoord[j].first + 1 && cY == cmShipsCoord[j].second + 1) ||
+                    (cX == cmShipsCoord[j].first - 1 && cY == cmShipsCoord[j].second - 1) ||
+                    (cX == cmShipsCoord[j].first + 1 && cY == cmShipsCoord[j].second - 1) ||
+                    (cX == cmShipsCoord[j].first - 1 && cY == cmShipsCoord[j].second + 1)) {
+                    cX = 18 + rand() % 8, cY = 4 + rand() % 6;
+                    j = -1;
+                }
+            }
+            else if (_cmShipType == DBL) {
+                if (_cmPos == VERTICAL) {
+                    for (int k = 0; k < 2; k++)
+                    {
+                        if ((cX == cmShipsCoord[j].first && cY + k == cmShipsCoord[j].second) ||
+                            (cX == cmShipsCoord[j].first + 1 && cY + k == cmShipsCoord[j].second) ||
+                            (cX == cmShipsCoord[j].first - 1 && cY + k == cmShipsCoord[j].second) ||
+                            (cX == cmShipsCoord[j].first && cY + k == cmShipsCoord[j].second + 1) ||
+                            (cX == cmShipsCoord[j].first && cY + k == cmShipsCoord[j].second - 1) ||
+                            (cX == cmShipsCoord[j].first + 1 && cY + k == cmShipsCoord[j].second + 1) ||
+                            (cX == cmShipsCoord[j].first - 1 && cY + k == cmShipsCoord[j].second - 1) ||
+                            (cX == cmShipsCoord[j].first + 1 && cY + k == cmShipsCoord[j].second - 1) ||
+                            (cX == cmShipsCoord[j].first - 1 && cY + k == cmShipsCoord[j].second + 1))
+                        {
+                            cX = 18 + rand() % 8, cY = 4 + rand() % 6;
+                            j = -1;
+                            k = -1;
+                            break;
+                        }
+
+                    }
+                }
+                else {
+                    for (int k = 0; k < 2; k++)
+                    {
+                        if ((cX + k == cmShipsCoord[j].first && cY == cmShipsCoord[j].second) ||
+                            (cX + k == cmShipsCoord[j].first + 1 && cY == cmShipsCoord[j].second) ||
+                            (cX + k == cmShipsCoord[j].first - 1 && cY == cmShipsCoord[j].second) ||
+                            (cX + k == cmShipsCoord[j].first && cY == cmShipsCoord[j].second + 1) ||
+                            (cX + k == cmShipsCoord[j].first && cY == cmShipsCoord[j].second - 1) ||
+                            (cX + k == cmShipsCoord[j].first + 1 && cY == cmShipsCoord[j].second + 1) ||
+                            (cX + k == cmShipsCoord[j].first - 1 && cY == cmShipsCoord[j].second - 1) ||
+                            (cX + k == cmShipsCoord[j].first + 1 && cY == cmShipsCoord[j].second - 1) ||
+                            (cX + k == cmShipsCoord[j].first - 1 && cY == cmShipsCoord[j].second + 1))
+                        {
+                            cX = 18 + rand() % 8, cY = 4 + rand() % 6;
+                            j = -1;
+                            k = -1;
+                            break;
+                        }
+                    }
+                }
+            }
+            else if (_cmShipType == TRPL) {
+                if (_cmPos == VERTICAL) {
+                    for (int k = 0; k < 3; k++)
+                    {
+                        if ((cX == cmShipsCoord[j].first && cY + k == cmShipsCoord[j].second) ||
+                            (cX == cmShipsCoord[j].first + 1 && cY + k == cmShipsCoord[j].second) ||
+                            (cX == cmShipsCoord[j].first - 1 && cY + k == cmShipsCoord[j].second) ||
+                            (cX == cmShipsCoord[j].first && cY + k == cmShipsCoord[j].second + 1) ||
+                            (cX == cmShipsCoord[j].first && cY + k == cmShipsCoord[j].second - 1) ||
+                            (cX == cmShipsCoord[j].first + 1 && cY + k == cmShipsCoord[j].second + 1) ||
+                            (cX == cmShipsCoord[j].first - 1 && cY + k == cmShipsCoord[j].second - 1) ||
+                            (cX == cmShipsCoord[j].first + 1 && cY + k == cmShipsCoord[j].second - 1) ||
+                            (cX == cmShipsCoord[j].first - 1 && cY + k == cmShipsCoord[j].second + 1))
+                        {
+                            cX = 18 + rand() % 8, cY = 4 + rand() % 6;
+                            j = -1;
+                            k = -1;
+                            break;
+                        }
+
+                    }
+                }
+                else {
+                    for (int k = 0; k < 3; k++)
+                    {
+                        if ((cX + k == cmShipsCoord[j].first && cY == cmShipsCoord[j].second) ||
+                            (cX + k == cmShipsCoord[j].first + 1 && cY == cmShipsCoord[j].second) ||
+                            (cX + k == cmShipsCoord[j].first - 1 && cY == cmShipsCoord[j].second) ||
+                            (cX + k == cmShipsCoord[j].first && cY == cmShipsCoord[j].second + 1) ||
+                            (cX + k == cmShipsCoord[j].first && cY == cmShipsCoord[j].second - 1) ||
+                            (cX + k == cmShipsCoord[j].first + 1 && cY == cmShipsCoord[j].second + 1) ||
+                            (cX + k == cmShipsCoord[j].first - 1 && cY == cmShipsCoord[j].second - 1) ||
+                            (cX + k == cmShipsCoord[j].first + 1 && cY == cmShipsCoord[j].second - 1) ||
+                            (cX + k == cmShipsCoord[j].first - 1 && cY == cmShipsCoord[j].second + 1))
+                        {
+                            cX = 18 + rand() % 8, cY = 4 + rand() % 6;
+                            j = -1;
+                            k = -1;
+                            break;
+                        }
+                    }
+                }
+            }
+            else if (_cmShipType == BIG) {
+                if (_cmPos == VERTICAL) {
+                    for (int k = 0; k < 4; k++)
+                    {
+                        if ((cX == cmShipsCoord[j].first && cY + k == cmShipsCoord[j].second) ||
+                            (cX == cmShipsCoord[j].first + 1 && cY + k == cmShipsCoord[j].second) ||
+                            (cX == cmShipsCoord[j].first - 1 && cY + k == cmShipsCoord[j].second) ||
+                            (cX == cmShipsCoord[j].first && cY + k == cmShipsCoord[j].second + 1) ||
+                            (cX == cmShipsCoord[j].first && cY + k == cmShipsCoord[j].second - 1) ||
+                            (cX == cmShipsCoord[j].first + 1 && cY + k == cmShipsCoord[j].second + 1) ||
+                            (cX == cmShipsCoord[j].first - 1 && cY + k == cmShipsCoord[j].second - 1) ||
+                            (cX == cmShipsCoord[j].first + 1 && cY + k == cmShipsCoord[j].second - 1) ||
+                            (cX == cmShipsCoord[j].first - 1 && cY + k == cmShipsCoord[j].second + 1))
+                        {
+                            cX = 18 + rand() % 8, cY = 4 + rand() % 6;
+                            j = -1;
+                            k = -1;
+                            break;
+                        }
+
+                    }
+                }
+                else {
+                    for (int k = 0; k < 4; k++)
+                    {
+                        if ((cX + k == cmShipsCoord[j].first && cY == cmShipsCoord[j].second) ||
+                            (cX + k == cmShipsCoord[j].first + 1 && cY == cmShipsCoord[j].second) ||
+                            (cX + k == cmShipsCoord[j].first - 1 && cY == cmShipsCoord[j].second) ||
+                            (cX + k == cmShipsCoord[j].first && cY == cmShipsCoord[j].second + 1) ||
+                            (cX + k == cmShipsCoord[j].first && cY == cmShipsCoord[j].second - 1) ||
+                            (cX + k == cmShipsCoord[j].first + 1 && cY == cmShipsCoord[j].second + 1) ||
+                            (cX + k == cmShipsCoord[j].first - 1 && cY == cmShipsCoord[j].second - 1) ||
+                            (cX + k == cmShipsCoord[j].first + 1 && cY == cmShipsCoord[j].second - 1) ||
+                            (cX + k == cmShipsCoord[j].first - 1 && cY == cmShipsCoord[j].second + 1))
+                        {
+                            cX = 18 + rand() % 8, cY = 4 + rand() % 6;
+                            j = -1;
+                            k = -1;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        
+
+        if (_cmShipType == SINGLE) {
+            cmShipsCoord.push_back(make_pair(cX, cY));
+        }
+        else if (_cmShipType == DBL) {
+            if (_cmPos == VERTICAL) {
+                cmShipsCoord.push_back(make_pair(cX, cY));
+                cmShipsCoord.push_back(make_pair(cX, cY + 1));
+            }
+            else {
+                cmShipsCoord.push_back(make_pair(cX, cY));
+                cmShipsCoord.push_back(make_pair(cX + 1, cY));
+            }
+        }
+        else if (_cmShipType == TRPL) {
+            if (_cmPos == VERTICAL) {
+                cmShipsCoord.push_back(make_pair(cX, cY));
+                cmShipsCoord.push_back(make_pair(cX, cY + 1));
+                cmShipsCoord.push_back(make_pair(cX, cY + 2));
+            }
+            else {
+                cmShipsCoord.push_back(make_pair(cX, cY));
+                cmShipsCoord.push_back(make_pair(cX + 1, cY));
+                cmShipsCoord.push_back(make_pair(cX + 2, cY));
+            }
+        }
+        else if (_cmShipType == BIG) {
+            if (_cmPos == VERTICAL) {
+                cmShipsCoord.push_back(make_pair(cX, cY));
+                cmShipsCoord.push_back(make_pair(cX, cY + 1));
+                cmShipsCoord.push_back(make_pair(cX, cY + 2));
+                cmShipsCoord.push_back(make_pair(cX, cY + 3));
+            }
+            else {
+                cmShipsCoord.push_back(make_pair(cX, cY));
+                cmShipsCoord.push_back(make_pair(cX + 1, cY));
+                cmShipsCoord.push_back(make_pair(cX + 2, cY));
+                cmShipsCoord.push_back(make_pair(cX + 3, cY));
+            }
         }
     }
 }

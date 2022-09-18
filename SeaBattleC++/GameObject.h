@@ -46,7 +46,9 @@ class Player : public GameObject
 {
 public:
 
-	Player(wd* wData, int x, int y, int color): GameObject(wData, x, y, color){};
+	Player(wd* wData, int x, int y, int color): GameObject(wData, x, y, color){
+		SetCompShips();
+	};
 
 	void MoveCursor();
 
