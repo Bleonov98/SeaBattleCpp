@@ -248,7 +248,9 @@ void Player::ChangeShipType()
         _shipType = BIG;
     }
     else if (_shipCnt == 7) {
+        _shipType = 0;
         _prepare = false;
+        _x = 20, _y = 7;
     }
 }
 
@@ -514,7 +516,6 @@ void Player::SetCompShips()
                         {
                             cX = 18 + rand() % 8, cY = 4 + rand() % 6;
                             j = -1;
-                            k = -1;
                             break;
                         }
 
@@ -535,7 +536,6 @@ void Player::SetCompShips()
                         {
                             cX = 18 + rand() % 8, cY = 4 + rand() % 6;
                             j = -1;
-                            k = -1;
                             break;
                         }
                     }
@@ -557,7 +557,6 @@ void Player::SetCompShips()
                         {
                             cX = 18 + rand() % 8, cY = 4 + rand() % 6;
                             j = -1;
-                            k = -1;
                             break;
                         }
 
@@ -578,7 +577,6 @@ void Player::SetCompShips()
                         {
                             cX = 18 + rand() % 8, cY = 4 + rand() % 6;
                             j = -1;
-                            k = -1;
                             break;
                         }
                     }
@@ -600,7 +598,6 @@ void Player::SetCompShips()
                         {
                             cX = 18 + rand() % 8, cY = 4 + rand() % 6;
                             j = -1;
-                            k = -1;
                             break;
                         }
 
@@ -621,7 +618,6 @@ void Player::SetCompShips()
                         {
                             cX = 18 + rand() % 8, cY = 4 + rand() % 6;
                             j = -1;
-                            k = -1;
                             break;
                         }
                     }
