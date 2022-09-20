@@ -83,6 +83,9 @@ public:
 
 	void SetCompShips();
 
+
+	void check();
+
 private:
 
 	bool _player = true, _prepare = true;
@@ -119,3 +122,5 @@ private:
 	vector <pair<int, int>> shipsCoord;
 	vector <pair<int, int>> cmShipsCoord;
 };
+
+
