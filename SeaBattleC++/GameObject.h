@@ -83,9 +83,6 @@ public:
 
 	void SetCompShips();
 
-
-	void check();
-
 private:
 
 	bool _player = true, _prepare = true;

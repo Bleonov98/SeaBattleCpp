@@ -170,11 +170,11 @@ void Game::DrawChanges()
 void Game::Timer()
 {
 	while (worldIsRun) {
-		if (!player->Prepare()) {
+		/*if (!player->Prepare()) {
 			this_thread::sleep_for(milliseconds(60000));
 
 			player->nextPlayer();
-		}
+		}*/
 	}
 }
 
