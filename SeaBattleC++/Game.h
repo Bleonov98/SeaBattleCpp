@@ -142,8 +142,6 @@ protected:
 
     void DrawChanges();
 
-    void Timer();
-
 public:
 
     void RunWorld(bool& restart);

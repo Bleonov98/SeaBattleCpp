@@ -167,17 +167,6 @@ void Game::DrawChanges()
 	}
 }
 
-void Game::Timer()
-{
-	while (worldIsRun) {
-		/*if (!player->Prepare()) {
-			this_thread::sleep_for(milliseconds(60000));
-
-			player->nextPlayer();
-		}*/
-	}
-}
-
 void Game::DrawToMem()
 {
 	for (int i = 0; i < allObjectList.size(); i++)
@@ -196,10 +185,6 @@ void Game::RunWorld(bool& restart)
 
 	thread hotKeys([&]
 		{ HotKeys(pause); }
-	);
-
-	thread timer([&]
-		{	Timer(); }
 	);
 
 	int tick = 0;
@@ -240,7 +225,6 @@ void Game::RunWorld(bool& restart)
 	DrawEndInfo(restart);
 
 	hotKeys.join();
-	timer.join();
 
 	printf(CSI "?1049l");
 }

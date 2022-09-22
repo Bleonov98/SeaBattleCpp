@@ -40,12 +40,6 @@ void GameObject::EraseCursor()
     wData->vBuf[_y][_x] = u' ';
 }
 
-bool GameObject::Shot()
-{
-    _shot = true;
-    return _shot;
-}
-
 void Player::MoveCursor()
 {
     ShowShips();
@@ -261,10 +255,15 @@ void Player::ShowShips()
         wData->vBuf[shipsCoord[i].second][shipsCoord[i].first] = u'#' | (_color << 8);
     }
 
-    for (int i = 0; i < cmShipsCoord.size(); i++)
+    for (int i = 0; i < damageShips.size(); i++)
+    {
+        wData->vBuf[damageShips[i].second][damageShips[i].first] = u'X' | (Green << 8);
+    }
+
+    /*for (int i = 0; i < cmShipsCoord.size(); i++)
     {
         wData->vBuf[cmShipsCoord[i].second][cmShipsCoord[i].first] = u'#' | (_color << 8);
-    }
+    }*/
 }
 
 void Player::RotateShip()
@@ -444,11 +443,11 @@ bool Player::Prepare()
     return _prepare;
 }
 
-void Player::nextPlayer()
+void Player::NextPlayer()
 {
     _player = !_player;
     EraseCursor();
-    if (_player) {
+    if (!_player) {
         _x = 4;
         _y = 3;
     }
@@ -463,6 +462,46 @@ bool Player::PlayerW()
     return _player;
 }
 
+void Player::Step()
+{
+    if (!_prepare && _player) {
+
+    }
+}
+
+void Player::Shot()
+{
+    bool kill = false;
+    if (_player) {
+        for (int i = 0; i < cmShipsCoord.size(); i++)
+        {
+            if (_x == cmShipsCoord[i].first && _y == cmShipsCoord[i].second) {
+                damageShips.push_back(make_pair(cmShipsCoord[i].first, cmShipsCoord[i].second));
+                wData->vBuf[cmShipsCoord[i].second][cmShipsCoord[i].first] = u'X' | (Green << 8);
+                cmShipsCoord.erase(cmShipsCoord.begin() + i);
+                kill = true;
+                break;
+            }
+        }
+    }
+    else {
+        for (int i = 0; i < shipsCoord.size(); i++)
+        {
+            if (_x == shipsCoord[i].first && _y == shipsCoord[i].second) {
+                damageShips.push_back(make_pair(shipsCoord[i].first, shipsCoord[i].second));
+                wData->vBuf[shipsCoord[i].second][shipsCoord[i].first] = u'X' | (Green << 8);
+                shipsCoord.erase(shipsCoord.begin() + i);
+                kill = true;
+                break;
+            }
+        }
+    }
+    if (!kill) {
+        NextPlayer();
+    }
+    Sleep(200);
+}
+
 void Player::Computer()
 {
     if (!_player) {
@@ -475,7 +514,9 @@ void Player::SetCompShips()
     srand(time(NULL));
 
     int cX, cY;
-    vector <pair<int, int>> checkedXY;
+
+    int check = 0;
+    bool newCoord = false;
 
     for (int i = 0; i < 7; i++)
     {
@@ -486,7 +527,20 @@ void Player::SetCompShips()
         _cmPos = rand() % 2;
 
         cX = 18 + rand() % 8;
-        cY = 4 + rand() % 6;
+        cY = 3 + rand() % 8;
+
+        for (int j = 0; j < cmShipsCoord.size(); j++)
+        {
+            if (cX == cmShipsCoord[j].first && cY == cmShipsCoord[j].second) {
+                cX = 18 + rand() % 8;
+                cY = 3 + rand() % 8;
+                j = -1;
+            }
+        }
+
+        
+        newCoord = false;
+        check = 0;
 
         for (int j = 0; j < cmShipsCoord.size(); j++)
         {
@@ -501,7 +555,7 @@ void Player::SetCompShips()
                     (cX == cmShipsCoord[j].first + 1 && cY == cmShipsCoord[j].second - 1) ||
                     (cX == cmShipsCoord[j].first - 1 && cY == cmShipsCoord[j].second + 1)) {
                     cX = 18 + rand() % 8;
-                    cY = 4 + rand() % 6;
+                    cY = 3 + rand() % 8;
 
                     j = -1;
                 }
@@ -521,14 +575,14 @@ void Player::SetCompShips()
                             (cX == cmShipsCoord[j].first - 1 && cY + k == cmShipsCoord[j].second + 1))
                         {
                             cX = 18 + rand() % 8;
-                            cY = 4 + rand() % 6;
+                            cY = 3 + rand() % 8;
                             _cmPos = rand() % 2;
                             j = -1;
                             break;
                         }
                         if (cY + k >= 11) {
                             cX = 18 + rand() % 8;
-                            cY = 4 + rand() % 6;
+                            cY = 3 + rand() % 8;
                             _cmPos = rand() % 2;
                             j = -1;
                             break;
@@ -550,14 +604,14 @@ void Player::SetCompShips()
                             (cX + k == cmShipsCoord[j].first - 1 && cY == cmShipsCoord[j].second + 1))
                         {
                             cX = 18 + rand() % 8;
-                            cY = 4 + rand() % 6;
+                            cY = 3 + rand() % 8;
                             _cmPos = rand() % 2;
                             j = -1;
                             break;
                         }
                         if (cX + k >= 27) {
                             cX = 18 + rand() % 8;
-                            cY = 4 + rand() % 6;
+                            cY = 3 + rand() % 8;
                             _cmPos = rand() % 2;
                             j = -1;
                             break;
@@ -580,14 +634,14 @@ void Player::SetCompShips()
                             (cX == cmShipsCoord[j].first - 1 && cY + k == cmShipsCoord[j].second + 1))
                         {
                             cX = 18 + rand() % 8;
-                            cY = 4 + rand() % 6;
+                            cY = 3 + rand() % 8;
                             _cmPos = rand() % 2;
                             j = -1;
                             break;
                         }
                         if (cY + k >= 11) {
                             cX = 18 + rand() % 8;
-                            cY = 4 + rand() % 6;
+                            cY = 3 + rand() % 8;
                             _cmPos = rand() % 2;
                             j = -1;
                             break;
@@ -609,14 +663,14 @@ void Player::SetCompShips()
                             (cX + k == cmShipsCoord[j].first - 1 && cY == cmShipsCoord[j].second + 1))
                         {
                             cX = 18 + rand() % 8;
-                            cY = 4 + rand() % 6;
+                            cY = 3 + rand() % 8;
                             _cmPos = rand() % 2;
                             j = -1;
                             break;
                         }
                         if (cX + k >= 27) {
                             cX = 18 + rand() % 8;
-                            cY = 4 + rand() % 6;
+                            cY = 3 + rand() % 8;
                             _cmPos = rand() % 2;
                             j = -1;
                             break;
@@ -639,14 +693,14 @@ void Player::SetCompShips()
                             (cX == cmShipsCoord[j].first - 1 && cY + k == cmShipsCoord[j].second + 1))
                         {
                             cX = 18 + rand() % 8;
-                            cY = 4 + rand() % 6;
+                            cY = 3 + rand() % 8;
                             _cmPos = rand() % 2;
                             j = -1;
                             break;
                         }
                         if (cY + k >= 11) {
                             cX = 18 + rand() % 8;
-                            cY = 4 + rand() % 6;
+                            cY = 3 + rand() % 8;
                             _cmPos = rand() % 2;
                             j = -1;
                             break;
@@ -668,14 +722,14 @@ void Player::SetCompShips()
                             (cX + k == cmShipsCoord[j].first - 1 && cY == cmShipsCoord[j].second + 1))
                         {
                             cX = 18 + rand() % 8;
-                            cY = 4 + rand() % 6;
+                            cY = 3 + rand() % 8;
                             _cmPos = rand() % 2;
                             j = -1;
                             break;
                         }
                         if (cX + k >= 27) {
                             cX = 18 + rand() % 8;
-                            cY = 4 + rand() % 6;
+                            cY = 3 + rand() % 8;
                             _cmPos = rand() % 2;
                             j = -1;
                             break;
@@ -683,8 +737,20 @@ void Player::SetCompShips()
                     }
                 }
             }
+
+            check++;
+            if (check >= 200) {
+                _cmShipType = 0;
+                cmShipsCoord.clear();
+                i = -1;
+                check = 0;
+                newCoord = true;
+                break;
+            }
         }
-        
+        if (newCoord) {
+            continue;
+        }
 
         if (_cmShipType == SINGLE) {
             cmShipsCoord.push_back(make_pair(cX, cY));

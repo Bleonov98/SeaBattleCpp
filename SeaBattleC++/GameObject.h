@@ -26,8 +26,6 @@ public:
 
 	void EraseCursor();
 
-	bool Shot();
-
 protected:
 
 	wd* wData;
@@ -73,10 +71,14 @@ public:
 
 	bool Prepare();
 
-	void nextPlayer();
+	void NextPlayer();
 
 	bool PlayerW();
 
+
+	void Step();
+
+	void Shot();
 
 
 	void Computer();
@@ -118,6 +120,8 @@ private:
 
 	vector <pair<int, int>> shipsCoord;
 	vector <pair<int, int>> cmShipsCoord;
+
+	vector <pair<int, int>> damageShips;
 };
 
 
