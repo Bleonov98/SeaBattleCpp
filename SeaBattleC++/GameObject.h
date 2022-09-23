@@ -76,8 +76,6 @@ public:
 	bool PlayerW();
 
 
-	void Step();
-
 	void Shot();
 
 
@@ -121,7 +119,14 @@ private:
 	vector <pair<int, int>> shipsCoord;
 	vector <pair<int, int>> cmShipsCoord;
 
-	vector <pair<int, int>> damageShips;
+	vector <pair<int, int>> damagePlShips;
+	vector <pair<int, int>> damageCmShips;
+
+	vector <pair<int, int>> missPlShips;
+	vector <pair<int, int>> missCmShips;
+
+	vector <pair<int, int>> checkAroudCrd;
+	bool algKill = false;
 };
 
 

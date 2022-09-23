@@ -110,11 +110,7 @@ void Player::MoveCursor()
         EraseCursor();
 
         if (!_player) {
-            if ((GetAsyncKeyState(VK_RIGHT) & 0x8000) && _x <= 11) _x++;
-            else if ((GetAsyncKeyState(VK_LEFT) & 0x8000) && _x >= 4) _x--;
-            else if ((GetAsyncKeyState(VK_UP) & 0x8000) && _y >= 4) _y--;
-            else if ((GetAsyncKeyState(VK_DOWN) & 0x8000) && _y <= 10) _y++;
-            else if (GetAsyncKeyState(VK_RETURN) & 0x8000) Shot();
+            Computer();
         }
         else {
             if ((GetAsyncKeyState(VK_RIGHT) & 0x8000) && _x <= 26) _x++;
@@ -255,9 +251,24 @@ void Player::ShowShips()
         wData->vBuf[shipsCoord[i].second][shipsCoord[i].first] = u'#' | (_color << 8);
     }
 
-    for (int i = 0; i < damageShips.size(); i++)
+    for (int i = 0; i < damagePlShips.size(); i++)
     {
-        wData->vBuf[damageShips[i].second][damageShips[i].first] = u'X' | (Green << 8);
+        wData->vBuf[damagePlShips[i].second][damagePlShips[i].first] = u'X' | (Green << 8);
+    }
+
+    for (int i = 0; i < damageCmShips.size(); i++)
+    {
+        wData->vBuf[damageCmShips[i].second][damageCmShips[i].first] = u'X' | (Green << 8);
+    }
+
+    for (int i = 0; i < missPlShips.size(); i++)
+    {
+        wData->vBuf[missPlShips[i].second][missPlShips[i].first] = u'X' | (Red << 8);
+    }
+
+    for (int i = 0; i < missCmShips.size(); i++)
+    {
+        wData->vBuf[missCmShips[i].second][missCmShips[i].first] = u'X' | (Red << 8);
     }
 
     /*for (int i = 0; i < cmShipsCoord.size(); i++)
@@ -462,21 +473,26 @@ bool Player::PlayerW()
     return _player;
 }
 
-void Player::Step()
-{
-    if (!_prepare && _player) {
-
-    }
-}
-
 void Player::Shot()
 {
     bool kill = false;
     if (_player) {
+        for (int i = 0; i < damageCmShips.size(); i++)
+        {
+            if (_x == damageCmShips[i].first && _y == damageCmShips[i].second) {
+                return;
+            }
+        }
+        for (int i = 0; i < missCmShips.size(); i++)
+        {
+            if (_x == missCmShips[i].first && _y == missCmShips[i].second) {
+                return;
+            }
+        }
         for (int i = 0; i < cmShipsCoord.size(); i++)
         {
             if (_x == cmShipsCoord[i].first && _y == cmShipsCoord[i].second) {
-                damageShips.push_back(make_pair(cmShipsCoord[i].first, cmShipsCoord[i].second));
+                damageCmShips.push_back(make_pair(cmShipsCoord[i].first, cmShipsCoord[i].second));
                 wData->vBuf[cmShipsCoord[i].second][cmShipsCoord[i].first] = u'X' | (Green << 8);
                 cmShipsCoord.erase(cmShipsCoord.begin() + i);
                 kill = true;
@@ -488,15 +504,19 @@ void Player::Shot()
         for (int i = 0; i < shipsCoord.size(); i++)
         {
             if (_x == shipsCoord[i].first && _y == shipsCoord[i].second) {
-                damageShips.push_back(make_pair(shipsCoord[i].first, shipsCoord[i].second));
+                damagePlShips.push_back(make_pair(shipsCoord[i].first, shipsCoord[i].second));
                 wData->vBuf[shipsCoord[i].second][shipsCoord[i].first] = u'X' | (Green << 8);
                 shipsCoord.erase(shipsCoord.begin() + i);
                 kill = true;
+                algKill = true;
+                checkAroudCrd.push_back(make_pair(_x, _y));
                 break;
             }
         }
     }
     if (!kill) {
+        if (_player) missCmShips.push_back(make_pair(_x, _y));
+        else missPlShips.push_back(make_pair(_x, _y));
         NextPlayer();
     }
     Sleep(200);
@@ -504,9 +524,36 @@ void Player::Shot()
 
 void Player::Computer()
 {
-    if (!_player) {
-
+    if (checkAroudCrd.empty()) {
+        algKill = false;
     }
+
+    if (!algKill) {
+        _x = 3 + rand() % 10;
+        _y = 3 + rand() % 9;
+    }
+    else {
+        if (checkAroudCrd[0].first + 1 < 10);
+    }
+
+    for (int i = 0; i < missPlShips.size(); i++)
+    {
+        if (_x == missPlShips[i].first && _y == missPlShips[i].second) {
+            _x = 3 + rand() % 10;
+            _y = 3 + rand() % 9;
+            i = -1;
+        }  
+    }
+    for (int i = 0; i < damagePlShips.size(); i++)
+    {
+        if (_x == damagePlShips[i].first && _y == damagePlShips[i].second) {
+            _x = 3 + rand() % 10;
+            _y = 3 + rand() % 9;
+            i = -1;
+        }
+    }
+
+    Shot();
 }
 
 void Player::SetCompShips()
