@@ -117,6 +117,7 @@ void Player::MoveCursor()
             else if ((GetAsyncKeyState(VK_LEFT) & 0x8000) && _x > 18) _x--;
             else if ((GetAsyncKeyState(VK_UP) & 0x8000) && _y >= 4) _y--;
             else if ((GetAsyncKeyState(VK_DOWN) & 0x8000) && _y <= 10) _y++;
+
             else if (GetAsyncKeyState(VK_RETURN) & 0x8000) Shot();
         }
     }
@@ -509,6 +510,7 @@ void Player::Shot()
                 shipsCoord.erase(shipsCoord.begin() + i);
                 kill = true;
                 algKill = true;
+                checkAroudCrd.clear();
                 checkAroudCrd.push_back(make_pair(_x, _y));
                 break;
             }
@@ -533,24 +535,53 @@ void Player::Computer()
         _y = 3 + rand() % 9;
     }
     else {
-        if (checkAroudCrd[0].first + 1 < 10);
+        if (_x + 1 <= 12) checkAroudCrd.push_back(make_pair(checkAroudCrd[0].first + 1, checkAroudCrd[0].second));
+        if (_x - 1 > 3) checkAroudCrd.push_back(make_pair(checkAroudCrd[0].first - 1, checkAroudCrd[0].second));
+        if (_y - 1 >= 3) checkAroudCrd.push_back(make_pair(checkAroudCrd[0].first, checkAroudCrd[0].second - 1));
+        if (_y + 1 <= 10) checkAroudCrd.push_back(make_pair(checkAroudCrd[0].first, checkAroudCrd[0].second + 1));
     }
 
     for (int i = 0; i < missPlShips.size(); i++)
     {
-        if (_x == missPlShips[i].first && _y == missPlShips[i].second) {
+        if (_x == missPlShips[i].first && _y == missPlShips[i].second && !algKill) {
             _x = 3 + rand() % 10;
             _y = 3 + rand() % 9;
             i = -1;
         }  
+        else if (algKill && !checkAroudCrd.empty()) {
+            for (int j = 0; j < checkAroudCrd.size(); j++)
+            {
+                if (checkAroudCrd[j].first == missPlShips[i].first && checkAroudCrd[j].second == missPlShips[i].second && algKill) {
+                    checkAroudCrd.erase(checkAroudCrd.begin() + j);
+                    i = -1;
+                    break;
+                }
+            }
+        }
     }
     for (int i = 0; i < damagePlShips.size(); i++)
     {
-        if (_x == damagePlShips[i].first && _y == damagePlShips[i].second) {
+        if (_x == damagePlShips[i].first && _y == damagePlShips[i].second && !algKill) {
             _x = 3 + rand() % 10;
             _y = 3 + rand() % 9;
             i = -1;
         }
+        else if (algKill && !checkAroudCrd.empty()) {
+            for (int j = 0; j < checkAroudCrd.size(); j++)
+            {
+                if (checkAroudCrd[j].first == damagePlShips[i].first && checkAroudCrd[j].second == damagePlShips[i].second && algKill) {
+                    checkAroudCrd.erase(checkAroudCrd.begin() + j);
+                    i = -1;
+                    break;
+                }
+            }  
+        }    
+    }
+
+    if (algKill && !checkAroudCrd.empty()) {
+        _x = checkAroudCrd.back().first;
+        _y = checkAroudCrd.back().second;
+        checkAroudCrd.pop_back();
     }
 
     Shot();

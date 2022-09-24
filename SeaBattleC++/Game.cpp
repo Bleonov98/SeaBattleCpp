@@ -211,6 +211,7 @@ void Game::RunWorld(bool& restart)
 		
 		player->MoveCursor();
 
+
 		DrawToMem();
 
 		DrawChanges();

@@ -90,6 +90,8 @@ private:
 	int _shipType = SINGLE, _shipCnt = 0, _position = VERTICAL;
 	int _cmShipType = SINGLE, _cmShipCnt = 0, _cmPos = VERTICAL;
 
+	bool singlePlayer = true;
+
 	char16_t dblShipVert[2][2]{
 		u"#",
 		u"#"
