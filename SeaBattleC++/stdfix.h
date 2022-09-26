@@ -9,14 +9,16 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <conio.h>
+
+#include <WinSock2.h>
+#pragma comment(lib, "ws2_32.lib")
+
 #include <windows.h>
 #include <mmsystem.h>
-#include <WinSock2.h>
 
 #include "resource.h"
 
 #pragma comment(lib, "winmm.lib")
-#pragma comment(lib, "ws2_32.lib")
 
 #define ESC "\x1b"
 #define CSI "\x1b["

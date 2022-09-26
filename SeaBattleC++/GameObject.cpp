@@ -521,6 +521,7 @@ void Player::Shot()
         else missPlShips.push_back(make_pair(_x, _y));
         NextPlayer();
     }
+
     Sleep(200);
 }
 
