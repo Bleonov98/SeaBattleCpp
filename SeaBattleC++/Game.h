@@ -13,6 +13,8 @@ private:
 
     int score = 0;
 
+    bool singlePl = false, MultiPl = false;
+
     HINSTANCE hInstance;
 
     vector <GameObject*> allObjectList;
