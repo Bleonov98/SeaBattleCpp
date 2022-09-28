@@ -1,13 +1,16 @@
 #include "GameObject.h"
 
+#pragma warning(disable: 4996)
 
 class Game
 {
 private:
     wd wData;
+    SOCKET Connection;
 
     char16_t prevBuf[ROWS][COLS];
     char coord[100];
+    char msg[256];
 
     bool worldIsRun = true, win = false;
 
@@ -20,7 +23,7 @@ private:
     vector <GameObject*> allObjectList;
     vector <Player*> playerList;
 
-    class VirtualTerminal {
+    class Settings {
     public:
 
         HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -120,11 +123,12 @@ private:
             wcscpy_s(cfi.FaceName, L"Lucida Console");
             SetCurrentConsoleFontEx(hOut, 0, &cfi);
         }
+
     };
 
     Player* player;
 
-    VirtualTerminal term; // console setting
+    Settings term; // console setting
 
 protected:
 

@@ -872,36 +872,3 @@ void Player::SetCompShips()
         }
     }
 }
-
-void Player::ShowShips()
-{
-    for (int i = 0; i < shipsCoord.size(); i++)
-    {
-        wData->vBuf[shipsCoord[i].second][shipsCoord[i].first] = u'#' | (_color << 8);
-    }
-
-    for (int i = 0; i < damagePlShips.size(); i++)
-    {
-        wData->vBuf[damagePlShips[i].second][damagePlShips[i].first] = u'X' | (Green << 8);
-    }
-
-    for (int i = 0; i < damageCmShips.size(); i++)
-    {
-        wData->vBuf[damageCmShips[i].second][damageCmShips[i].first] = u'X' | (Green << 8);
-    }
-
-    for (int i = 0; i < missPlShips.size(); i++)
-    {
-        wData->vBuf[missPlShips[i].second][missPlShips[i].first] = u'X' | (Red << 8);
-    }
-
-    for (int i = 0; i < missCmShips.size(); i++)
-    {
-        wData->vBuf[missCmShips[i].second][missCmShips[i].first] = u'X' | (Red << 8);
-    }
-
-    /*for (int i = 0; i < cmShipsCoord.size(); i++)
-    {
-        wData->vBuf[cmShipsCoord[i].second][cmShipsCoord[i].first] = u'#' | (_color << 8);
-    }*/
-}

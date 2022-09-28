@@ -65,6 +65,26 @@ void Game::CreateWorld() {
 	printf(CSI "?25l"); // hide cursor blinking
 
 	DrawArea();
+
+	WSAData wsaData;
+	WORD DLLversion = MAKEWORD(2, 1);
+	WSAStartup(DLLversion, &wsaData);
+	if (WSAStartup(DLLversion, &wsaData) != 0) {
+		cout << "ERROR" << endl;
+		exit(1);
+	}
+	SOCKADDR_IN addr;
+	int addrSize = sizeof(addr);
+	addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+	addr.sin_port = htons(1111);
+	addr.sin_family = AF_INET;
+
+	SOCKET Connection = socket(AF_INET, SOCK_STREAM, NULL);
+	if (connect(Connection, (SOCKADDR*)&addr, addrSize) != 0) {
+		cout << "Error: failed connect to server";
+		return;
+	}
+	recv(Connection, msg, sizeof(msg), NULL);
 }
 
 void Game::DrawEndInfo(bool& restart)
@@ -192,6 +212,9 @@ void Game::RunWorld(bool& restart)
 	player = new Player(&wData, 3, 3, Blue);
 	playerList.push_back(player);
 	allObjectList.push_back(player);
+
+	SetPos(30, 30);
+	cout << msg;
 
 	while (worldIsRun) {
 
