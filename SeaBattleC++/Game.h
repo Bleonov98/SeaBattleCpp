@@ -148,6 +148,8 @@ protected:
 
     void DrawChanges();
 
+    void ConnectW();
+
 public:
 
     void RunWorld(bool& restart);

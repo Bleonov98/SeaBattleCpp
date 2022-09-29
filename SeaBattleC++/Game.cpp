@@ -81,10 +81,10 @@ void Game::CreateWorld() {
 
 	SOCKET Connection = socket(AF_INET, SOCK_STREAM, NULL);
 	if (connect(Connection, (SOCKADDR*)&addr, addrSize) != 0) {
+		SetPos(35, 40);
 		cout << "Error: failed connect to server";
 		return;
 	}
-	recv(Connection, msg, sizeof(msg), NULL);
 }
 
 void Game::DrawEndInfo(bool& restart)
@@ -187,6 +187,14 @@ void Game::DrawChanges()
 	}
 }
 
+void Game::ConnectW()
+{
+	while (worldIsRun)
+	{
+		recv(Connection, msg, sizeof(msg), NULL);
+	}
+}
+
 void Game::DrawToMem()
 {
 	for (int i = 0; i < allObjectList.size(); i++)
@@ -207,14 +215,17 @@ void Game::RunWorld(bool& restart)
 		{ HotKeys(pause); }
 	);
 
+	thread mPlayer([&]
+		{ ConnectW(); }
+	);
+
 	int tick = 0;
 
 	player = new Player(&wData, 3, 3, Blue);
 	playerList.push_back(player);
 	allObjectList.push_back(player);
 
-	SetPos(30, 30);
-	cout << msg;
+	char msgl[256];
 
 	while (worldIsRun) {
 
@@ -234,7 +245,6 @@ void Game::RunWorld(bool& restart)
 		
 		player->MoveCursor();
 
-
 		DrawToMem();
 
 		DrawChanges();
@@ -244,11 +254,18 @@ void Game::RunWorld(bool& restart)
 		Sleep(60);
 
 		tick++;
+
+		send(Connection, msgl, sizeof(msgl), NULL);
+
+		if (player->GetEndSet(win)) {
+			worldIsRun = false;
+		}
 	}
 
 	DrawEndInfo(restart);
 
 	hotKeys.join();
+	mPlayer.join();
 
 	printf(CSI "?1049l");
 }

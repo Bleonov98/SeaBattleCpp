@@ -59,7 +59,7 @@ public:
 
 	void SetShip();
 
-	int ShipCounter();
+	int GetShipCounter();
 
 
 	int GetShipType();
@@ -77,6 +77,8 @@ public:
 
 
 	void Shot();
+	
+	bool GetEndSet(bool& win);
 
 
 	void Computer();
@@ -85,7 +87,7 @@ public:
 
 private:
 
-	bool _player = true, _prepare = true;
+	bool _player = true, _prepare = true, _plWin = false, _cmWin = false;
 
 	int _shipType = SINGLE, _shipCnt = 0, _position = VERTICAL;
 	int _cmShipType = SINGLE, _cmShipCnt = 0, _cmPos = VERTICAL;
@@ -117,6 +119,9 @@ private:
 	char16_t bigShipHor[1][5]{
 		u"####"
 	};
+
+	vector<vector<pair<int, int>>> plShips;
+	vector<vector<pair<int, int>>> cmShips;
 
 	vector <pair<int, int>> shipsCoord;
 	vector <pair<int, int>> cmShipsCoord;

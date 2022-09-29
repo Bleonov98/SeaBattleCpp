@@ -396,18 +396,23 @@ void Player::SetShip()
 
     _shipCnt++;
 
-    if (_shipType == SINGLE) shipsCoord.push_back(make_pair(_x,_y));
+    if (_shipType == SINGLE) {
+        shipsCoord.push_back(make_pair(_x, _y));
+        plShips[_shipCnt - 1].push_back(make_pair(_x, _y));
+    }
     else if (_shipType == DBL) {
         if (_position == VERTICAL) {
             for (int height = 0; height < 2; height++)
             {
                 shipsCoord.push_back(make_pair(_x, _y + height));
+                plShips[_shipCnt - 1].push_back(make_pair(_x, _y + height));
             }
         }
         else {
             for (int width = 0; width < 2; width++)
             {
                 shipsCoord.push_back(make_pair(_x + width, _y));
+                plShips[_shipCnt - 1].push_back(make_pair(_x + width, _y));
             }
         }
     } 
@@ -416,12 +421,14 @@ void Player::SetShip()
             for (int height = 0; height < 3; height++)
             {
                 shipsCoord.push_back(make_pair(_x, _y + height));
+                plShips[_shipCnt - 1].push_back(make_pair(_x, _y + height));
             }
         }
         else {
             for (int width = 0; width < 3; width++)
             {
                 shipsCoord.push_back(make_pair(_x + width, _y));
+                plShips[_shipCnt - 1].push_back(make_pair(_x + width, _y));
             }
         }
     }
@@ -430,12 +437,14 @@ void Player::SetShip()
             for (int height = 0; height < 4; height++)
             {
                 shipsCoord.push_back(make_pair(_x, _y + height));
+                plShips[_shipCnt - 1].push_back(make_pair(_x, _y + height));
             }
         }
         else {
             for (int width = 0; width < 4; width++)
             {
                 shipsCoord.push_back(make_pair(_x + width, _y));
+                plShips[_shipCnt - 1].push_back(make_pair(_x + width, _y));
             }
         }
     }
@@ -445,7 +454,7 @@ void Player::SetShip()
     ChangeShipType();
 }
 
-int Player::ShipCounter()
+int Player::GetShipCounter()
 {
     return _shipCnt;
 }
@@ -502,6 +511,18 @@ void Player::Shot()
         }
     }
     else {
+        for (int i = 0; i < damagePlShips.size(); i++)
+        {
+            if (_x == damagePlShips[i].first && _y == damagePlShips[i].second) {
+                return;
+            }
+        }
+        for (int i = 0; i < missPlShips.size(); i++)
+        {
+            if (_x == missPlShips[i].first && _y == missPlShips[i].second) {
+                return;
+            }
+        }
         for (int i = 0; i < shipsCoord.size(); i++)
         {
             if (_x == shipsCoord[i].first && _y == shipsCoord[i].second) {
@@ -525,6 +546,22 @@ void Player::Shot()
     Sleep(200);
 }
 
+bool Player::GetEndSet(bool &win)
+{
+    if (shipsCoord.empty() && damagePlShips.size() > 0) {
+        _plWin = false;
+        _cmWin = true;
+        win = false;
+        return _cmWin;
+    }
+    else if (cmShipsCoord.empty() && damageCmShips.size() > 0) {
+        _plWin = true;
+        _cmWin = true;
+        win = true;
+        return _plWin;
+    }
+}
+
 void Player::Computer()
 {
     if (checkAroudCrd.empty()) {
@@ -535,11 +572,13 @@ void Player::Computer()
         _x = 3 + rand() % 10;
         _y = 3 + rand() % 9;
     }
-    else {
-        if (_x + 1 <= 12) checkAroudCrd.push_back(make_pair(checkAroudCrd[0].first + 1, checkAroudCrd[0].second));
-        if (_x - 1 > 3) checkAroudCrd.push_back(make_pair(checkAroudCrd[0].first - 1, checkAroudCrd[0].second));
-        if (_y - 1 >= 3) checkAroudCrd.push_back(make_pair(checkAroudCrd[0].first, checkAroudCrd[0].second - 1));
-        if (_y + 1 <= 10) checkAroudCrd.push_back(make_pair(checkAroudCrd[0].first, checkAroudCrd[0].second + 1));
+    else if (algKill && checkAroudCrd.size() == 1) {
+        if (checkAroudCrd[0].first + 1 <= 12) checkAroudCrd.push_back(make_pair(checkAroudCrd[0].first + 1, checkAroudCrd[0].second));
+        if (checkAroudCrd[0].first - 1 > 3) checkAroudCrd.push_back(make_pair(checkAroudCrd[0].first - 1, checkAroudCrd[0].second));
+        if (checkAroudCrd[0].second - 1 >= 3) checkAroudCrd.push_back(make_pair(checkAroudCrd[0].first, checkAroudCrd[0].second - 1));
+        if (checkAroudCrd[0].second + 1 <= 10) checkAroudCrd.push_back(make_pair(checkAroudCrd[0].first, checkAroudCrd[0].second + 1));
+
+        checkAroudCrd.erase(checkAroudCrd.begin());
     }
 
     for (int i = 0; i < missPlShips.size(); i++)
@@ -578,6 +617,18 @@ void Player::Computer()
             }  
         }    
     }
+
+    //if (!checkAroudCrd.empty()) {
+    //    for (int i = 0; i < checkAroudCrd.size(); i++)
+    //    {
+    //        for (int j = 0; j < damagePlShips.size(); j++)
+    //        {
+    //            if (checkAroudCrd[i].first == damagePlShips[j].first) {
+
+    //            }
+    //        }
+    //    }
+    //}
 
     if (algKill && !checkAroudCrd.empty()) {
         _x = checkAroudCrd.back().first;
