@@ -46,6 +46,9 @@ public:
 
 	Player(wd* wData, int x, int y, int color): GameObject(wData, x, y, color){
 		SetCompShips();
+
+		plShips.resize(7);
+		cmShips.resize(7);
 	};
 
 	void MoveCursor();

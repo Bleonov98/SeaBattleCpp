@@ -272,6 +272,13 @@ void Player::ShowShips()
         wData->vBuf[missCmShips[i].second][missCmShips[i].first] = u'X' | (Red << 8);
     }
 
+    for (int i = 0; i < plShips.size(); i++)
+    {
+        if (plShips[i].empty()) {
+
+        }
+    }
+
     /*for (int i = 0; i < cmShipsCoord.size(); i++)
     {
         wData->vBuf[cmShipsCoord[i].second][cmShipsCoord[i].first] = u'#' | (_color << 8);
@@ -541,6 +548,33 @@ void Player::Shot()
         if (_player) missCmShips.push_back(make_pair(_x, _y));
         else missPlShips.push_back(make_pair(_x, _y));
         NextPlayer();
+    }
+
+    int cmCnt = 0;
+    for (int i = 0; i < cmShips.size(); i++)
+    {
+        for (int j = 0; j < cmShips[i].size(); j++)
+        {
+            for (int k = 0; k < damageCmShips.size(); k++) // ---
+            {
+                if (damageCmShips[k].first == cmShips[i][j].first && damageCmShips[k].second == cmShips[i][j].second) {
+                    cmCnt++;
+                    if (cmCnt == cmShips[i].size()) {
+
+                            for (int cmShC = 0; cmShC < cmShips[i].size(); cmShC++)
+                            {
+                                for (int missCmSh = 0; missCmSh < missCmShips.size(); missCmSh++)
+                                {
+                                    if (missCmShips[missCmSh].first == cmShips[i][cmShC].first && missCmShips[missCmSh].second == cmShips[i][cmShC].second) {
+
+                                    }
+                                }
+                            }
+
+                    }
+                }
+            }
+        }
     }
 
     Sleep(200);
