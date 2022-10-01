@@ -261,7 +261,6 @@ void Player::ShowShips()
     {
         for (int j = 0; j < cmShips[i].size(); j++)
         {
-            wData->vBuf[cmShips[i][j].second][cmShips[i][j].first] = u'#' | (_color << 8);
             wData->grid[cmShips[i][j].second][cmShips[i][j].first] = 1;
         }
     }
@@ -269,12 +268,14 @@ void Player::ShowShips()
 
     for (int i = 0; i < missPlShips.size(); i++)
     {
+        if (missPlShips[i].first <= 2 || missPlShips[i].first >= 13 || missPlShips[i].second <= 2 || missPlShips[i].second >= 12) continue;
         wData->vBuf[missPlShips[i].second][missPlShips[i].first] = u'X' | (Red << 8);
         wData->grid[missPlShips[i].second][missPlShips[i].first] = 2;
     }
 
     for (int i = 0; i < missCmShips.size(); i++)
     {
+        if (missCmShips[i].first <= 17 || missCmShips[i].first >= 28 || missCmShips[i].second <= 2 || missCmShips[i].second >= 12) continue;
         wData->vBuf[missCmShips[i].second][missCmShips[i].first] = u'X' | (Red << 8);
         wData->grid[missCmShips[i].second][missCmShips[i].first] = 2;
     }
@@ -694,7 +695,7 @@ void Player::Shot()
 
             }
         }
-        Cnt = 0;
+        cmCnt = 0;
     }
 
     Sleep(200);
@@ -772,18 +773,6 @@ void Player::Computer()
             }  
         }    
     }
-
-    //if (!checkAroudCrd.empty()) {
-    //    for (int i = 0; i < checkAroudCrd.size(); i++)
-    //    {
-    //        for (int j = 0; j < damagePlShips.size(); j++)
-    //        {
-    //            if (checkAroudCrd[i].first == damagePlShips[j].first) {
-
-    //            }
-    //        }
-    //    }
-    //}
 
     if (algKill && !checkAroudCrd.empty()) {
         _x = checkAroudCrd.back().first;
