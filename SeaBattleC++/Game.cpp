@@ -44,7 +44,7 @@ void Game::DrawArea()
 
 				if (0 != dwResourceSize)
 				{
-					for (int i = 0; i < strnlen(area, 650); i++) {
+					for (int i = 0; i < strnlen(area, 800); i++) {
 						cout << area[i];
 					}
 				}

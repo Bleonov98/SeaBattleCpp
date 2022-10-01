@@ -45,10 +45,18 @@ class Player : public GameObject
 public:
 
 	Player(wd* wData, int x, int y, int color): GameObject(wData, x, y, color){
-		SetCompShips();
-
 		plShips.resize(7);
 		cmShips.resize(7);
+
+		SetCompShips();
+
+		for (int i = 0; i < ROWS; i++)
+		{
+			for (int j = 0; j < COLS; j++)
+			{
+				wData->grid[i][j] = 0;
+			}
+		}
 	};
 
 	void MoveCursor();
@@ -70,6 +78,8 @@ public:
 	void ChangeShipType();
 
 	void ShowShips();
+
+	void ShowDstrShips();
 
 
 	bool Prepare();
@@ -126,11 +136,11 @@ private:
 	vector<vector<pair<int, int>>> plShips;
 	vector<vector<pair<int, int>>> cmShips;
 
-	vector <pair<int, int>> shipsCoord;
-	vector <pair<int, int>> cmShipsCoord;
-
 	vector <pair<int, int>> damagePlShips;
 	vector <pair<int, int>> damageCmShips;
+
+	vector <int> destroyedShips;
+	vector <int> destroyedCmShips;
 
 	vector <pair<int, int>> missPlShips;
 	vector <pair<int, int>> missCmShips;
