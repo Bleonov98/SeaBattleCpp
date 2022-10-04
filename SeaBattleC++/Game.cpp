@@ -1,5 +1,6 @@
 #include "Game.h"
 
+
 void Game::SetPos(int x, int y)
 {
 	sprintf_s(coord, "%s%d;%dH", CSI, y, x);
@@ -65,26 +66,6 @@ void Game::CreateWorld() {
 	printf(CSI "?25l"); // hide cursor blinking
 
 	DrawArea();
-
-	WSAData wsaData;
-	WORD DLLversion = MAKEWORD(2, 1);
-	WSAStartup(DLLversion, &wsaData);
-	if (WSAStartup(DLLversion, &wsaData) != 0) {
-		cout << "ERROR" << endl;
-		exit(1);
-	}
-	SOCKADDR_IN addr;
-	int addrSize = sizeof(addr);
-	addr.sin_addr.s_addr = inet_addr("127.0.0.1");
-	addr.sin_port = htons(1111);
-	addr.sin_family = AF_INET;
-
-	SOCKET Connection = socket(AF_INET, SOCK_STREAM, NULL);
-	if (connect(Connection, (SOCKADDR*)&addr, addrSize) != 0) {
-		SetPos(35, 40);
-		cout << "Error: failed connect to server";
-		return;
-	}
 }
 
 void Game::DrawEndInfo(bool& restart)
@@ -189,10 +170,101 @@ void Game::DrawChanges()
 
 void Game::ConnectW()
 {
-	while (worldIsRun)
-	{
-		recv(Connection, msg, sizeof(msg), NULL);
+	WSADATA wsaData;
+	SOCKET ConnectSocket = INVALID_SOCKET;
+	struct addrinfo* result = NULL,
+		* ptr = NULL,
+		hints;
+
+	// Initialize Winsock
+	iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
+	if (iResult != 0) {
+		SetPos(30, 30);
+		printf("WSAStartup failed with error: %d\n", iResult);
+		return;
 	}
+
+
+	ZeroMemory(&hints, sizeof(hints));
+	hints.ai_family = AF_UNSPEC;
+	hints.ai_socktype = SOCK_STREAM;
+	hints.ai_protocol = IPPROTO_TCP;
+
+	// Resolve the server address and port
+	iResult = getaddrinfo(NULL, DEFAULT_PORT, &hints, &result);
+	if (iResult != 0) {
+		SetPos(30, 30);
+		printf("getaddrinfo failed with error: %d\n", iResult);
+		WSACleanup();
+	}
+
+	// Attempt to connect to an address until one succeeds
+	for (ptr = result; ptr != NULL; ptr = ptr->ai_next) {
+
+		// Create a SOCKET for connecting to server
+		ConnectSocket = socket(ptr->ai_family, ptr->ai_socktype,
+			ptr->ai_protocol);
+		if (ConnectSocket == INVALID_SOCKET) {
+			SetPos(30, 30);
+			printf("socket failed with error: %ld\n", WSAGetLastError());
+			WSACleanup();
+		}
+
+		// Connect to server.
+		iResult = connect(ConnectSocket, ptr->ai_addr, (int)ptr->ai_addrlen);
+		if (iResult == SOCKET_ERROR) {
+			closesocket(ConnectSocket);
+			ConnectSocket = INVALID_SOCKET;
+			continue;
+		}
+		break;
+	}
+
+	freeaddrinfo(result);
+
+	if (ConnectSocket == INVALID_SOCKET) {
+		SetPos(30, 30);
+		printf("Unable to connect to server!\n");
+		WSACleanup();
+	}
+
+	// Send an initial buffer
+	iResult = send(ConnectSocket, sendbuf, (int)strlen(sendbuf), 0);
+	if (iResult == SOCKET_ERROR) {
+		SetPos(30, 30);
+		printf("send failed with error: %d\n", WSAGetLastError());
+		closesocket(ConnectSocket);
+		WSACleanup();
+	}
+
+	//printf("Bytes Sent: %ld\n", iResult);
+
+	// shutdown the connection since no more data will be sent
+	iResult = shutdown(ConnectSocket, SD_SEND);
+	if (iResult == SOCKET_ERROR) {
+		SetPos(30, 30);
+		printf("shutdown failed with error: %d\n", WSAGetLastError());
+		closesocket(ConnectSocket);
+		WSACleanup();
+	}
+
+	// Receive until the peer closes the connection
+	do {
+		iResult = recv(ConnectSocket, recvbuf, recvbuflen, 0);
+		if (iResult == 0) {
+			SetPos(30, 30);
+			printf("Connection closed\n");
+		}
+		else {
+			SetPos(30, 30);
+			printf("recv failed with error: %d\n", WSAGetLastError());
+		}
+			
+	} while (worldIsRun);
+
+	// cleanup
+	closesocket(ConnectSocket);
+	WSACleanup();
 }
 
 void Game::DrawToMem()
@@ -211,12 +283,12 @@ void Game::RunWorld(bool& restart)
 	bool pause = false;
 	score = 0;
 
-	thread hotKeys([&]
-		{ HotKeys(pause); }
-	);
-
 	thread mPlayer([&]
 		{ ConnectW(); }
+	);
+
+	thread hotKeys([&]
+		{ HotKeys(pause); }
 	);
 
 	int tick = 0;
@@ -254,8 +326,6 @@ void Game::RunWorld(bool& restart)
 		Sleep(60);
 
 		tick++;
-
-		send(Connection, msgl, sizeof(msgl), NULL);
 
 		if (player->GetEndSet(win)) {
 			worldIsRun = false;

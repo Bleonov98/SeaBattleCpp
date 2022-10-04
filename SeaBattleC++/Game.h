@@ -1,22 +1,28 @@
 #include "GameObject.h"
 
 #pragma warning(disable: 4996)
+#define DEFAULT_BUFLEN 512
+#define DEFAULT_PORT "27015"
 
 class Game
 {
 private:
     wd wData;
-    SOCKET Connection;
-
     char16_t prevBuf[ROWS][COLS];
     char coord[100];
-    char msg[256];
+    
+
+    WSADATA wsaData;
+    int recvbuflen = DEFAULT_BUFLEN;
+    const char* sendbuf = "this is a test";
+    char recvbuf[DEFAULT_BUFLEN];
+    int iResult;
 
     bool worldIsRun = true, win = false;
 
     int score = 0;
 
-    bool singlePl = false, MultiPl = false;
+    bool singlePl = false, multiPl = false;
 
     HINSTANCE hInstance;
 
