@@ -12,10 +12,9 @@
 
 #include <WinSock2.h>
 #include <ws2tcpip.h>
-#include <iphlpapi.h>
+
 #pragma comment (lib, "Ws2_32.lib")
 #pragma comment (lib, "Mswsock.lib")
-#pragma comment (lib, "AdvApi32.lib")
 
 #include <windows.h>
 #include <mmsystem.h>

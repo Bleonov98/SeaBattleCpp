@@ -1,6 +1,5 @@
 #include "Game.h"
 
-
 void Game::SetPos(int x, int y)
 {
 	sprintf_s(coord, "%s%d;%dH", CSI, y, x);
@@ -170,100 +169,66 @@ void Game::DrawChanges()
 
 void Game::ConnectW()
 {
-	WSADATA wsaData;
-	SOCKET ConnectSocket = INVALID_SOCKET;
-	struct addrinfo* result = NULL,
-		* ptr = NULL,
-		hints;
-
-	// Initialize Winsock
-	iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
-	if (iResult != 0) {
+	if (wsResult != 0) {
 		SetPos(30, 30);
-		printf("WSAStartup failed with error: %d\n", iResult);
+		cout << "Failed to start wSock... ERROR: " << wsResult;
+	}
+
+	SOCKET conSocket = socket(AF_INET, SOCK_STREAM, NULL);
+	if (conSocket == INVALID_SOCKET) {
+		SetPos(30, 30);
+		cout << "socket can't be created... ERROR: " << WSAGetLastError();
 		return;
 	}
 
 
-	ZeroMemory(&hints, sizeof(hints));
-	hints.ai_family = AF_UNSPEC;
-	hints.ai_socktype = SOCK_STREAM;
-	hints.ai_protocol = IPPROTO_TCP;
+	/*DWORD nonBlocking = 1;
+	if (ioctlsocket(conSocket, FIONBIO, &nonBlocking) != 0)
+	{
+		printf("failed to set non-blocking socket\n");
+		return;
+	}*/
 
-	// Resolve the server address and port
-	iResult = getaddrinfo(NULL, DEFAULT_PORT, &hints, &result);
-	if (iResult != 0) {
+	sockaddr_in hints;
+
+	hints.sin_family = AF_INET;
+	hints.sin_port = htons(DEFAULT_PORT);
+	inet_pton(AF_INET, ipAdd.c_str(), &hints.sin_addr);
+
+	int connRes = connect(conSocket, (sockaddr*)&hints, sizeof(hints));
+	if (connRes == SOCKET_ERROR) {
 		SetPos(30, 30);
-		printf("getaddrinfo failed with error: %d\n", iResult);
+		cout << "Unable connect to server, ERROR: " << connRes;
+		closesocket(conSocket);
 		WSACleanup();
+		return;
 	}
 
-	// Attempt to connect to an address until one succeeds
-	for (ptr = result; ptr != NULL; ptr = ptr->ai_next) {
+	char buf[4096];
+	string userInput;
 
-		// Create a SOCKET for connecting to server
-		ConnectSocket = socket(ptr->ai_family, ptr->ai_socktype,
-			ptr->ai_protocol);
-		if (ConnectSocket == INVALID_SOCKET) {
-			SetPos(30, 30);
-			printf("socket failed with error: %ld\n", WSAGetLastError());
-			WSACleanup();
+	do
+	{
+		SetPos(30, 28);
+		cout << "> ";
+		SetPos(30, 28);
+		getline(cin, userInput);
+
+		if (userInput.size() > 0) {
+			int sendRes = send(conSocket, userInput.c_str(), userInput.size() + 1, 0);
+			if (sendRes != SOCKET_ERROR) {
+				ZeroMemory(buf, 4096);
+				int bytesRecv = recv(conSocket, buf, 4096, 0);
+				if (bytesRecv > 0) {
+					SetPos(30, 30);
+					cout << "Server> " << string(buf, 0, bytesRecv) << endl;
+				}
+			}
 		}
+		
+	} while (userInput.size() > 0);
 
-		// Connect to server.
-		iResult = connect(ConnectSocket, ptr->ai_addr, (int)ptr->ai_addrlen);
-		if (iResult == SOCKET_ERROR) {
-			closesocket(ConnectSocket);
-			ConnectSocket = INVALID_SOCKET;
-			continue;
-		}
-		break;
-	}
-
-	freeaddrinfo(result);
-
-	if (ConnectSocket == INVALID_SOCKET) {
-		SetPos(30, 30);
-		printf("Unable to connect to server!\n");
-		WSACleanup();
-	}
-
-	// Send an initial buffer
-	iResult = send(ConnectSocket, sendbuf, (int)strlen(sendbuf), 0);
-	if (iResult == SOCKET_ERROR) {
-		SetPos(30, 30);
-		printf("send failed with error: %d\n", WSAGetLastError());
-		closesocket(ConnectSocket);
-		WSACleanup();
-	}
-
-	//printf("Bytes Sent: %ld\n", iResult);
-
-	// shutdown the connection since no more data will be sent
-	iResult = shutdown(ConnectSocket, SD_SEND);
-	if (iResult == SOCKET_ERROR) {
-		SetPos(30, 30);
-		printf("shutdown failed with error: %d\n", WSAGetLastError());
-		closesocket(ConnectSocket);
-		WSACleanup();
-	}
-
-	// Receive until the peer closes the connection
-	do {
-		iResult = recv(ConnectSocket, recvbuf, recvbuflen, 0);
-		if (iResult == 0) {
-			SetPos(30, 30);
-			printf("Connection closed\n");
-		}
-		else {
-			SetPos(30, 30);
-			printf("recv failed with error: %d\n", WSAGetLastError());
-		}
-			
-	} while (worldIsRun);
-
-	// cleanup
-	closesocket(ConnectSocket);
+	closesocket(conSocket);
 	WSACleanup();
 }
 
