@@ -191,6 +191,7 @@ void Game::ConnectW()
 
 	sockaddr_in hints;
 
+	ZeroMemory(&hints, sizeof(hints));
 	hints.sin_family = AF_INET;
 	hints.sin_port = htons(DEFAULT_PORT);
 	inet_pton(AF_INET, ipAdd.c_str(), &hints.sin_addr);
@@ -211,8 +212,8 @@ void Game::ConnectW()
 	{
 		SetPos(30, 28);
 		cout << "> ";
-		SetPos(30, 28);
-		getline(cin, userInput);
+		//SetPos(30, 28);
+		//getline(cin, userInput);
 
 		if (userInput.size() > 0) {
 			int sendRes = send(conSocket, userInput.c_str(), userInput.size() + 1, 0);

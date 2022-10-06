@@ -20,8 +20,8 @@ private:
 
     WORD ver = MAKEWORD(2, 2);
     int  wsResult = WSAStartup(ver, &wsData);
-
     // ----------
+
     HINSTANCE hInstance;
 
     vector <GameObject*> allObjectList;
