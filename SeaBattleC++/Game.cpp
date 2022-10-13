@@ -169,9 +169,14 @@ void Game::DrawChanges()
 
 void Game::ConnectW()
 {
+	WSAData wsData;
+	WORD ver = MAKEWORD(2, 2);
+	
+	int  wsResult = WSAStartup(ver, &wsData);
 	if (wsResult != 0) {
 		SetPos(30, 30);
 		cout << "Failed to start wSock... ERROR: " << wsResult;
+		return;
 	}
 
 	SOCKET conSocket = socket(AF_INET, SOCK_STREAM, NULL);
@@ -180,14 +185,6 @@ void Game::ConnectW()
 		cout << "socket can't be created... ERROR: " << WSAGetLastError();
 		return;
 	}
-
-
-	/*DWORD nonBlocking = 1;
-	if (ioctlsocket(conSocket, FIONBIO, &nonBlocking) != 0)
-	{
-		printf("failed to set non-blocking socket\n");
-		return;
-	}*/
 
 	sockaddr_in hints;
 
@@ -205,34 +202,55 @@ void Game::ConnectW()
 		return;
 	}
 
-	char buf[4096];
-	string userInput;
+	ConData cData;
+	char* bufByte = new char[sizeof(ConData)];
+
+	int cX = 0, cY = 0;
 
 	do
 	{
-		SetPos(30, 28);
-		cout << "> ";
-		//SetPos(30, 28);
-		//getline(cin, userInput);
+		cData._x = player->GetX();
+		cData._y = player->GetY();
+		cData._shot = player->isShot();
 
-		if (userInput.size() > 0) {
-			int sendRes = send(conSocket, userInput.c_str(), userInput.size() + 1, 0);
+		ZeroMemory(bufByte, sizeof(bufByte));
+		memcpy(bufByte, &cData, sizeof(cData));
+
+		if (sizeof(bufByte) > 0) {
+			int sendRes = send(conSocket, bufByte, sizeof(bufByte), 0);
 			if (sendRes != SOCKET_ERROR) {
-				ZeroMemory(buf, 4096);
-				int bytesRecv = recv(conSocket, buf, 4096, 0);
+				ZeroMemory(bufByte, sizeof(bufByte));
+				int bytesRecv = recv(conSocket, bufByte, sizeof(bufByte), 0);
 				if (bytesRecv > 0) {
-					SetPos(30, 30);
-					cout << "Server> " << string(buf, 0, bytesRecv) << endl;
+
+					memcpy(&cData, bufByte, sizeof(bufByte));
+					wData.vBuf[cY][cX] = u' ';
+					cY = cData._y;
+					cX = cData._x;
+
+					if (player->Prepare()) {
+						
+						wData.vBuf[cY][cX] = u'#' | (Purple << 8);
+					}
+					else {
+						if (player->isShot()) {
+							player->SetX(cData._x);
+							player->SetY(cData._y);
+							if (cData._shot == true) {
+								player->Shot();
+							}
+						}
+					}
 				}
 			}
 		}
-		
-	} while (userInput.size() > 0);
+
+	} while (worldIsRun);
+
 
 	closesocket(conSocket);
 	WSACleanup();
 }
-
 void Game::DrawToMem()
 {
 	for (int i = 0; i < allObjectList.size(); i++)
@@ -249,21 +267,20 @@ void Game::RunWorld(bool& restart)
 	bool pause = false;
 	score = 0;
 
-	thread mPlayer([&]
-		{ ConnectW(); }
-	);
-
 	thread hotKeys([&]
 		{ HotKeys(pause); }
 	);
 
 	int tick = 0;
 
-	player = new Player(&wData, 3, 3, Blue);
+	player = new Player(&wData, 7, 7, Blue);
 	playerList.push_back(player);
 	allObjectList.push_back(player);
+	
+	thread mPlayer([&]
+		{ ConnectW(); }
+	);
 
-	char msgl[256];
 
 	while (worldIsRun) {
 

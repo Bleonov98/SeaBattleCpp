@@ -48,8 +48,6 @@ public:
 		plShips.resize(7);
 		cmShips.resize(7);
 
-		SetCompShips();
-
 		for (int i = 0; i < ROWS; i++)
 		{
 			for (int j = 0; j < COLS; j++)
@@ -93,10 +91,14 @@ public:
 	
 	bool GetEndSet(bool& win);
 
+	bool isShot();
+
 
 	void Computer();
 
 	void SetCompShips();
+
+	void SetSecondPlShips();
 
 private:
 
@@ -104,8 +106,9 @@ private:
 
 	int _shipType = SINGLE, _shipCnt = 0, _position = VERTICAL;
 	int _cmShipType = SINGLE, _cmShipCnt = 0, _cmPos = VERTICAL;
+	int _prepareCnt = 0;
 
-	bool singlePlayer = true;
+	bool singlePlayer = false, _shot;
 
 	char16_t dblShipVert[2][2]{
 		u"#",

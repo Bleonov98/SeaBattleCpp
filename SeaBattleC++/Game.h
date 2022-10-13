@@ -14,12 +14,14 @@ private:
     bool worldIsRun = true, win = false, singlePl = false, multiPl = false;
     int score = 0;
 
-    // CONNECTION SETTINGS
+    // CONNECTION SETTING
     string ipAdd = "192.168.0.156";
-    WSAData wsData;
 
-    WORD ver = MAKEWORD(2, 2);
-    int  wsResult = WSAStartup(ver, &wsData);
+    struct ConData {
+        int _x = 7;
+        int _y = 7;
+        bool _shot = false;
+    };
     // ----------
 
     HINSTANCE hInstance;
