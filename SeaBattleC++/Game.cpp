@@ -209,7 +209,7 @@ void Game::ConnectW()
 
 	do
 	{
-		cData._x = player->GetX();
+		cData._x = player->GetX() + 15;
 		cData._y = player->GetY();
 		cData._shot = player->isShot();
 
@@ -229,17 +229,13 @@ void Game::ConnectW()
 					cX = cData._x;
 
 					if (player->Prepare()) {
-						
 						wData.vBuf[cY][cX] = u'#' | (Purple << 8);
 					}
-					else {
-						if (player->isShot()) {
-							player->SetX(cData._x);
-							player->SetY(cData._y);
-							if (cData._shot == true) {
-								player->Shot();
-							}
-						}
+					else if (!player->Prepare() && !player->GetEnemyState()) {
+
+					}
+					else if (!player->Prepare() && player->GetEnemyState()) {
+
 					}
 				}
 			}

@@ -20,7 +20,7 @@ private:
     struct ConData {
         int _x = 7;
         int _y = 7;
-        bool _shot = false;
+        bool _shot = false, _prepare = true, _win = false;
     };
     // ----------
 

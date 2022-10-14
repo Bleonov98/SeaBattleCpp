@@ -98,7 +98,13 @@ public:
 
 	void SetCompShips();
 
-	void SetSecondPlShips();
+	
+
+	void SetEnemyCoord(vector<vector<pair<int, int>>> enemyCoordVec);
+
+	void SetEnemyState(bool rdy);
+
+	bool GetEnemyState();
 
 private:
 
@@ -149,7 +155,7 @@ private:
 	vector <pair<int, int>> missCmShips;
 
 	vector <pair<int, int>> checkAroudCrd;
-	bool algKill = false;
+	bool algKill = false, enemyReady = false;
 };
 
 

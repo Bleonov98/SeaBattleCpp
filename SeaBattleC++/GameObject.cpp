@@ -50,136 +50,69 @@ void Player::MoveCursor()
     }
 
     if (_prepare) {
-        if (_player) {
-            EraseShip();
 
-            if (_shipType == SINGLE) {
+        EraseShip();
+
+        if (_shipType == SINGLE) {
+            if ((GetAsyncKeyState(VK_RIGHT) & 0x8000) && _x <= 11) _x++;
+            else if ((GetAsyncKeyState(VK_LEFT) & 0x8000) && _x >= 4) _x--;
+            else if ((GetAsyncKeyState(VK_UP) & 0x8000) && _y >= 4) _y--;
+            else if ((GetAsyncKeyState(VK_DOWN) & 0x8000) && _y <= 10) _y++;
+        }
+        else if (_shipType == DBL) {
+            if (_position == VERTICAL) {
                 if ((GetAsyncKeyState(VK_RIGHT) & 0x8000) && _x <= 11) _x++;
+                else if ((GetAsyncKeyState(VK_LEFT) & 0x8000) && _x >= 4) _x--;
+                else if ((GetAsyncKeyState(VK_UP) & 0x8000) && _y >= 4) _y--;
+                else if ((GetAsyncKeyState(VK_DOWN) & 0x8000) && _y <= 9) _y++;
+            }
+            else {
+                if ((GetAsyncKeyState(VK_RIGHT) & 0x8000) && _x <= 10) _x++;
                 else if ((GetAsyncKeyState(VK_LEFT) & 0x8000) && _x >= 4) _x--;
                 else if ((GetAsyncKeyState(VK_UP) & 0x8000) && _y >= 4) _y--;
                 else if ((GetAsyncKeyState(VK_DOWN) & 0x8000) && _y <= 10) _y++;
             }
-            else if (_shipType == DBL) {
-                if (_position == VERTICAL) {
-                    if ((GetAsyncKeyState(VK_RIGHT) & 0x8000) && _x <= 11) _x++;
-                    else if ((GetAsyncKeyState(VK_LEFT) & 0x8000) && _x >= 4) _x--;
-                    else if ((GetAsyncKeyState(VK_UP) & 0x8000) && _y >= 4) _y--;
-                    else if ((GetAsyncKeyState(VK_DOWN) & 0x8000) && _y <= 9) _y++;
-                }
-                else {
-                    if ((GetAsyncKeyState(VK_RIGHT) & 0x8000) && _x <= 10) _x++;
-                    else if ((GetAsyncKeyState(VK_LEFT) & 0x8000) && _x >= 4) _x--;
-                    else if ((GetAsyncKeyState(VK_UP) & 0x8000) && _y >= 4) _y--;
-                    else if ((GetAsyncKeyState(VK_DOWN) & 0x8000) && _y <= 10) _y++;
-                }
-            }
-            else if (_shipType == TRPL) {
-                if (_position == VERTICAL) {
-                    if ((GetAsyncKeyState(VK_RIGHT) & 0x8000) && _x <= 11) _x++;
-                    else if ((GetAsyncKeyState(VK_LEFT) & 0x8000) && _x >= 4) _x--;
-                    else if ((GetAsyncKeyState(VK_UP) & 0x8000) && _y >= 4) _y--;
-                    else if ((GetAsyncKeyState(VK_DOWN) & 0x8000) && _y <= 8) _y++;
-                }
-                else {
-                    if ((GetAsyncKeyState(VK_RIGHT) & 0x8000) && _x <= 9) _x++;
-                    else if ((GetAsyncKeyState(VK_LEFT) & 0x8000) && _x >= 4) _x--;
-                    else if ((GetAsyncKeyState(VK_UP) & 0x8000) && _y >= 4) _y--;
-                    else if ((GetAsyncKeyState(VK_DOWN) & 0x8000) && _y <= 10) _y++;
-                }
-            }
-            else if (_shipType == BIG) {
-                if (_position == VERTICAL) {
-                    if ((GetAsyncKeyState(VK_RIGHT) & 0x8000) && _x <= 11) _x++;
-                    else if ((GetAsyncKeyState(VK_LEFT) & 0x8000) && _x >= 4) _x--;
-                    else if ((GetAsyncKeyState(VK_UP) & 0x8000) && _y >= 4) _y--;
-                    else if ((GetAsyncKeyState(VK_DOWN) & 0x8000) && _y <= 7) _y++;
-                }
-                else {
-                    if ((GetAsyncKeyState(VK_RIGHT) & 0x8000) && _x <= 8) _x++;
-                    else if ((GetAsyncKeyState(VK_LEFT) & 0x8000) && _x >= 4) _x--;
-                    else if ((GetAsyncKeyState(VK_UP) & 0x8000) && _y >= 4) _y--;
-                    else if ((GetAsyncKeyState(VK_DOWN) & 0x8000) && _y <= 10) _y++;
-                }
-            }
-
-
-            if (GetAsyncKeyState(VK_RETURN) & 0x8000) {
-                Sleep(200);
-                SetShip();
-            }
-            if (GetAsyncKeyState(VK_SPACE) & 0x8000) {
-                RotateShip();
-            }
-
-            DrawShip();
-
         }
-        else {
-
-            EraseShip();
-
-            if (_cmShipType == SINGLE) {
-                if ((GetAsyncKeyState(VK_RIGHT) & 0x8000) && _x <= 26) _x++;
-                else if ((GetAsyncKeyState(VK_LEFT) & 0x8000) && _x > 18) _x--;
+        else if (_shipType == TRPL) {
+            if (_position == VERTICAL) {
+                if ((GetAsyncKeyState(VK_RIGHT) & 0x8000) && _x <= 11) _x++;
+                else if ((GetAsyncKeyState(VK_LEFT) & 0x8000) && _x >= 4) _x--;
+                else if ((GetAsyncKeyState(VK_UP) & 0x8000) && _y >= 4) _y--;
+                else if ((GetAsyncKeyState(VK_DOWN) & 0x8000) && _y <= 8) _y++;
+            }
+            else {
+                if ((GetAsyncKeyState(VK_RIGHT) & 0x8000) && _x <= 9) _x++;
+                else if ((GetAsyncKeyState(VK_LEFT) & 0x8000) && _x >= 4) _x--;
                 else if ((GetAsyncKeyState(VK_UP) & 0x8000) && _y >= 4) _y--;
                 else if ((GetAsyncKeyState(VK_DOWN) & 0x8000) && _y <= 10) _y++;
             }
-            else if (_cmShipType == DBL) {
-                if (_cmPos == VERTICAL) {
-                    if ((GetAsyncKeyState(VK_RIGHT) & 0x8000) && _x <= 26) _x++;
-                    else if ((GetAsyncKeyState(VK_LEFT) & 0x8000) && _x > 18) _x--;
-                    else if ((GetAsyncKeyState(VK_UP) & 0x8000) && _y >= 4) _y--;
-                    else if ((GetAsyncKeyState(VK_DOWN) & 0x8000) && _y <= 9) _y++;
-                }
-                else {
-                    if ((GetAsyncKeyState(VK_RIGHT) & 0x8000) && _x <= 25) _x++;
-                    else if ((GetAsyncKeyState(VK_LEFT) & 0x8000) && _x > 18) _x--;
-                    else if ((GetAsyncKeyState(VK_UP) & 0x8000) && _y >= 4) _y--;
-                    else if ((GetAsyncKeyState(VK_DOWN) & 0x8000) && _y <= 10) _y++;
-                }
-            }
-            else if (_cmShipType == TRPL) {
-                if (_cmPos == VERTICAL) {
-                    if ((GetAsyncKeyState(VK_RIGHT) & 0x8000) && _x <= 26) _x++;
-                    else if ((GetAsyncKeyState(VK_LEFT) & 0x8000) && _x > 18) _x--;
-                    else if ((GetAsyncKeyState(VK_UP) & 0x8000) && _y >= 4) _y--;
-                    else if ((GetAsyncKeyState(VK_DOWN) & 0x8000) && _y <= 8) _y++;
-                }
-                else {
-                    if ((GetAsyncKeyState(VK_RIGHT) & 0x8000) && _x <= 24) _x++;
-                    else if ((GetAsyncKeyState(VK_LEFT) & 0x8000) && _x > 18) _x--;
-                    else if ((GetAsyncKeyState(VK_UP) & 0x8000) && _y >= 4) _y--;
-                    else if ((GetAsyncKeyState(VK_DOWN) & 0x8000) && _y <= 10) _y++;
-                }
-            }
-            else if (_cmShipType == BIG) {
-                if (_cmPos == VERTICAL) {
-                    if ((GetAsyncKeyState(VK_RIGHT) & 0x8000) && _x <= 26) _x++;
-                    else if ((GetAsyncKeyState(VK_LEFT) & 0x8000) && _x > 18) _x--;
-                    else if ((GetAsyncKeyState(VK_UP) & 0x8000) && _y >= 4) _y--;
-                    else if ((GetAsyncKeyState(VK_DOWN) & 0x8000) && _y <= 7) _y++;
-                }
-                else {
-                    if ((GetAsyncKeyState(VK_RIGHT) & 0x8000) && _x <= 23) _x++;
-                    else if ((GetAsyncKeyState(VK_LEFT) & 0x8000) && _x > 18) _x--;
-                    else if ((GetAsyncKeyState(VK_UP) & 0x8000) && _y >= 4) _y--;
-                    else if ((GetAsyncKeyState(VK_DOWN) & 0x8000) && _y <= 10) _y++;
-                }
-            }
-
-
-            if (GetAsyncKeyState(VK_RETURN) & 0x8000) {
-                Sleep(200);
-                SetCompShips();
-            }
-            if (GetAsyncKeyState(VK_SPACE) & 0x8000) {
-                RotateShip();
-            }
-
-            DrawShip();
-
         }
-        
+        else if (_shipType == BIG) {
+            if (_position == VERTICAL) {
+                if ((GetAsyncKeyState(VK_RIGHT) & 0x8000) && _x <= 11) _x++;
+                else if ((GetAsyncKeyState(VK_LEFT) & 0x8000) && _x >= 4) _x--;
+                else if ((GetAsyncKeyState(VK_UP) & 0x8000) && _y >= 4) _y--;
+                else if ((GetAsyncKeyState(VK_DOWN) & 0x8000) && _y <= 7) _y++;
+            }
+            else {
+                if ((GetAsyncKeyState(VK_RIGHT) & 0x8000) && _x <= 8) _x++;
+                else if ((GetAsyncKeyState(VK_LEFT) & 0x8000) && _x >= 4) _x--;
+                else if ((GetAsyncKeyState(VK_UP) & 0x8000) && _y >= 4) _y--;
+                else if ((GetAsyncKeyState(VK_DOWN) & 0x8000) && _y <= 10) _y++;
+            }
+        }
+
+
+        if (GetAsyncKeyState(VK_RETURN) & 0x8000) {
+            Sleep(200);
+            SetShip();
+        }
+        if (GetAsyncKeyState(VK_SPACE) & 0x8000) {
+            RotateShip();
+        }
+
+        DrawShip();
+
     }
     else {
         EraseCursor();
@@ -200,200 +133,101 @@ void Player::MoveCursor()
 
 void Player::DrawShip()
 {
-    if (_player) {
-        if (_shipType == SINGLE) {
-            wData->vBuf[_y][_x] = u'#' | (_color << 8);
-        }
-        else if (_shipType == DBL) {
-            if (_position == VERTICAL) {
-                for (int height = 0; height < 2; height++)
-                {
-                    wData->vBuf[_y + height][_x] = dblShipVert[height][0] | (_color << 8);
-                }
-            }
-            else {
-                for (int width = 0; width < 2; width++)
-                {
-                    wData->vBuf[_y][_x + width] = dblShipHor[0][width] | (_color << 8);
-                }
+    if (_shipType == SINGLE) {
+        wData->vBuf[_y][_x] = u'#' | (_color << 8);
+    }
+    else if (_shipType == DBL) {
+        if (_position == VERTICAL) {
+            for (int height = 0; height < 2; height++)
+            {
+                wData->vBuf[_y + height][_x] = dblShipVert[height][0] | (_color << 8);
             }
         }
-        else if (_shipType == TRPL) {
-            if (_position == VERTICAL) {
-                for (int height = 0; height < 3; height++)
-                {
-                    wData->vBuf[_y + height][_x] = trplShipVert[height][0] | (_color << 8);
-                }
-            }
-            else {
-                for (int width = 0; width < 3; width++)
-                {
-                    wData->vBuf[_y][_x + width] = trplShipHor[0][width] | (_color << 8);
-                }
-            }
-        }
-        else if (_shipType == BIG) {
-            if (_position == VERTICAL) {
-                for (int height = 0; height < 4; height++)
-                {
-                    wData->vBuf[_y + height][_x] = bigShipVert[height][0] | (_color << 8);
-                }
-            }
-            else {
-                for (int width = 0; width < 4; width++)
-                {
-                    wData->vBuf[_y][_x + width] = bigShipHor[0][width] | (_color << 8);
-                }
+        else {
+            for (int width = 0; width < 2; width++)
+            {
+                wData->vBuf[_y][_x + width] = dblShipHor[0][width] | (_color << 8);
             }
         }
     }
-    else {
-        if (_cmShipType == SINGLE) {
-            wData->vBuf[_y][_x] = u'#' | (_color << 8);
-        }
-        else if (_cmShipType == DBL) {
-            if (_cmPos == VERTICAL) {
-                for (int height = 0; height < 2; height++)
-                {
-                    wData->vBuf[_y + height][_x] = dblShipVert[height][0] | (_color << 8);
-                }
-            }
-            else {
-                for (int width = 0; width < 2; width++)
-                {
-                    wData->vBuf[_y][_x + width] = dblShipHor[0][width] | (_color << 8);
-                }
+    else if (_shipType == TRPL) {
+        if (_position == VERTICAL) {
+            for (int height = 0; height < 3; height++)
+            {
+                wData->vBuf[_y + height][_x] = trplShipVert[height][0] | (_color << 8);
             }
         }
-        else if (_cmShipType == TRPL) {
-            if (_cmPos == VERTICAL) {
-                for (int height = 0; height < 3; height++)
-                {
-                    wData->vBuf[_y + height][_x] = trplShipVert[height][0] | (_color << 8);
-                }
-            }
-            else {
-                for (int width = 0; width < 3; width++)
-                {
-                    wData->vBuf[_y][_x + width] = trplShipHor[0][width] | (_color << 8);
-                }
-            }
-        }
-        else if (_cmShipType == BIG) {
-            if (_cmPos == VERTICAL) {
-                for (int height = 0; height < 4; height++)
-                {
-                    wData->vBuf[_y + height][_x] = bigShipVert[height][0] | (_color << 8);
-                }
-            }
-            else {
-                for (int width = 0; width < 4; width++)
-                {
-                    wData->vBuf[_y][_x + width] = bigShipHor[0][width] | (_color << 8);
-                }
+        else {
+            for (int width = 0; width < 3; width++)
+            {
+                wData->vBuf[_y][_x + width] = trplShipHor[0][width] | (_color << 8);
             }
         }
     }
-
+    else if (_shipType == BIG) {
+        if (_position == VERTICAL) {
+            for (int height = 0; height < 4; height++)
+            {
+                wData->vBuf[_y + height][_x] = bigShipVert[height][0] | (_color << 8);
+            }
+        }
+        else {
+            for (int width = 0; width < 4; width++)
+            {
+                wData->vBuf[_y][_x + width] = bigShipHor[0][width] | (_color << 8);
+            }
+        }
+    }
 }
 
 void Player::EraseShip()
+
 {
-    if (_player) {
-        if (_shipType == SINGLE) {
-            wData->vBuf[_y][_x] = u' ';
-        }
-        else if (_shipType == DBL) {
-            if (_position == VERTICAL) {
-                for (int height = 0; height < 2; height++)
-                {
-                    wData->vBuf[_y + height][_x] = u' ';
-                }
-            }
-            else {
-                for (int width = 0; width < 2; width++)
-                {
-                    wData->vBuf[_y][_x + width] = u' ';
-                }
+    if (_shipType == SINGLE) {
+        wData->vBuf[_y][_x] = u' ';
+    }
+    else if (_shipType == DBL) {
+        if (_position == VERTICAL) {
+            for (int height = 0; height < 2; height++)
+            {
+                wData->vBuf[_y + height][_x] = u' ';
             }
         }
-        else if (_shipType == TRPL) {
-            if (_position == VERTICAL) {
-                for (int height = 0; height < 3; height++)
-                {
-                    wData->vBuf[_y + height][_x] = u' ';
-                }
-            }
-            else {
-                for (int width = 0; width < 3; width++)
-                {
-                    wData->vBuf[_y][_x + width] = u' ';
-                }
-            }
-        }
-        else if (_shipType == BIG) {
-            if (_position == VERTICAL) {
-                for (int height = 0; height < 4; height++)
-                {
-                    wData->vBuf[_y + height][_x] = u' ';
-                }
-            }
-            else {
-                for (int width = 0; width < 4; width++)
-                {
-                    wData->vBuf[_y][_x + width] = u' ';
-                }
+        else {
+            for (int width = 0; width < 2; width++)
+            {
+                wData->vBuf[_y][_x + width] = u' ';
             }
         }
     }
-    else {
-        if (_cmShipType == SINGLE) {
-            wData->vBuf[_y][_x] = u' ';
-        }
-        else if (_cmShipType == DBL) {
-            if (_cmPos == VERTICAL) {
-                for (int height = 0; height < 2; height++)
-                {
-                    wData->vBuf[_y + height][_x] = u' ';
-                }
-            }
-            else {
-                for (int width = 0; width < 2; width++)
-                {
-                    wData->vBuf[_y][_x + width] = u' ';
-                }
+    else if (_shipType == TRPL) {
+        if (_position == VERTICAL) {
+            for (int height = 0; height < 3; height++)
+            {
+                wData->vBuf[_y + height][_x] = u' ';
             }
         }
-        else if (_cmShipType == TRPL) {
-            if (_cmPos == VERTICAL) {
-                for (int height = 0; height < 3; height++)
-                {
-                    wData->vBuf[_y + height][_x] = u' ';
-                }
-            }
-            else {
-                for (int width = 0; width < 3; width++)
-                {
-                    wData->vBuf[_y][_x + width] = u' ';
-                }
-            }
-        }
-        else if (_cmShipType == BIG) {
-            if (_cmPos == VERTICAL) {
-                for (int height = 0; height < 4; height++)
-                {
-                    wData->vBuf[_y + height][_x] = u' ';
-                }
-            }
-            else {
-                for (int width = 0; width < 4; width++)
-                {
-                    wData->vBuf[_y][_x + width] = u' ';
-                }
+        else {
+            for (int width = 0; width < 3; width++)
+            {
+                wData->vBuf[_y][_x + width] = u' ';
             }
         }
     }
-    
+    else if (_shipType == BIG) {
+        if (_position == VERTICAL) {
+            for (int height = 0; height < 4; height++)
+            {
+                wData->vBuf[_y + height][_x] = u' ';
+            }
+        }
+        else {
+            for (int width = 0; width < 4; width++)
+            {
+                wData->vBuf[_y][_x + width] = u' ';
+            }
+        }
+    }
 }
 
 int Player::GetShipType()
@@ -413,36 +247,9 @@ void Player::ChangeShipType()
         _shipType = BIG;
     }
     else if (_shipCnt == 7) {
-        _shipType = 0;
-
-        if (singlePlayer) _prepare = false;
-        else _prepareCnt++;
-        
-        _x = 20, _y = 7;
-
-        _shipCnt = 0;
-        _player = !_player;
-    }
-
-    if (!singlePlayer) {
-        if (_cmShipType == SINGLE && _cmShipCnt == 2) {
-            _cmShipType = DBL;
-        }
-        else if (_cmShipType == DBL && _cmShipCnt == 4) {
-            _cmShipType = TRPL;
-        }
-        else if (_cmShipType == TRPL && _cmShipCnt == 6) {
-            _cmShipType = BIG;
-        }
-        else if (_cmShipCnt == 7) {
-            _cmShipType = 0;
-            _prepareCnt++;
-        }
-    }
-
-    if (_prepareCnt >= 2) {
         _prepare = false;
-        _player = !_player;
+   
+        _x = 20, _y = 7, _shipCnt = 0, _shipType = 0;
     }
 }
 
@@ -758,11 +565,7 @@ void Player::NextPlayer()
 {
     _player = !_player;
     EraseCursor();
-    if (!_player) {
-        _x = 4;
-        _y = 3;
-    }
-    else {
+    if (_player) {
         _x = 18;
         _y = 3;
     }
@@ -948,560 +751,405 @@ bool Player::isShot()
 
 void Player::Computer()
 {
-    if (singlePlayer) {
-        if (checkAroudCrd.empty()) {
-            algKill = false;
-        }
+    if (checkAroudCrd.empty()) {
+        algKill = false;
+    }
 
-        if (!algKill) {
+    if (!algKill) {
+        _x = 3 + rand() % 10;
+        _y = 3 + rand() % 9;
+    }
+    else if (algKill && checkAroudCrd.size() == 1) {
+        if (checkAroudCrd[0].first + 1 <= 12) checkAroudCrd.push_back(make_pair(checkAroudCrd[0].first + 1, checkAroudCrd[0].second));
+        if (checkAroudCrd[0].first - 1 > 3) checkAroudCrd.push_back(make_pair(checkAroudCrd[0].first - 1, checkAroudCrd[0].second));
+        if (checkAroudCrd[0].second - 1 >= 3) checkAroudCrd.push_back(make_pair(checkAroudCrd[0].first, checkAroudCrd[0].second - 1));
+        if (checkAroudCrd[0].second + 1 <= 10) checkAroudCrd.push_back(make_pair(checkAroudCrd[0].first, checkAroudCrd[0].second + 1));
+
+        checkAroudCrd.erase(checkAroudCrd.begin());
+    }
+
+    for (int i = 0; i < missPlShips.size(); i++)
+    {
+        if (_x == missPlShips[i].first && _y == missPlShips[i].second && !algKill) {
             _x = 3 + rand() % 10;
             _y = 3 + rand() % 9;
+            i = -1;
         }
-        else if (algKill && checkAroudCrd.size() == 1) {
-            if (checkAroudCrd[0].first + 1 <= 12) checkAroudCrd.push_back(make_pair(checkAroudCrd[0].first + 1, checkAroudCrd[0].second));
-            if (checkAroudCrd[0].first - 1 > 3) checkAroudCrd.push_back(make_pair(checkAroudCrd[0].first - 1, checkAroudCrd[0].second));
-            if (checkAroudCrd[0].second - 1 >= 3) checkAroudCrd.push_back(make_pair(checkAroudCrd[0].first, checkAroudCrd[0].second - 1));
-            if (checkAroudCrd[0].second + 1 <= 10) checkAroudCrd.push_back(make_pair(checkAroudCrd[0].first, checkAroudCrd[0].second + 1));
-
-            checkAroudCrd.erase(checkAroudCrd.begin());
-        }
-
-        for (int i = 0; i < missPlShips.size(); i++)
-        {
-            if (_x == missPlShips[i].first && _y == missPlShips[i].second && !algKill) {
-                _x = 3 + rand() % 10;
-                _y = 3 + rand() % 9;
-                i = -1;
-            }
-            else if (algKill && !checkAroudCrd.empty()) {
-                for (int j = 0; j < checkAroudCrd.size(); j++)
-                {
-                    if (checkAroudCrd[j].first == missPlShips[i].first && checkAroudCrd[j].second == missPlShips[i].second && algKill) {
-                        checkAroudCrd.erase(checkAroudCrd.begin() + j);
-                        i = -1;
-                        break;
-                    }
+        else if (algKill && !checkAroudCrd.empty()) {
+            for (int j = 0; j < checkAroudCrd.size(); j++)
+            {
+                if (checkAroudCrd[j].first == missPlShips[i].first && checkAroudCrd[j].second == missPlShips[i].second && algKill) {
+                    checkAroudCrd.erase(checkAroudCrd.begin() + j);
+                    i = -1;
+                    break;
                 }
             }
         }
-        for (int i = 0; i < damagePlShips.size(); i++)
-        {
-            if (_x == damagePlShips[i].first && _y == damagePlShips[i].second && !algKill) {
-                _x = 3 + rand() % 10;
-                _y = 3 + rand() % 9;
-                i = -1;
-            }
-            else if (algKill && !checkAroudCrd.empty()) {
-                for (int j = 0; j < checkAroudCrd.size(); j++)
-                {
-                    if (checkAroudCrd[j].first == damagePlShips[i].first && checkAroudCrd[j].second == damagePlShips[i].second && algKill) {
-                        checkAroudCrd.erase(checkAroudCrd.begin() + j);
-                        i = -1;
-                        break;
-                    }
+    }
+    for (int i = 0; i < damagePlShips.size(); i++)
+    {
+        if (_x == damagePlShips[i].first && _y == damagePlShips[i].second && !algKill) {
+            _x = 3 + rand() % 10;
+            _y = 3 + rand() % 9;
+            i = -1;
+        }
+        else if (algKill && !checkAroudCrd.empty()) {
+            for (int j = 0; j < checkAroudCrd.size(); j++)
+            {
+                if (checkAroudCrd[j].first == damagePlShips[i].first && checkAroudCrd[j].second == damagePlShips[i].second && algKill) {
+                    checkAroudCrd.erase(checkAroudCrd.begin() + j);
+                    i = -1;
+                    break;
                 }
             }
         }
-
-        if (algKill && !checkAroudCrd.empty()) {
-            _x = checkAroudCrd.back().first;
-            _y = checkAroudCrd.back().second;
-            checkAroudCrd.pop_back();
-        }
-
-        Shot();
     }
-    else {
-        if ((GetAsyncKeyState(VK_RIGHT) & 0x8000) && _x <= 11) _x++;
-        else if ((GetAsyncKeyState(VK_LEFT) & 0x8000) && _x > 3) _x--;
-        else if ((GetAsyncKeyState(VK_UP) & 0x8000) && _y >= 4) _y--;
-        else if ((GetAsyncKeyState(VK_DOWN) & 0x8000) && _y <= 10) _y++;
 
-        else if (GetAsyncKeyState(VK_RETURN) & 0x8000) Shot();
+    if (algKill && !checkAroudCrd.empty()) {
+        _x = checkAroudCrd.back().first;
+        _y = checkAroudCrd.back().second;
+        checkAroudCrd.pop_back();
     }
+
+    Shot();
 }
 
 void Player::SetCompShips()
 {
-    if (singlePlayer) {
-        srand(time(NULL));
+    srand(time(NULL));
 
-        int cX, cY;
+    int cX, cY;
 
-        int check = 0;
-        bool newCoord = false;
+    int check = 0;
+    bool newCoord = false;
 
-        for (int i = 0; i < 7; i++)
+    for (int i = 0; i < 7; i++)
+    {
+        if (i % 2 == 0 && i > 0) {
+            _cmShipType++;
+        }
+
+        _cmPos = rand() % 2;
+
+        cX = 18 + rand() % 8;
+        cY = 3 + rand() % 8;
+
+        for (int k = 0; k < cmShips.size(); k++)
         {
-            if (i % 2 == 0 && i > 0) {
-                _cmShipType++;
-            }
-
-            _cmPos = rand() % 2;
-
-            cX = 18 + rand() % 8;
-            cY = 3 + rand() % 8;
-
-            for (int k = 0; k < cmShips.size(); k++)
+            for (int j = 0; j < cmShips[k].size(); j++)
             {
-                for (int j = 0; j < cmShips[k].size(); j++)
-                {
-                    if (cX == cmShips[k][j].first && cY == cmShips[k][j].second) {
+                if (cX == cmShips[k][j].first && cY == cmShips[k][j].second) {
+                    cX = 18 + rand() % 8;
+                    cY = 3 + rand() % 8;
+                    k = -1;
+                    break;
+                }
+            }
+        }
+
+
+
+        newCoord = false;
+        check = 0;
+
+        for (int k = 0; k < cmShips.size(); k++)
+        {
+            for (int j = 0; j < cmShips[k].size(); j++)
+            {
+                bool brk = false;
+                if (_cmShipType == SINGLE) {
+                    if ((cX == cmShips[k][j].first && cY == cmShips[k][j].second) ||
+                        (cX == cmShips[k][j].first + 1 && cY == cmShips[k][j].second) ||
+                        (cX == cmShips[k][j].first - 1 && cY == cmShips[k][j].second) ||
+                        (cX == cmShips[k][j].first && cY == cmShips[k][j].second + 1) ||
+                        (cX == cmShips[k][j].first && cY == cmShips[k][j].second - 1) ||
+                        (cX == cmShips[k][j].first + 1 && cY == cmShips[k][j].second + 1) ||
+                        (cX == cmShips[k][j].first - 1 && cY == cmShips[k][j].second - 1) ||
+                        (cX == cmShips[k][j].first + 1 && cY == cmShips[k][j].second - 1) ||
+                        (cX == cmShips[k][j].first - 1 && cY == cmShips[k][j].second + 1)) {
                         cX = 18 + rand() % 8;
                         cY = 3 + rand() % 8;
+
                         k = -1;
                         break;
                     }
                 }
+                else if (_cmShipType == DBL) {
+                    if (_cmPos == VERTICAL) {
+                        for (int s = 0; s < 2; s++)
+                        {
+                            if ((cX == cmShips[k][j].first && cY + s == cmShips[k][j].second) ||
+                                (cX == cmShips[k][j].first + 1 && cY + s == cmShips[k][j].second) ||
+                                (cX == cmShips[k][j].first - 1 && cY + s == cmShips[k][j].second) ||
+                                (cX == cmShips[k][j].first && cY + s == cmShips[k][j].second + 1) ||
+                                (cX == cmShips[k][j].first && cY + s == cmShips[k][j].second - 1) ||
+                                (cX == cmShips[k][j].first + 1 && cY + s == cmShips[k][j].second + 1) ||
+                                (cX == cmShips[k][j].first - 1 && cY + s == cmShips[k][j].second - 1) ||
+                                (cX == cmShips[k][j].first + 1 && cY + s == cmShips[k][j].second - 1) ||
+                                (cX == cmShips[k][j].first - 1 && cY + s == cmShips[k][j].second + 1))
+                            {
+                                cX = 18 + rand() % 8;
+                                cY = 3 + rand() % 8;
+                                _cmPos = rand() % 2;
+                                k = -1;
+                                brk = true;
+                            }
+                            if (cY + s >= 11) {
+                                cX = 18 + rand() % 8;
+                                cY = 3 + rand() % 8;
+                                _cmPos = rand() % 2;
+                                k = -1;
+                                brk = true;
+                            }
+                            if (brk) break;
+                        }
+                        if (brk) break;
+                    }
+                    else {
+                        for (int s = 0; s < 2; s++)
+                        {
+                            if ((cX + s == cmShips[k][j].first && cY == cmShips[k][j].second) ||
+                                (cX + s == cmShips[k][j].first + 1 && cY == cmShips[k][j].second) ||
+                                (cX + s == cmShips[k][j].first - 1 && cY == cmShips[k][j].second) ||
+                                (cX + s == cmShips[k][j].first && cY == cmShips[k][j].second + 1) ||
+                                (cX + s == cmShips[k][j].first && cY == cmShips[k][j].second - 1) ||
+                                (cX + s == cmShips[k][j].first + 1 && cY == cmShips[k][j].second + 1) ||
+                                (cX + s == cmShips[k][j].first - 1 && cY == cmShips[k][j].second - 1) ||
+                                (cX + s == cmShips[k][j].first + 1 && cY == cmShips[k][j].second - 1) ||
+                                (cX + s == cmShips[k][j].first - 1 && cY == cmShips[k][j].second + 1))
+                            {
+                                cX = 18 + rand() % 8;
+                                cY = 3 + rand() % 8;
+                                _cmPos = rand() % 2;
+                                k = -1;
+                                brk = true;
+                            }
+                            if (cX + s >= 27) {
+                                cX = 18 + rand() % 8;
+                                cY = 3 + rand() % 8;
+                                _cmPos = rand() % 2;
+                                k = -1;
+                                brk = true;
+                            }
+                            if (brk) break;
+                        }
+                        if (brk) break;
+                    }
+                }
+                else if (_cmShipType == TRPL) {
+                    if (_cmPos == VERTICAL) {
+                        for (int s = 0; s < 3; s++)
+                        {
+                            if ((cX == cmShips[k][j].first && cY + s == cmShips[k][j].second) ||
+                                (cX == cmShips[k][j].first + 1 && cY + s == cmShips[k][j].second) ||
+                                (cX == cmShips[k][j].first - 1 && cY + s == cmShips[k][j].second) ||
+                                (cX == cmShips[k][j].first && cY + s == cmShips[k][j].second + 1) ||
+                                (cX == cmShips[k][j].first && cY + s == cmShips[k][j].second - 1) ||
+                                (cX == cmShips[k][j].first + 1 && cY + s == cmShips[k][j].second + 1) ||
+                                (cX == cmShips[k][j].first - 1 && cY + s == cmShips[k][j].second - 1) ||
+                                (cX == cmShips[k][j].first + 1 && cY + s == cmShips[k][j].second - 1) ||
+                                (cX == cmShips[k][j].first - 1 && cY + s == cmShips[k][j].second + 1))
+                            {
+                                cX = 18 + rand() % 8;
+                                cY = 3 + rand() % 8;
+                                _cmPos = rand() % 2;
+                                k = -1;
+                                brk = true;
+                            }
+                            if (cY + s >= 11) {
+                                cX = 18 + rand() % 8;
+                                cY = 3 + rand() % 8;
+                                _cmPos = rand() % 2;
+                                k = -1;
+                                brk = true;
+                            }
+                            if (brk) break;
+
+                        }
+                        if (brk) break;
+                    }
+                    else {
+                        for (int s = 0; s < 3; s++)
+                        {
+                            if ((cX + s == cmShips[k][j].first && cY == cmShips[k][j].second) ||
+                                (cX + s == cmShips[k][j].first + 1 && cY == cmShips[k][j].second) ||
+                                (cX + s == cmShips[k][j].first - 1 && cY == cmShips[k][j].second) ||
+                                (cX + s == cmShips[k][j].first && cY == cmShips[k][j].second + 1) ||
+                                (cX + s == cmShips[k][j].first && cY == cmShips[k][j].second - 1) ||
+                                (cX + s == cmShips[k][j].first + 1 && cY == cmShips[k][j].second + 1) ||
+                                (cX + s == cmShips[k][j].first - 1 && cY == cmShips[k][j].second - 1) ||
+                                (cX + s == cmShips[k][j].first + 1 && cY == cmShips[k][j].second - 1) ||
+                                (cX + s == cmShips[k][j].first - 1 && cY == cmShips[k][j].second + 1))
+                            {
+                                cX = 18 + rand() % 8;
+                                cY = 3 + rand() % 8;
+                                _cmPos = rand() % 2;
+                                k = -1;
+                                brk = true;
+                            }
+                            if (cX + s >= 27) {
+                                cX = 18 + rand() % 8;
+                                cY = 3 + rand() % 8;
+                                _cmPos = rand() % 2;
+                                k = -1;
+                                brk = true;
+                            }
+                            if (brk) break;
+                        }
+                        if (brk) break;
+                    }
+                }
+                else if (_cmShipType == BIG) {
+                    if (_cmPos == VERTICAL) {
+                        for (int s = 0; s < 4; s++)
+                        {
+                            if ((cX == cmShips[k][j].first && cY + s == cmShips[k][j].second) ||
+                                (cX == cmShips[k][j].first + 1 && cY + s == cmShips[k][j].second) ||
+                                (cX == cmShips[k][j].first - 1 && cY + s == cmShips[k][j].second) ||
+                                (cX == cmShips[k][j].first && cY + s == cmShips[k][j].second + 1) ||
+                                (cX == cmShips[k][j].first && cY + s == cmShips[k][j].second - 1) ||
+                                (cX == cmShips[k][j].first + 1 && cY + s == cmShips[k][j].second + 1) ||
+                                (cX == cmShips[k][j].first - 1 && cY + s == cmShips[k][j].second - 1) ||
+                                (cX == cmShips[k][j].first + 1 && cY + s == cmShips[k][j].second - 1) ||
+                                (cX == cmShips[k][j].first - 1 && cY + s == cmShips[k][j].second + 1))
+                            {
+                                cX = 18 + rand() % 8;
+                                cY = 3 + rand() % 8;
+                                _cmPos = rand() % 2;
+                                k = -1;
+                                brk = true;
+                            }
+                            if (cY + s >= 11) {
+                                cX = 18 + rand() % 8;
+                                cY = 3 + rand() % 8;
+                                _cmPos = rand() % 2;
+                                k = -1;
+                                brk = true;
+                            }
+                            if (brk) break;
+
+                        }
+                        if (brk) break;
+                    }
+                    else {
+                        for (int s = 0; s < 4; s++)
+                        {
+                            if ((cX + s == cmShips[k][j].first && cY == cmShips[k][j].second) ||
+                                (cX + s == cmShips[k][j].first + 1 && cY == cmShips[k][j].second) ||
+                                (cX + s == cmShips[k][j].first - 1 && cY == cmShips[k][j].second) ||
+                                (cX + s == cmShips[k][j].first && cY == cmShips[k][j].second + 1) ||
+                                (cX + s == cmShips[k][j].first && cY == cmShips[k][j].second - 1) ||
+                                (cX + s == cmShips[k][j].first + 1 && cY == cmShips[k][j].second + 1) ||
+                                (cX + s == cmShips[k][j].first - 1 && cY == cmShips[k][j].second - 1) ||
+                                (cX + s == cmShips[k][j].first + 1 && cY == cmShips[k][j].second - 1) ||
+                                (cX + s == cmShips[k][j].first - 1 && cY == cmShips[k][j].second + 1))
+                            {
+                                cX = 18 + rand() % 8;
+                                cY = 3 + rand() % 8;
+                                _cmPos = rand() % 2;
+                                k = -1;
+                                brk = true;
+                            }
+                            if (cX + s >= 27) {
+                                cX = 18 + rand() % 8;
+                                cY = 3 + rand() % 8;
+                                _cmPos = rand() % 2;
+                                k = -1;
+                                brk = true;
+                            }
+                            if (brk) break;
+                        }
+                        if (brk) break;
+                    }
+                }
+
+                check++;
+                if (check >= 200) {
+                    _cmShipType = 0;
+                    cmShips[k].clear();
+                    i = -1;
+                    check = 0;
+                    newCoord = true;
+                    break;
+                }
             }
 
+            if (newCoord) break;
 
+        }
+        if (newCoord) {
+            continue;
+        }
 
-            newCoord = false;
-            check = 0;
+        _cmShipCnt++;
 
-            for (int k = 0; k < cmShips.size(); k++)
-            {
-                for (int j = 0; j < cmShips[k].size(); j++)
+        if (_cmShipType == SINGLE) {
+            cmShips[_cmShipCnt - 1].push_back(make_pair(cX, cY));
+        }
+        else if (_cmShipType == DBL) {
+            if (_cmPos == VERTICAL) {
+                for (int height = 0; height < 2; height++)
                 {
-                    bool brk = false;
-                    if (_cmShipType == SINGLE) {
-                        if ((cX == cmShips[k][j].first && cY == cmShips[k][j].second) ||
-                            (cX == cmShips[k][j].first + 1 && cY == cmShips[k][j].second) ||
-                            (cX == cmShips[k][j].first - 1 && cY == cmShips[k][j].second) ||
-                            (cX == cmShips[k][j].first && cY == cmShips[k][j].second + 1) ||
-                            (cX == cmShips[k][j].first && cY == cmShips[k][j].second - 1) ||
-                            (cX == cmShips[k][j].first + 1 && cY == cmShips[k][j].second + 1) ||
-                            (cX == cmShips[k][j].first - 1 && cY == cmShips[k][j].second - 1) ||
-                            (cX == cmShips[k][j].first + 1 && cY == cmShips[k][j].second - 1) ||
-                            (cX == cmShips[k][j].first - 1 && cY == cmShips[k][j].second + 1)) {
-                            cX = 18 + rand() % 8;
-                            cY = 3 + rand() % 8;
-
-                            k = -1;
-                            break;
-                        }
-                    }
-                    else if (_cmShipType == DBL) {
-                        if (_cmPos == VERTICAL) {
-                            for (int s = 0; s < 2; s++)
-                            {
-                                if ((cX == cmShips[k][j].first && cY + s == cmShips[k][j].second) ||
-                                    (cX == cmShips[k][j].first + 1 && cY + s == cmShips[k][j].second) ||
-                                    (cX == cmShips[k][j].first - 1 && cY + s == cmShips[k][j].second) ||
-                                    (cX == cmShips[k][j].first && cY + s == cmShips[k][j].second + 1) ||
-                                    (cX == cmShips[k][j].first && cY + s == cmShips[k][j].second - 1) ||
-                                    (cX == cmShips[k][j].first + 1 && cY + s == cmShips[k][j].second + 1) ||
-                                    (cX == cmShips[k][j].first - 1 && cY + s == cmShips[k][j].second - 1) ||
-                                    (cX == cmShips[k][j].first + 1 && cY + s == cmShips[k][j].second - 1) ||
-                                    (cX == cmShips[k][j].first - 1 && cY + s == cmShips[k][j].second + 1))
-                                {
-                                    cX = 18 + rand() % 8;
-                                    cY = 3 + rand() % 8;
-                                    _cmPos = rand() % 2;
-                                    k = -1;
-                                    brk = true;
-                                }
-                                if (cY + s >= 11) {
-                                    cX = 18 + rand() % 8;
-                                    cY = 3 + rand() % 8;
-                                    _cmPos = rand() % 2;
-                                    k = -1;
-                                    brk = true;
-                                }
-                                if (brk) break;
-                            }
-                            if (brk) break;
-                        }
-                        else {
-                            for (int s = 0; s < 2; s++)
-                            {
-                                if ((cX + s == cmShips[k][j].first && cY == cmShips[k][j].second) ||
-                                    (cX + s == cmShips[k][j].first + 1 && cY == cmShips[k][j].second) ||
-                                    (cX + s == cmShips[k][j].first - 1 && cY == cmShips[k][j].second) ||
-                                    (cX + s == cmShips[k][j].first && cY == cmShips[k][j].second + 1) ||
-                                    (cX + s == cmShips[k][j].first && cY == cmShips[k][j].second - 1) ||
-                                    (cX + s == cmShips[k][j].first + 1 && cY == cmShips[k][j].second + 1) ||
-                                    (cX + s == cmShips[k][j].first - 1 && cY == cmShips[k][j].second - 1) ||
-                                    (cX + s == cmShips[k][j].first + 1 && cY == cmShips[k][j].second - 1) ||
-                                    (cX + s == cmShips[k][j].first - 1 && cY == cmShips[k][j].second + 1))
-                                {
-                                    cX = 18 + rand() % 8;
-                                    cY = 3 + rand() % 8;
-                                    _cmPos = rand() % 2;
-                                    k = -1;
-                                    brk = true;
-                                }
-                                if (cX + s >= 27) {
-                                    cX = 18 + rand() % 8;
-                                    cY = 3 + rand() % 8;
-                                    _cmPos = rand() % 2;
-                                    k = -1;
-                                    brk = true;
-                                }
-                                if (brk) break;
-                            }
-                            if (brk) break;
-                        }
-                    }
-                    else if (_cmShipType == TRPL) {
-                        if (_cmPos == VERTICAL) {
-                            for (int s = 0; s < 3; s++)
-                            {
-                                if ((cX == cmShips[k][j].first && cY + s == cmShips[k][j].second) ||
-                                    (cX == cmShips[k][j].first + 1 && cY + s == cmShips[k][j].second) ||
-                                    (cX == cmShips[k][j].first - 1 && cY + s == cmShips[k][j].second) ||
-                                    (cX == cmShips[k][j].first && cY + s == cmShips[k][j].second + 1) ||
-                                    (cX == cmShips[k][j].first && cY + s == cmShips[k][j].second - 1) ||
-                                    (cX == cmShips[k][j].first + 1 && cY + s == cmShips[k][j].second + 1) ||
-                                    (cX == cmShips[k][j].first - 1 && cY + s == cmShips[k][j].second - 1) ||
-                                    (cX == cmShips[k][j].first + 1 && cY + s == cmShips[k][j].second - 1) ||
-                                    (cX == cmShips[k][j].first - 1 && cY + s == cmShips[k][j].second + 1))
-                                {
-                                    cX = 18 + rand() % 8;
-                                    cY = 3 + rand() % 8;
-                                    _cmPos = rand() % 2;
-                                    k = -1;
-                                    brk = true;
-                                }
-                                if (cY + s >= 11) {
-                                    cX = 18 + rand() % 8;
-                                    cY = 3 + rand() % 8;
-                                    _cmPos = rand() % 2;
-                                    k = -1;
-                                    brk = true;
-                                }
-                                if (brk) break;
-
-                            }
-                            if (brk) break;
-                        }
-                        else {
-                            for (int s = 0; s < 3; s++)
-                            {
-                                if ((cX + s == cmShips[k][j].first && cY == cmShips[k][j].second) ||
-                                    (cX + s == cmShips[k][j].first + 1 && cY == cmShips[k][j].second) ||
-                                    (cX + s == cmShips[k][j].first - 1 && cY == cmShips[k][j].second) ||
-                                    (cX + s == cmShips[k][j].first && cY == cmShips[k][j].second + 1) ||
-                                    (cX + s == cmShips[k][j].first && cY == cmShips[k][j].second - 1) ||
-                                    (cX + s == cmShips[k][j].first + 1 && cY == cmShips[k][j].second + 1) ||
-                                    (cX + s == cmShips[k][j].first - 1 && cY == cmShips[k][j].second - 1) ||
-                                    (cX + s == cmShips[k][j].first + 1 && cY == cmShips[k][j].second - 1) ||
-                                    (cX + s == cmShips[k][j].first - 1 && cY == cmShips[k][j].second + 1))
-                                {
-                                    cX = 18 + rand() % 8;
-                                    cY = 3 + rand() % 8;
-                                    _cmPos = rand() % 2;
-                                    k = -1;
-                                    brk = true;
-                                }
-                                if (cX + s >= 27) {
-                                    cX = 18 + rand() % 8;
-                                    cY = 3 + rand() % 8;
-                                    _cmPos = rand() % 2;
-                                    k = -1;
-                                    brk = true;
-                                }
-                                if (brk) break;
-                            }
-                            if (brk) break;
-                        }
-                    }
-                    else if (_cmShipType == BIG) {
-                        if (_cmPos == VERTICAL) {
-                            for (int s = 0; s < 4; s++)
-                            {
-                                if ((cX == cmShips[k][j].first && cY + s == cmShips[k][j].second) ||
-                                    (cX == cmShips[k][j].first + 1 && cY + s == cmShips[k][j].second) ||
-                                    (cX == cmShips[k][j].first - 1 && cY + s == cmShips[k][j].second) ||
-                                    (cX == cmShips[k][j].first && cY + s == cmShips[k][j].second + 1) ||
-                                    (cX == cmShips[k][j].first && cY + s == cmShips[k][j].second - 1) ||
-                                    (cX == cmShips[k][j].first + 1 && cY + s == cmShips[k][j].second + 1) ||
-                                    (cX == cmShips[k][j].first - 1 && cY + s == cmShips[k][j].second - 1) ||
-                                    (cX == cmShips[k][j].first + 1 && cY + s == cmShips[k][j].second - 1) ||
-                                    (cX == cmShips[k][j].first - 1 && cY + s == cmShips[k][j].second + 1))
-                                {
-                                    cX = 18 + rand() % 8;
-                                    cY = 3 + rand() % 8;
-                                    _cmPos = rand() % 2;
-                                    k = -1;
-                                    brk = true;
-                                }
-                                if (cY + s >= 11) {
-                                    cX = 18 + rand() % 8;
-                                    cY = 3 + rand() % 8;
-                                    _cmPos = rand() % 2;
-                                    k = -1;
-                                    brk = true;
-                                }
-                                if (brk) break;
-
-                            }
-                            if (brk) break;
-                        }
-                        else {
-                            for (int s = 0; s < 4; s++)
-                            {
-                                if ((cX + s == cmShips[k][j].first && cY == cmShips[k][j].second) ||
-                                    (cX + s == cmShips[k][j].first + 1 && cY == cmShips[k][j].second) ||
-                                    (cX + s == cmShips[k][j].first - 1 && cY == cmShips[k][j].second) ||
-                                    (cX + s == cmShips[k][j].first && cY == cmShips[k][j].second + 1) ||
-                                    (cX + s == cmShips[k][j].first && cY == cmShips[k][j].second - 1) ||
-                                    (cX + s == cmShips[k][j].first + 1 && cY == cmShips[k][j].second + 1) ||
-                                    (cX + s == cmShips[k][j].first - 1 && cY == cmShips[k][j].second - 1) ||
-                                    (cX + s == cmShips[k][j].first + 1 && cY == cmShips[k][j].second - 1) ||
-                                    (cX + s == cmShips[k][j].first - 1 && cY == cmShips[k][j].second + 1))
-                                {
-                                    cX = 18 + rand() % 8;
-                                    cY = 3 + rand() % 8;
-                                    _cmPos = rand() % 2;
-                                    k = -1;
-                                    brk = true;
-                                }
-                                if (cX + s >= 27) {
-                                    cX = 18 + rand() % 8;
-                                    cY = 3 + rand() % 8;
-                                    _cmPos = rand() % 2;
-                                    k = -1;
-                                    brk = true;
-                                }
-                                if (brk) break;
-                            }
-                            if (brk) break;
-                        }
-                    }
-
-                    check++;
-                    if (check >= 200) {
-                        _cmShipType = 0;
-                        cmShips[k].clear();
-                        i = -1;
-                        check = 0;
-                        newCoord = true;
-                        break;
-                    }
-                }
-
-                if (newCoord) break;
-
-            }
-            if (newCoord) {
-                continue;
-            }
-
-            _cmShipCnt++;
-
-            if (_cmShipType == SINGLE) {
-                cmShips[_cmShipCnt - 1].push_back(make_pair(cX, cY));
-            }
-            else if (_cmShipType == DBL) {
-                if (_cmPos == VERTICAL) {
-                    for (int height = 0; height < 2; height++)
-                    {
-                        cmShips[_cmShipCnt - 1].push_back(make_pair(cX, cY + height));
-                    }
-                }
-                else {
-                    for (int width = 0; width < 2; width++)
-                    {
-                        cmShips[_cmShipCnt - 1].push_back(make_pair(cX + width, cY));
-                    }
+                    cmShips[_cmShipCnt - 1].push_back(make_pair(cX, cY + height));
                 }
             }
-            else if (_cmShipType == TRPL) {
-                if (_cmPos == VERTICAL) {
-                    for (int height = 0; height < 3; height++)
-                    {
-                        cmShips[_cmShipCnt - 1].push_back(make_pair(cX, cY + height));
-                    }
-                }
-                else {
-                    for (int width = 0; width < 3; width++)
-                    {
-                        cmShips[_cmShipCnt - 1].push_back(make_pair(cX + width, cY));
-                    }
-                }
-            }
-            else if (_cmShipType == BIG) {
-                if (_cmPos == VERTICAL) {
-                    for (int height = 0; height < 4; height++)
-                    {
-                        cmShips[_cmShipCnt - 1].push_back(make_pair(cX, cY + height));
-                    }
-                }
-                else {
-                    for (int width = 0; width < 4; width++)
-                    {
-                        cmShips[_cmShipCnt - 1].push_back(make_pair(cX + width, cY));
-                    }
+            else {
+                for (int width = 0; width < 2; width++)
+                {
+                    cmShips[_cmShipCnt - 1].push_back(make_pair(cX + width, cY));
                 }
             }
         }
-    }
-    else {
-        SetSecondPlShips();
+        else if (_cmShipType == TRPL) {
+            if (_cmPos == VERTICAL) {
+                for (int height = 0; height < 3; height++)
+                {
+                    cmShips[_cmShipCnt - 1].push_back(make_pair(cX, cY + height));
+                }
+            }
+            else {
+                for (int width = 0; width < 3; width++)
+                {
+                    cmShips[_cmShipCnt - 1].push_back(make_pair(cX + width, cY));
+                }
+            }
+        }
+        else if (_cmShipType == BIG) {
+            if (_cmPos == VERTICAL) {
+                for (int height = 0; height < 4; height++)
+                {
+                    cmShips[_cmShipCnt - 1].push_back(make_pair(cX, cY + height));
+                }
+            }
+            else {
+                for (int width = 0; width < 4; width++)
+                {
+                    cmShips[_cmShipCnt - 1].push_back(make_pair(cX + width, cY));
+                }
+            }
+        }
     }
 }
 
-void Player::SetSecondPlShips()
+void Player::SetEnemyCoord(vector<vector<pair<int, int>>> enemyCoordVec)
 {
-    for (int i = 0; i < cmShips.size(); i++)
-    {
-        for (int k = 0; k < cmShips[i].size(); k++)
+    if (enemyReady) {
+        for (int i = 0; i < cmShips.size(); i++)
         {
-            if (_cmShipType == SINGLE) {
-                if ((_x == cmShips[i][k].first && _y == cmShips[i][k].second) ||
-                    (_x == cmShips[i][k].first + 1 && _y == cmShips[i][k].second) ||
-                    (_x == cmShips[i][k].first - 1 && _y == cmShips[i][k].second) ||
-                    (_x == cmShips[i][k].first && _y == cmShips[i][k].second + 1) ||
-                    (_x == cmShips[i][k].first && _y == cmShips[i][k].second - 1) ||
-                    (_x == cmShips[i][k].first + 1 && _y == cmShips[i][k].second + 1) ||
-                    (_x == cmShips[i][k].first - 1 && _y == cmShips[i][k].second - 1) ||
-                    (_x == cmShips[i][k].first + 1 && _y == cmShips[i][k].second - 1) ||
-                    (_x == cmShips[i][k].first - 1 && _y == cmShips[i][k].second + 1)) return;
-            }
-            else if (_cmShipType == DBL) {
-                if (_cmPos == VERTICAL) {
-                    for (int j = 0; j < 2; j++)
-                    {
-                        if ((_x == cmShips[i][k].first && _y + j == cmShips[i][k].second) ||
-                            (_x == cmShips[i][k].first + 1 && _y + j == cmShips[i][k].second) ||
-                            (_x == cmShips[i][k].first - 1 && _y + j == cmShips[i][k].second) ||
-                            (_x == cmShips[i][k].first && _y + j == cmShips[i][k].second + 1) ||
-                            (_x == cmShips[i][k].first && _y + j == cmShips[i][k].second - 1) ||
-                            (_x == cmShips[i][k].first + 1 && _y + j == cmShips[i][k].second + 1) ||
-                            (_x == cmShips[i][k].first - 1 && _y + j == cmShips[i][k].second - 1) ||
-                            (_x == cmShips[i][k].first + 1 && _y + j == cmShips[i][k].second - 1) ||
-                            (_x == cmShips[i][k].first - 1 && _y + j == cmShips[i][k].second + 1)) return;
-                    }
-                }
-                else {
-                    for (int j = 0; j < 2; j++)
-                    {
-                        if ((_x + j == cmShips[i][k].first && _y == cmShips[i][k].second) ||
-                            (_x + j == cmShips[i][k].first + 1 && _y == cmShips[i][k].second) ||
-                            (_x + j == cmShips[i][k].first - 1 && _y == cmShips[i][k].second) ||
-                            (_x + j == cmShips[i][k].first && _y == cmShips[i][k].second + 1) ||
-                            (_x + j == cmShips[i][k].first && _y == cmShips[i][k].second - 1) ||
-                            (_x + j == cmShips[i][k].first + 1 && _y == cmShips[i][k].second + 1) ||
-                            (_x + j == cmShips[i][k].first - 1 && _y == cmShips[i][k].second - 1) ||
-                            (_x + j == cmShips[i][k].first + 1 && _y == cmShips[i][k].second - 1) ||
-                            (_x + j == cmShips[i][k].first - 1 && _y == cmShips[i][k].second + 1)) return;
-                    }
-                }
-            }
-            else if (_cmShipType == TRPL) {
-                if (_cmPos == VERTICAL) {
-                    for (int j = 0; j < 3; j++)
-                    {
-                        if ((_x == cmShips[i][k].first && _y + j == cmShips[i][k].second) ||
-                            (_x == cmShips[i][k].first + 1 && _y + j == cmShips[i][k].second) ||
-                            (_x == cmShips[i][k].first - 1 && _y + j == cmShips[i][k].second) ||
-                            (_x == cmShips[i][k].first && _y + j == cmShips[i][k].second + 1) ||
-                            (_x == cmShips[i][k].first && _y + j == cmShips[i][k].second - 1) ||
-                            (_x == cmShips[i][k].first + 1 && _y + j == cmShips[i][k].second + 1) ||
-                            (_x == cmShips[i][k].first - 1 && _y + j == cmShips[i][k].second - 1) ||
-                            (_x == cmShips[i][k].first + 1 && _y + j == cmShips[i][k].second - 1) ||
-                            (_x == cmShips[i][k].first - 1 && _y + j == cmShips[i][k].second + 1)) return;
-                    }
-                }
-                else {
-                    for (int j = 0; j < 3; j++)
-                    {
-                        if ((_x + j == cmShips[i][k].first && _y == cmShips[i][k].second) ||
-                            (_x + j == cmShips[i][k].first + 1 && _y == cmShips[i][k].second) ||
-                            (_x + j == cmShips[i][k].first - 1 && _y == cmShips[i][k].second) ||
-                            (_x + j == cmShips[i][k].first && _y == cmShips[i][k].second + 1) ||
-                            (_x + j == cmShips[i][k].first && _y == cmShips[i][k].second - 1) ||
-                            (_x + j == cmShips[i][k].first + 1 && _y == cmShips[i][k].second + 1) ||
-                            (_x + j == cmShips[i][k].first - 1 && _y == cmShips[i][k].second - 1) ||
-                            (_x + j == cmShips[i][k].first + 1 && _y == cmShips[i][k].second - 1) ||
-                            (_x + j == cmShips[i][k].first - 1 && _y == cmShips[i][k].second + 1)) return;
-                    }
-                }
-            }
-            else if (_cmShipType == BIG) {
-                if (_cmPos == VERTICAL) {
-                    for (int j = 0; j < 4; j++)
-                    {
-                        if ((_x == cmShips[i][k].first && _y + j == cmShips[i][k].second) ||
-                            (_x == cmShips[i][k].first + 1 && _y + j == cmShips[i][k].second) ||
-                            (_x == cmShips[i][k].first - 1 && _y + j == cmShips[i][k].second) ||
-                            (_x == cmShips[i][k].first && _y + j == cmShips[i][k].second + 1) ||
-                            (_x == cmShips[i][k].first && _y + j == cmShips[i][k].second - 1) ||
-                            (_x == cmShips[i][k].first + 1 && _y + j == cmShips[i][k].second + 1) ||
-                            (_x == cmShips[i][k].first - 1 && _y + j == cmShips[i][k].second - 1) ||
-                            (_x == cmShips[i][k].first + 1 && _y + j == cmShips[i][k].second - 1) ||
-                            (_x == cmShips[i][k].first - 1 && _y + j == cmShips[i][k].second + 1)) return;
-                    }
-                }
-                else {
-                    for (int j = 0; j < 4; j++)
-                    {
-                        if ((_x + j == cmShips[i][k].first && _y == cmShips[i][k].second) ||
-                            (_x + j == cmShips[i][k].first + 1 && _y == cmShips[i][k].second) ||
-                            (_x + j == cmShips[i][k].first - 1 && _y == cmShips[i][k].second) ||
-                            (_x + j == cmShips[i][k].first && _y == cmShips[i][k].second + 1) ||
-                            (_x + j == cmShips[i][k].first && _y == cmShips[i][k].second - 1) ||
-                            (_x + j == cmShips[i][k].first + 1 && _y == cmShips[i][k].second + 1) ||
-                            (_x + j == cmShips[i][k].first - 1 && _y == cmShips[i][k].second - 1) ||
-                            (_x + j == cmShips[i][k].first + 1 && _y == cmShips[i][k].second - 1) ||
-                            (_x + j == cmShips[i][k].first - 1 && _y == cmShips[i][k].second + 1)) return;
-                    }
-                }
+            for (int j = 0;  j < cmShips[i].size();  j++)
+            {
+                cmShips[i][j] = enemyCoordVec[i][j];
             }
         }
     }
+}
 
-    _cmShipCnt++;
+void Player::SetEnemyState(bool rdy)
+{
+    enemyReady = rdy;
+}
 
-    if (_cmShipType == SINGLE) {
-        cmShips[_cmShipCnt - 1].push_back(make_pair(_x, _y));
-    }
-    else if (_cmShipType == DBL) {
-        if (_cmPos == VERTICAL) {
-            for (int height = 0; height < 2; height++)
-            {
-                cmShips[_cmShipCnt - 1].push_back(make_pair(_x, _y + height));
-            }
-        }
-        else {
-            for (int width = 0; width < 2; width++)
-            {
-                cmShips[_cmShipCnt - 1].push_back(make_pair(_x + width, _y));
-            }
-        }
-    }
-    else if (_cmShipType == TRPL) {
-        if (_cmPos == VERTICAL) {
-            for (int height = 0; height < 3; height++)
-            {
-                cmShips[_cmShipCnt - 1].push_back(make_pair(_x, _y + height));
-            }
-        }
-        else {
-            for (int width = 0; width < 3; width++)
-            {
-                cmShips[_cmShipCnt - 1].push_back(make_pair(_x + width, _y));
-            }
-        }
-    }
-    else if (_cmShipType == BIG) {
-        if (_cmPos == VERTICAL) {
-            for (int height = 0; height < 4; height++)
-            {
-                cmShips[_cmShipCnt - 1].push_back(make_pair(_x, _y + height));
-            }
-        }
-        else {
-            for (int width = 0; width < 4; width++)
-            {
-                cmShips[_cmShipCnt - 1].push_back(make_pair(_x + width, _y));
-            }
-        }
-    }
-
-    _x = 22, _y = 7;
-
-    ChangeShipType();
+bool Player::GetEnemyState()
+{
+    return enemyReady;
 }
