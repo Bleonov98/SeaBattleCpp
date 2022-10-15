@@ -80,7 +80,7 @@ public:
 	void ShowDstrShips();
 
 
-	bool Prepare();
+	bool IsReady();
 
 	void NextPlayer();
 
@@ -106,15 +106,16 @@ public:
 
 	bool GetEnemyState();
 
+	void SetPlState(bool multiplayer);
+
 private:
 
-	bool _player = true, _prepare = true, _plWin = false, _cmWin = false;
+	bool _player = true, _plWin = false, _cmWin = false;
 
 	int _shipType = SINGLE, _shipCnt = 0, _position = VERTICAL;
 	int _cmShipType = SINGLE, _cmShipCnt = 0, _cmPos = VERTICAL;
-	int _prepareCnt = 0;
 
-	bool singlePlayer = false, _shot;
+	bool singlePlayer = false, _shot = false;
 
 	char16_t dblShipVert[2][2]{
 		u"#",
@@ -155,7 +156,7 @@ private:
 	vector <pair<int, int>> missCmShips;
 
 	vector <pair<int, int>> checkAroudCrd;
-	bool algKill = false, enemyReady = false;
+	bool algKill = false, enemyReady = false, plReady = false;
 };
 
 

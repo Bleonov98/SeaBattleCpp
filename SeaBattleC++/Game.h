@@ -11,7 +11,7 @@ private:
 
     char16_t prevBuf[ROWS][COLS];
     char coord[100];
-    bool worldIsRun = true, win = false, singlePl = false, multiPl = false;
+    bool worldIsRun = true, win = false, waiting = false;
     int score = 0;
 
     // CONNECTION SETTING
@@ -20,7 +20,10 @@ private:
     struct ConData {
         int _x = 7;
         int _y = 7;
-        bool _shot = false, _prepare = true, _win = false;
+    };
+    struct PrepData {
+        bool _prepare = false;
+        //vector<vector<pair<int, int>>> myShipsCoord;
     };
     // ----------
 

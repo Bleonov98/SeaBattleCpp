@@ -203,40 +203,81 @@ void Game::ConnectW()
 	}
 
 	ConData cData;
+	PrepData pData;
+
 	char* bufByte = new char[sizeof(ConData)];
+	char* prepBuf = new char[sizeof(PrepData)];
 
 	int cX = 0, cY = 0;
 
 	do
 	{
-		cData._x = player->GetX() + 15;
-		cData._y = player->GetY();
-		cData._shot = player->isShot();
+		if (!player->IsReady() && !player->GetEnemyState()) {
+			cData._x = player->GetX() + 15;
+			cData._y = player->GetY();
+		}
+		else if (player->IsReady() && player->GetEnemyState()) {
+			cData._x = player->GetX() - 15;
+			cData._y = player->GetY();
+		}
 
 		ZeroMemory(bufByte, sizeof(bufByte));
 		memcpy(bufByte, &cData, sizeof(cData));
 
 		if (sizeof(bufByte) > 0) {
-			int sendRes = send(conSocket, bufByte, sizeof(bufByte), 0);
+			int sendRes = send(conSocket, bufByte, sizeof(bufByte), 0); // send to enemy my coord
 			if (sendRes != SOCKET_ERROR) {
 				ZeroMemory(bufByte, sizeof(bufByte));
-				int bytesRecv = recv(conSocket, bufByte, sizeof(bufByte), 0);
+				int bytesRecv = recv(conSocket, bufByte, sizeof(bufByte), 0); // recieve from enemy
 				if (bytesRecv > 0) {
 
 					memcpy(&cData, bufByte, sizeof(bufByte));
 					wData.vBuf[cY][cX] = u' ';
 					cY = cData._y;
 					cX = cData._x;
+					wData.vBuf[cY][cX] = u'#' | (Purple << 8); // for seeing enemy cursor 
 
-					if (player->Prepare()) {
-						wData.vBuf[cY][cX] = u'#' | (Purple << 8);
-					}
-					else if (!player->Prepare() && !player->GetEnemyState()) {
+					if (player->IsReady() && !player->GetEnemyState()) {
+						
+						waiting = true;
+
+						do
+						{
+							pData._prepare = player->IsReady();
+
+							ZeroMemory(prepBuf, sizeof(prepBuf));
+							memcpy(prepBuf, &pData, sizeof(pData));
+
+							
+							if (sizeof(prepBuf) > 0) {
+
+								int sendPD = send(conSocket, prepBuf, sizeof(prepBuf), 0);
+								pData._prepare = false;
+
+								if (sendPD != SOCKET_ERROR) {
+
+									pData._prepare = false;
+									ZeroMemory(prepBuf, sizeof(prepBuf));
+									int prepRecv = recv(conSocket, prepBuf, sizeof(prepBuf), 0);
+
+									if (prepRecv > 0) {
+										memcpy(&pData, prepBuf, sizeof(prepBuf));
+										player->SetEnemyState(pData._prepare);
+									}
+
+								}
+							}
+						} while (!player->GetEnemyState());
+
+						waiting = false;
+
+					} // waiting for enemy ready func
+					else if (player->IsReady() && player->GetEnemyState()) {
+
+
 
 					}
-					else if (!player->Prepare() && player->GetEnemyState()) {
 
-					}
 				}
 			}
 		}
@@ -294,7 +335,15 @@ void Game::RunWorld(bool& restart)
 
 		}
 		
-		player->MoveCursor();
+		if (!waiting) player->MoveCursor();
+		else {
+			SetPos(38, 30);
+			cout << "Waiting for enemy...";
+			Sleep(700);
+			SetPos(38, 30);
+			cout << "                    ";
+			Sleep(550);
+		}
 
 		DrawToMem();
 

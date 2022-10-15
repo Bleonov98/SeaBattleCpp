@@ -49,7 +49,7 @@ void Player::MoveCursor()
         SetCompShips();
     }
 
-    if (_prepare) {
+    if (!plReady) {
 
         EraseShip();
 
@@ -118,7 +118,8 @@ void Player::MoveCursor()
         EraseCursor();
 
         if (!_player) {
-            Computer();
+            if (singlePlayer) Computer();
+            else _player = !_player;
         }
         else {
             if ((GetAsyncKeyState(VK_RIGHT) & 0x8000) && _x <= 26) _x++;
@@ -247,7 +248,7 @@ void Player::ChangeShipType()
         _shipType = BIG;
     }
     else if (_shipCnt == 7) {
-        _prepare = false;
+        plReady = true;
    
         _x = 20, _y = 7, _shipCnt = 0, _shipType = 0;
     }
@@ -556,9 +557,9 @@ int Player::GetShipCounter()
     return _shipCnt;
 }
 
-bool Player::Prepare()
+bool Player::IsReady()
 {
-    return _prepare;
+    return plReady;
 }
 
 void Player::NextPlayer()
@@ -722,8 +723,6 @@ void Player::Shot()
     }
 
     _shot = true;
-
-    Sleep(500);
 }
 
 bool Player::GetEndSet(bool &win)
@@ -1139,6 +1138,7 @@ void Player::SetEnemyCoord(vector<vector<pair<int, int>>> enemyCoordVec)
             for (int j = 0;  j < cmShips[i].size();  j++)
             {
                 cmShips[i][j] = enemyCoordVec[i][j];
+                cmShips[i][j].first += 15;
             }
         }
     }
@@ -1152,4 +1152,9 @@ void Player::SetEnemyState(bool rdy)
 bool Player::GetEnemyState()
 {
     return enemyReady;
+}
+
+void Player::SetPlState(bool singlePlayer)
+{
+    this->singlePlayer = singlePlayer;
 }
