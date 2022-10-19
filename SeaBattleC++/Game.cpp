@@ -176,13 +176,15 @@ void Game::ConnectW()
 	if (wsResult != 0) {
 		SetPos(30, 30);
 		cout << "Failed to start wSock... ERROR: " << wsResult;
+		player->SetPlState(true);
 		return;
 	}
 
 	SOCKET conSocket = socket(AF_INET, SOCK_STREAM, NULL);
 	if (conSocket == INVALID_SOCKET) {
 		SetPos(30, 30);
-		cout << "socket can't be created... ERROR: " << WSAGetLastError();
+		cout << "Socket can't be created... ERROR: " << WSAGetLastError();
+		player->SetPlState(true);
 		return;
 	}
 
@@ -199,16 +201,38 @@ void Game::ConnectW()
 		cout << "Unable connect to server, ERROR: " << connRes;
 		closesocket(conSocket);
 		WSACleanup();
+		player->SetPlState(true);
 		return;
 	}
 
+	player->SetPlState(false);
+
 	ConData cData;
-	PrepData pData;
 
 	char* bufByte = new char[sizeof(ConData)];
-	char* prepBuf = new char[sizeof(PrepData)];
+	char* prepBuf = new char[2];
 
 	int cX = 0, cY = 0;
+	bool _prepare = false;
+
+	int** shipsCrd = new int*[7];
+	for (int i = 0; i < 7; i++)			
+	{
+		if (i <= 1) {
+			shipsCrd[i] = new int[2];
+		}
+		if (i <= 3) {
+			shipsCrd[i] = new int[4];
+		}
+		if (i <= 5) {
+			shipsCrd[i] = new int[6];
+		}
+		if (i == 6) {
+			shipsCrd[i] = new int[8];
+		}
+	}
+
+	int arrSize = (sizeof(shipsCrd) * 7) + (sizeof(int) * 40);
 
 	do
 	{
@@ -220,6 +244,7 @@ void Game::ConnectW()
 			cData._x = player->GetX() - 15;
 			cData._y = player->GetY();
 		}
+
 
 		ZeroMemory(bufByte, sizeof(bufByte));
 		memcpy(bufByte, &cData, sizeof(cData));
@@ -239,39 +264,70 @@ void Game::ConnectW()
 
 					if (player->IsReady() && !player->GetEnemyState()) {
 						
+						// ------------ WAITING FOR PREPARE SHIPS ------------------
+
 						waiting = true;
 
 						do
 						{
-							pData._prepare = player->IsReady();
+							_prepare = player->IsReady();
 
 							ZeroMemory(prepBuf, sizeof(prepBuf));
-							memcpy(prepBuf, &pData, sizeof(pData));
+							memcpy(prepBuf, &_prepare, sizeof(_prepare));
 
 							
 							if (sizeof(prepBuf) > 0) {
 
-								int sendPD = send(conSocket, prepBuf, sizeof(prepBuf), 0);
-								pData._prepare = false;
+								int sendPD = send(conSocket, prepBuf, sizeof(_prepare), 0);
 
 								if (sendPD != SOCKET_ERROR) {
 
-									pData._prepare = false;
 									ZeroMemory(prepBuf, sizeof(prepBuf));
 									int prepRecv = recv(conSocket, prepBuf, sizeof(prepBuf), 0);
 
-									if (prepRecv > 0) {
-										memcpy(&pData, prepBuf, sizeof(prepBuf));
-										player->SetEnemyState(pData._prepare);
+									if (prepRecv > 0 && prepRecv < 4) {
+										memcpy(&_prepare, prepBuf, sizeof(_prepare));
+										player->SetEnemyState(_prepare);
 									}
 
 								}
 							}
 						} while (!player->GetEnemyState());
 
+						_prepare = player->IsReady();
+
+						ZeroMemory(prepBuf, sizeof(prepBuf));
+						memcpy(prepBuf, &_prepare, sizeof(_prepare));
+
+						int sendPD = send(conSocket, prepBuf, sizeof(_prepare), 0);
+						// ------------ WAITING FOR PREPARE SHIPS ------------------
+
+						Sleep(200);
+
+						char* vecCh = new char[1024];
+
+						player->SendMyCoord(shipsCrd);
+
+						ZeroMemory(vecCh, sizeof(vecCh));
+
+						int sendVec = send(conSocket, vecCh, sizeof(vecCh), 0);
+
+						if (sendVec != SOCKET_ERROR) {
+
+							ZeroMemory(vecCh, sizeof(vecCh));
+							int recvVec = recv(conSocket, vecCh, sizeof(vecCh), 0);
+
+							if (recvVec > 0) {
+								memcpy(&shipsCrd, vecCh, sizeof(1024));
+								player->SetEnemyCoord(shipsCrd);
+							}
+						}
+
 						waiting = false;
 
-					} // waiting for enemy ready func
+						// Send vectors plShips for cmShips
+						Sleep(200);
+					}
 					else if (player->IsReady() && player->GetEnemyState()) {
 
 
@@ -318,6 +374,8 @@ void Game::RunWorld(bool& restart)
 		{ ConnectW(); }
 	);
 
+
+	Sleep(1000);
 
 	while (worldIsRun) {
 

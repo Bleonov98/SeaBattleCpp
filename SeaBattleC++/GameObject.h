@@ -100,12 +100,17 @@ public:
 
 	
 
-	void SetEnemyCoord(vector<vector<pair<int, int>>> enemyCoordVec);
+	void SetEnemyCoord(int** crdArr);
+
+	void SendMyCoord(int** &crdArr);
+
 
 	void SetEnemyState(bool rdy);
 
 	bool GetEnemyState();
 
+	
+	
 	void SetPlState(bool multiplayer);
 
 private:
@@ -115,7 +120,7 @@ private:
 	int _shipType = SINGLE, _shipCnt = 0, _position = VERTICAL;
 	int _cmShipType = SINGLE, _cmShipCnt = 0, _cmPos = VERTICAL;
 
-	bool singlePlayer = false, _shot = false;
+	bool singlePlayer = true, _shot = false;
 
 	char16_t dblShipVert[2][2]{
 		u"#",

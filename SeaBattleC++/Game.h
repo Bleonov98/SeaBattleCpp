@@ -21,10 +21,6 @@ private:
         int _x = 7;
         int _y = 7;
     };
-    struct PrepData {
-        bool _prepare = false;
-        //vector<vector<pair<int, int>>> myShipsCoord;
-    };
     // ----------
 
     HINSTANCE hInstance;

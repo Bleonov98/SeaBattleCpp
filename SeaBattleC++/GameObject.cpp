@@ -1130,18 +1130,22 @@ void Player::SetCompShips()
     }
 }
 
-void Player::SetEnemyCoord(vector<vector<pair<int, int>>> enemyCoordVec)
+void Player::SetEnemyCoord(int** crdArr)
 {
-    if (enemyReady) {
-        for (int i = 0; i < cmShips.size(); i++)
+    cmShips = enemyCoordVec;
+
+    for (int i = 0; i < cmShips.size(); i++)
+    {
+        for (int j = 0; j < cmShips[i].size(); j++)
         {
-            for (int j = 0;  j < cmShips[i].size();  j++)
-            {
-                cmShips[i][j] = enemyCoordVec[i][j];
-                cmShips[i][j].first += 15;
-            }
+            cmShips[i][j].first += 15;
         }
     }
+}
+
+void Player::SendMyCoord(int** &crdArr)
+{
+    myCoordVec = plShips;
 }
 
 void Player::SetEnemyState(bool rdy)
