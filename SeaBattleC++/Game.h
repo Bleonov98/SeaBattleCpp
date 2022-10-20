@@ -21,6 +21,10 @@ private:
         int _x = 7;
         int _y = 7;
     };
+    struct PData {
+        int shipsCnt = 7;
+        int** shipsCrd = new int* [shipsCnt];
+    };
     // ----------
 
     HINSTANCE hInstance;

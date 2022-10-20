@@ -1132,20 +1132,62 @@ void Player::SetCompShips()
 
 void Player::SetEnemyCoord(int** crdArr)
 {
-    cmShips = enemyCoordVec;
-
-    for (int i = 0; i < cmShips.size(); i++)
+    for (int i = 0; i < 7; i++)
     {
-        for (int j = 0; j < cmShips[i].size(); j++)
-        {
-            cmShips[i][j].first += 15;
+        if (i <= 1) {
+            cmShips[i].push_back(make_pair(crdArr[i][0] + 15, crdArr[i][1]));
+        }
+        else if (i <= 3) {
+            for (int j = 0; j < 2; j++)
+            {
+                cmShips[i].push_back(make_pair(crdArr[i][j * 2] + 15, crdArr[i][j * 2 + 1]));
+            }
+        }
+        else if (i <= 5) {
+            for (int j = 0; j < 3; j++)
+            {
+                cmShips[i].push_back(make_pair(crdArr[i][j * 2] + 15, crdArr[i][j * 2 + 1]));
+            }
+        }
+        else if (i == 6) {
+            for (int j = 0; j < 4; j++)
+            {
+                cmShips[i].push_back(make_pair(crdArr[i][j * 2] + 15, crdArr[i][j * 2 + 1]));
+            }
         }
     }
 }
 
 void Player::SendMyCoord(int** &crdArr)
 {
-    myCoordVec = plShips;
+    for (int i = 0; i < 7; i++)
+    {
+        if (i <= 1) {
+            crdArr[i][0] = plShips[i][0].first;
+            crdArr[i][1] = plShips[i][0].second;
+        }
+        else if (i <= 3) {
+            for (int j = 0; j < 2; j++)
+            {
+                crdArr[i][j * 2] = plShips[i][j].first;
+                crdArr[i][j * 2 + 1] = plShips[i][j].second;
+            }
+        }
+        else if (i <= 5) {
+            for (int j = 0; j < 3; j++)
+            {
+                crdArr[i][j * 2] = plShips[i][j].first;
+                crdArr[i][j * 2 + 1] = plShips[i][j].second;
+            }
+        }
+        else if (i == 6) {
+            for (int j = 0; j < 4; j++)
+            {
+                crdArr[i][j * 2] = plShips[i][j].first;
+                crdArr[i][j * 2 + 1] = plShips[i][j].second;
+            }
+        }
+    }
 }
 
 void Player::SetEnemyState(bool rdy)

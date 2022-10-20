@@ -208,6 +208,7 @@ void Game::ConnectW()
 	player->SetPlState(false);
 
 	ConData cData;
+	PData pData;
 
 	char* bufByte = new char[sizeof(ConData)];
 	char* prepBuf = new char[2];
@@ -215,24 +216,16 @@ void Game::ConnectW()
 	int cX = 0, cY = 0;
 	bool _prepare = false;
 
-	int** shipsCrd = new int*[7];
-	for (int i = 0; i < 7; i++)			
-	{
-		if (i <= 1) {
-			shipsCrd[i] = new int[2];
-		}
-		if (i <= 3) {
-			shipsCrd[i] = new int[4];
-		}
-		if (i <= 5) {
-			shipsCrd[i] = new int[6];
-		}
-		if (i == 6) {
-			shipsCrd[i] = new int[8];
-		}
-	}
 
-	int arrSize = (sizeof(shipsCrd) * 7) + (sizeof(int) * 40);
+	int shipsCnt = 7;
+
+	for (int i = 0; i < shipsCnt; i++)
+	{
+		if (i <= 1) pData.shipsCrd[i] = new int[2];
+		else if (i <= 3) pData.shipsCrd[i] = new int[4];
+		else if (i <= 5) pData.shipsCrd[i] = new int[6];
+		else if (i == 6) pData.shipsCrd[i] = new int[8];
+	}
 
 	do
 	{
@@ -294,6 +287,13 @@ void Game::ConnectW()
 							}
 						} while (!player->GetEnemyState());
 
+						int prepRecv = recv(conSocket, prepBuf, sizeof(prepBuf), 0);
+						do
+						{
+							prepRecv = recv(conSocket, prepBuf, sizeof(prepBuf), 0);
+						} while (prepRecv == 1 && prepRecv > 0);
+						
+
 						_prepare = player->IsReady();
 
 						ZeroMemory(prepBuf, sizeof(prepBuf));
@@ -302,13 +302,10 @@ void Game::ConnectW()
 						int sendPD = send(conSocket, prepBuf, sizeof(_prepare), 0);
 						// ------------ WAITING FOR PREPARE SHIPS ------------------
 
-						Sleep(200);
+						char* vecCh = new char[sizeof(PData)];
 
-						char* vecCh = new char[1024];
-
-						player->SendMyCoord(shipsCrd);
-
-						ZeroMemory(vecCh, sizeof(vecCh));
+						player->SendMyCoord(pData.shipsCrd);
+						memcpy(vecCh, &pData, sizeof(pData));
 
 						int sendVec = send(conSocket, vecCh, sizeof(vecCh), 0);
 
@@ -318,15 +315,20 @@ void Game::ConnectW()
 							int recvVec = recv(conSocket, vecCh, sizeof(vecCh), 0);
 
 							if (recvVec > 0) {
-								memcpy(&shipsCrd, vecCh, sizeof(1024));
-								player->SetEnemyCoord(shipsCrd);
+								memcpy(&pData, vecCh, sizeof(pData));
+								player->SetEnemyCoord(pData.shipsCrd);
 							}
 						}
+
+						for (int i = 0; i < shipsCnt; i++)
+						{
+							delete[] pData.shipsCrd[i];
+						}
+						delete[] pData.shipsCrd;
 
 						waiting = false;
 
 						// Send vectors plShips for cmShips
-						Sleep(200);
 					}
 					else if (player->IsReady() && player->GetEnemyState()) {
 
