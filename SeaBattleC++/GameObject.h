@@ -102,7 +102,7 @@ public:
 
 	void SetEnemyCoord(int** crdArr);
 
-	void SendMyCoord(int** &crdArr);
+	void SendMyCoord(int** crdArr);
 
 
 	void SetEnemyState(bool rdy);

@@ -1158,7 +1158,7 @@ void Player::SetEnemyCoord(int** crdArr)
     }
 }
 
-void Player::SendMyCoord(int** &crdArr)
+void Player::SendMyCoord(int** crdArr)
 {
     for (int i = 0; i < 7; i++)
     {

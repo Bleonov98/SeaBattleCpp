@@ -17,13 +17,14 @@ private:
     // CONNECTION SETTING
     string ipAdd = "192.168.0.156";
 
-    struct ConData {
+    struct PacketData {
         int _x = 7;
         int _y = 7;
-    };
-    struct PData {
-        int shipsCnt = 7;
-        int** shipsCrd = new int* [shipsCnt];
+
+        bool _shot = false;
+        bool _prepare = false;
+
+        int** shipsCrd = new int* [7];
     };
     // ----------
 
