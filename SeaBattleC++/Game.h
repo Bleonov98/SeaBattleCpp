@@ -11,8 +11,8 @@ private:
 
     char16_t prevBuf[ROWS][COLS];
     char coord[100];
-    bool worldIsRun = true, win = false, waiting = false;
-    int score = 0;
+
+    bool worldIsRun = true, win = false, waiting = true;
 
     // CONNECTION SETTING
     string ipAdd = "192.168.0.156";
@@ -20,11 +20,11 @@ private:
     struct PacketData {
         int _x = 7;
         int _y = 7;
-
+        int _shipCnt = 0;
+        int _ship = SINGLE;
         bool _shot = false;
         bool _prepare = false;
-
-        int** shipsCrd = new int* [7];
+        bool _setShip = false;
     };
     // ----------
 
@@ -153,8 +153,6 @@ protected:
     void HotKeys(bool& pause);
 
     void DrawEndInfo(bool& restart);
-
-    void DrawInfo();
 
     void DrawChanges();
 

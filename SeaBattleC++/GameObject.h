@@ -68,10 +68,10 @@ public:
 
 	void SetShip();
 
-	int GetShipCounter();
-
 
 	int GetShipType();
+
+	int GetShipPos();
 
 	void ChangeShipType();
 
@@ -91,18 +91,20 @@ public:
 	
 	bool GetEndSet(bool& win);
 
+
+
 	bool isShot();
+
+	bool isSet();
+
 
 
 	void Computer();
 
 	void SetCompShips();
-
 	
 
-	void SetEnemyCoord(int** crdArr);
-
-	void SendMyCoord(int** crdArr);
+	void SetEnemyCoord(int x, int y, int shipCounter, int ship);
 
 
 	void SetEnemyState(bool rdy);
@@ -110,17 +112,14 @@ public:
 	bool GetEnemyState();
 
 	
-	
 	void SetPlState(bool multiplayer);
 
 private:
 
-	bool _player = true, _plWin = false, _cmWin = false;
+	bool _player = true, _plWin = false, _cmWin = false, singlePlayer = true;
 
 	int _shipType = SINGLE, _shipCnt = 0, _position = VERTICAL;
 	int _cmShipType = SINGLE, _cmShipCnt = 0, _cmPos = VERTICAL;
-
-	bool singlePlayer = true, _shot = false;
 
 	char16_t dblShipVert[2][2]{
 		u"#",
@@ -161,7 +160,7 @@ private:
 	vector <pair<int, int>> missCmShips;
 
 	vector <pair<int, int>> checkAroudCrd;
-	bool algKill = false, enemyReady = false, plReady = false;
+	bool algKill = false, enemyReady = false, plReady = false, _shot = false, _setShip = false;
 };
 
 

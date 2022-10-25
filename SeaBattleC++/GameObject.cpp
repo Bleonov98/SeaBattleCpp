@@ -236,6 +236,11 @@ int Player::GetShipType()
     return _shipType;
 }
 
+int Player::GetShipPos()
+{
+    return _position;
+}
+
 void Player::ChangeShipType()
 {
     if (_shipType == SINGLE && _shipCnt == 2) {
@@ -250,8 +255,10 @@ void Player::ChangeShipType()
     else if (_shipCnt == 7) {
         plReady = true;
    
-        _x = 20, _y = 7, _shipCnt = 0, _shipType = 0;
+        _x = 20, _y = 7;
     }
+
+    _setShip = false;
 }
 
 void Player::ShowShips()
@@ -500,6 +507,7 @@ void Player::SetShip()
     }
 
     _shipCnt++;
+    _setShip = true;
 
     if (_shipType == SINGLE) {
         plShips[_shipCnt - 1].push_back(make_pair(_x, _y));
@@ -550,11 +558,6 @@ void Player::SetShip()
     _x = 7, _y = 7;
 
     ChangeShipType();
-}
-
-int Player::GetShipCounter()
-{
-    return _shipCnt;
 }
 
 bool Player::IsReady()
@@ -746,6 +749,11 @@ bool Player::isShot()
 {
     return _shot;
     _shot = false;
+}
+
+bool Player::isSet()
+{
+    return _setShip;
 }
 
 void Player::Computer()
@@ -1130,62 +1138,46 @@ void Player::SetCompShips()
     }
 }
 
-void Player::SetEnemyCoord(int** crdArr)
+void Player::SetEnemyCoord(int x, int y, int shipCounter, int shipPos)
 {
-    for (int i = 0; i < 7; i++)
-    {
-        if (i <= 1) {
-            cmShips[i].push_back(make_pair(crdArr[i][0] + 15, crdArr[i][1]));
+    _cmShipCnt = shipCounter;
+    if (shipCounter <= 1) {
+        cmShips[shipCounter].push_back(make_pair(x, y));
+    }
+    else if (shipCounter <= 3) {
+        if (shipPos == VERTICAL) {
+            cmShips[shipCounter].push_back(make_pair(x, y));
+            cmShips[shipCounter].push_back(make_pair(x, y + 1));
         }
-        else if (i <= 3) {
-            for (int j = 0; j < 2; j++)
-            {
-                cmShips[i].push_back(make_pair(crdArr[i][j * 2] + 15, crdArr[i][j * 2 + 1]));
-            }
-        }
-        else if (i <= 5) {
-            for (int j = 0; j < 3; j++)
-            {
-                cmShips[i].push_back(make_pair(crdArr[i][j * 2] + 15, crdArr[i][j * 2 + 1]));
-            }
-        }
-        else if (i == 6) {
-            for (int j = 0; j < 4; j++)
-            {
-                cmShips[i].push_back(make_pair(crdArr[i][j * 2] + 15, crdArr[i][j * 2 + 1]));
-            }
+        else {
+            cmShips[shipCounter].push_back(make_pair(x, y));
+            cmShips[shipCounter].push_back(make_pair(x + 1, y));
         }
     }
-}
-
-void Player::SendMyCoord(int** crdArr)
-{
-    for (int i = 0; i < 7; i++)
-    {
-        if (i <= 1) {
-            crdArr[i][0] = plShips[i][0].first;
-            crdArr[i][1] = plShips[i][0].second;
+    else if (shipCounter <= 5) {
+        if (shipPos == VERTICAL) {
+            cmShips[shipCounter].push_back(make_pair(x, y));
+            cmShips[shipCounter].push_back(make_pair(x, y + 1));
+            cmShips[shipCounter].push_back(make_pair(x, y + 2));
         }
-        else if (i <= 3) {
-            for (int j = 0; j < 2; j++)
-            {
-                crdArr[i][j * 2] = plShips[i][j].first;
-                crdArr[i][j * 2 + 1] = plShips[i][j].second;
-            }
+        else {
+            cmShips[shipCounter].push_back(make_pair(x, y));
+            cmShips[shipCounter].push_back(make_pair(x + 1, y));
+            cmShips[shipCounter].push_back(make_pair(x + 2, y));
         }
-        else if (i <= 5) {
-            for (int j = 0; j < 3; j++)
-            {
-                crdArr[i][j * 2] = plShips[i][j].first;
-                crdArr[i][j * 2 + 1] = plShips[i][j].second;
-            }
+    }
+    else if (shipCounter == 6) {
+        if (shipPos == VERTICAL) {
+            cmShips[shipCounter].push_back(make_pair(x, y));
+            cmShips[shipCounter].push_back(make_pair(x, y + 1));
+            cmShips[shipCounter].push_back(make_pair(x, y + 2));
+            cmShips[shipCounter].push_back(make_pair(x, y + 3));
         }
-        else if (i == 6) {
-            for (int j = 0; j < 4; j++)
-            {
-                crdArr[i][j * 2] = plShips[i][j].first;
-                crdArr[i][j * 2 + 1] = plShips[i][j].second;
-            }
+        else {
+            cmShips[shipCounter].push_back(make_pair(x, y));
+            cmShips[shipCounter].push_back(make_pair(x + 1, y));
+            cmShips[shipCounter].push_back(make_pair(x + 2, y));
+            cmShips[shipCounter].push_back(make_pair(x + 3, y));
         }
     }
 }

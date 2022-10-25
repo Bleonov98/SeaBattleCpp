@@ -98,12 +98,6 @@ void Game::DrawEndInfo(bool& restart)
 	}
 }
 
-void Game::DrawInfo()
-{
-	SetPos(40, 3);
-	cout << "SCORE: " << score;
-}
-
 void Game::DrawChanges()
 {
 	for (int y = 0; y < ROWS; y++)
@@ -207,20 +201,14 @@ void Game::ConnectW()
 
 	player->SetPlState(false);
 
+	PacketData cData;
+
+	bool waitEn = true;
+
 	int cX = 0, cY = 0;
 	bool gameRun = false, enemyRd = false;
 
-	PacketData cData;
-
-	for (int i = 0; i < 7; i++)
-	{
-		if (i <= 1) cData.shipsCrd[i] = new int[2];
-		else if (i <= 3) cData.shipsCrd[i] = new int[4];
-		else if (i <= 5) cData.shipsCrd[i] = new int[6];
-		else if (i == 6) cData.shipsCrd[i] = new int[8];
-	}
-
-	char* bufByte = new char[1024];
+	char bufByte[1024];
 
 	do
 	{
@@ -228,19 +216,17 @@ void Game::ConnectW()
 			if (!player->IsReady() && !player->GetEnemyState()) {
 				cData._x = player->GetX() + 15;
 				cData._y = player->GetY();
+				cData._setShip = player->isSet();
 			}
 			else if (player->IsReady() && !player->GetEnemyState()) {
-				player->SendMyCoord(cData.shipsCrd);
 				cData._prepare = player->IsReady();
+
 				waiting = true;
 			}
 			else if (!player->IsReady() && player->GetEnemyState()) {
 				cData._x = player->GetX() + 15;
 				cData._y = player->GetY();
 				cData._prepare = player->IsReady();
-				if (cData._prepare) {
-					player->SendMyCoord(cData.shipsCrd);
-				}
 			}
 			else if (player->IsReady() && player->GetEnemyState()) {
 				waiting = false;
@@ -257,105 +243,25 @@ void Game::ConnectW()
 
 		if (sizeof(bufByte) > 0) {
 
-			int sendRes = send(conSocket, bufByte, sizeof(bufByte), 0); // send to enemy
+			int sendRes = send(conSocket, (char*)bufByte, sizeof(bufByte), 0); // send to enemy
 
 			if (sendRes != SOCKET_ERROR) {
 
 				ZeroMemory(bufByte, sizeof(bufByte));
-				int bytesRecv = recv(conSocket, bufByte, sizeof(bufByte), 0); // recieve from enemy
+				int bytesRecv = recv(conSocket, (char*)bufByte, sizeof(bufByte), 0); // recieve from enemy
+				waitEn = false, waiting = false;
+
 
 				if (bytesRecv > 0) {
 
 					memcpy(&cData, bufByte, sizeof(cData));
+
 					wData.vBuf[cY][cX] = u' ';
 					cY = cData._y;
 					cX = cData._x;
 					wData.vBuf[cY][cX] = u'#' | (Purple << 8); // for seeing enemy cursor 
 
-
-					if (!gameRun) {
-
-						player->SetEnemyState(cData._prepare);
-
-						if (player->GetEnemyState() && !enemyRd) {
-							player->SetEnemyCoord(cData.shipsCrd);
-							enemyRd = true;
-						}
-
-					}
-					
-					//if (player->IsReady() && !player->GetEnemyState()) {
-					//	
-					//	// ------------ WAITING FOR PREPARE SHIPS ------------------
-
-					//	/*waiting = true;*/
-
-					//	/*while (!player->GetEnemyState()) {
-
-					//		cData._prepare = player->IsReady();
-
-					//		ZeroMemory(bufByte, sizeof(bufByte));
-					//		memcpy(bufByte, &cData._prepare, sizeof(cData._prepare));
-
-
-					//		if (sizeof(bufByte) > 0) {
-
-					//			int sendPD = send(conSocket, bufByte, sizeof(cData._prepare), 0);
-
-					//			if (sendPD != SOCKET_ERROR) {
-
-					//				ZeroMemory(bufByte, sizeof(bufByte));
-					//				int prepRecv = recv(conSocket, bufByte, sizeof(bufByte), 0);
-
-					//				if (prepRecv > 0 && prepRecv < 4) {
-					//					memcpy(&cData._prepare, bufByte, sizeof(cData._prepare));
-					//					
-					//				}
-					//			}
-					//		}
-
-					//	}*/
-
-					//	//_prepare = player->IsReady();
-
-					//	//ZeroMemory(prepBuf, sizeof(prepBuf));
-					//	//memcpy(prepBuf, &_prepare, sizeof(_prepare));
-
-					//	//int sendPD = send(conSocket, prepBuf, sizeof(_prepare), 0);
-					//	// ------------ WAITING FOR PREPARE SHIPS ------------------
-
-					//	//player->SendMyCoord(cData.shipsCrd);
-					//	//memcpy(bufByte, &cData, sizeof(cData));
-
-					//	//int sendVec = send(conSocket, bufByte, sizeof(bufByte), 0);
-
-					//	//if (sendVec != SOCKET_ERROR) {
-
-					//	//	ZeroMemory(bufByte, sizeof(bufByte));
-					//	//	int recvVec = recv(conSocket, bufByte, sizeof(bufByte), 0);
-
-					//	//	if (recvVec > 0) {
-					//	//		memcpy(&cData, bufByte, sizeof(cData));
-					//	//		
-					//	//	}
-					//	//}
-
-					//	//for (int i = 0; i < cData.shipsCnt; i++)
-					//	//{
-					//	//	delete[] cData.shipsCrd[i];
-					//	//}
-					//	//delete[] cData.shipsCrd;
-
-					//	waiting = false;
-
-					//	//  Send vectors plShips for cmShips
-					//}
-					//else if (player->IsReady() && player->GetEnemyState()) {
-
-
-
-					//}
-
+					//player->SetEnemyState(cData._prepare);
 				}
 			}
 		}
@@ -379,14 +285,14 @@ void Game::RunWorld(bool& restart)
 	srand(time(NULL));
 	CreateWorld();
 
+	int tick = 0;
 	bool pause = false;
-	score = 0;
 
 	thread hotKeys([&]
 		{ HotKeys(pause); }
 	);
 
-	int tick = 0;
+	
 
 	player = new Player(&wData, 7, 7, Blue);
 	playerList.push_back(player);
