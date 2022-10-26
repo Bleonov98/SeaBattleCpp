@@ -21,7 +21,7 @@ private:
         int _x = 7;
         int _y = 7;
         int _shipCnt = 0;
-        int _ship = SINGLE;
+        int _shipPos = VERTICAL;
         bool _shot = false;
         bool _prepare = false;
         bool _setShip = false;

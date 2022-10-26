@@ -57,53 +57,22 @@ public:
 		}
 	};
 
-	void MoveCursor();
-
 	
-	void DrawShip();
-
-	void EraseShip();
-
-	void RotateShip();
-
-	void SetShip();
+	void MoveCursor();
 
 
 	int GetShipType();
 
 	int GetShipPos();
 
-	void ChangeShipType();
-
-	void ShowShips();
-
-	void ShowDstrShips();
-
 
 	bool IsReady();
-
-	void NextPlayer();
-
-	bool PlayerW();
-
-
-	void Shot();
-	
-	bool GetEndSet(bool& win);
-
-
 
 	bool isShot();
 
 	bool isSet();
 
-
-
-	void Computer();
-
-	void SetCompShips();
 	
-
 	void SetEnemyCoord(int x, int y, int shipCounter, int ship);
 
 
@@ -114,7 +83,40 @@ public:
 	
 	void SetPlState(bool multiplayer);
 
+	bool GetEndSet(bool& win);
+
+
 private:
+
+
+	void DrawShip();
+
+	void EraseShip();
+
+	void RotateShip();
+
+	void SetShip();
+
+	void ChangeShipType();
+
+
+	void ShowShips();
+
+	void ShowDstrShips();
+	
+
+	void Computer();
+
+	void SetCompShips();
+
+
+	void NextPlayer();
+
+	bool PlayerW();
+
+
+	void Shot();
+
 
 	bool _player = true, _plWin = false, _cmWin = false, singlePlayer = true;
 

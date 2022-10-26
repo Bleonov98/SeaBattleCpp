@@ -257,8 +257,6 @@ void Player::ChangeShipType()
    
         _x = 20, _y = 7;
     }
-
-    _setShip = false;
 }
 
 void Player::ShowShips()
@@ -754,6 +752,7 @@ bool Player::isShot()
 bool Player::isSet()
 {
     return _setShip;
+    _setShip = false;
 }
 
 void Player::Computer()

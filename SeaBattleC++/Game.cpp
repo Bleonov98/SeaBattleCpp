@@ -261,7 +261,11 @@ void Game::ConnectW()
 					cX = cData._x;
 					wData.vBuf[cY][cX] = u'#' | (Purple << 8); // for seeing enemy cursor 
 
-					//player->SetEnemyState(cData._prepare);
+					player->SetEnemyState(cData._prepare);
+					
+					if (!gameRun && cData._setShip) {
+						player->SetEnemyCoord(cData._x, cData._y, cData._shipCnt, cData._shipPos);
+					}
 				}
 			}
 		}
@@ -334,8 +338,6 @@ void Game::RunWorld(bool& restart)
 		DrawToMem();
 
 		DrawChanges();
-
-		DrawInfo();
 
 		Sleep(60);
 
