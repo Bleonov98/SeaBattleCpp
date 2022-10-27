@@ -170,7 +170,6 @@ void Game::ConnectW()
 	if (wsResult != 0) {
 		SetPos(30, 30);
 		cout << "Failed to start wSock... ERROR: " << wsResult;
-		player->SetPlState(true);
 		return;
 	}
 
@@ -178,7 +177,6 @@ void Game::ConnectW()
 	if (conSocket == INVALID_SOCKET) {
 		SetPos(30, 30);
 		cout << "Socket can't be created... ERROR: " << WSAGetLastError();
-		player->SetPlState(true);
 		return;
 	}
 
@@ -195,7 +193,6 @@ void Game::ConnectW()
 		cout << "Unable connect to server, ERROR: " << connRes;
 		closesocket(conSocket);
 		WSACleanup();
-		player->SetPlState(true);
 		return;
 	}
 
@@ -203,7 +200,7 @@ void Game::ConnectW()
 
 	PacketData cData;
 
-	bool waitEn = true;
+	waiting = true;
 
 	int cX = 0, cY = 0;
 	bool gameRun = false, enemyRd = false;
@@ -213,21 +210,13 @@ void Game::ConnectW()
 	do
 	{
 		if (!gameRun) {
-			if (!player->IsReady() && !player->GetEnemyState()) {
-				cData._x = player->GetX() + 15;
-				cData._y = player->GetY();
-				cData._setShip = player->isSet();
-			}
-			else if (player->IsReady() && !player->GetEnemyState()) {
-				cData._prepare = player->IsReady();
+			cData._x = player->GetX() + 15;
+			cData._y = player->GetY();
+			cData._setShip = player->isSet();
+			cData._shipPos = player->GetShipPos();
+			cData._prepare = player->IsReady();
 
-				waiting = true;
-			}
-			else if (!player->IsReady() && player->GetEnemyState()) {
-				cData._x = player->GetX() + 15;
-				cData._y = player->GetY();
-				cData._prepare = player->IsReady();
-			}
+			if (player->IsReady() && !player->GetEnemyState()) waiting = true;
 			else if (player->IsReady() && player->GetEnemyState()) {
 				waiting = false;
 				gameRun = true;
@@ -236,6 +225,7 @@ void Game::ConnectW()
 		else {
 			cData._x = player->GetX() - 15;
 			cData._y = player->GetY();
+			cData.win = win;
 		}
 
 		ZeroMemory(bufByte, sizeof(bufByte));
@@ -249,29 +239,33 @@ void Game::ConnectW()
 
 				ZeroMemory(bufByte, sizeof(bufByte));
 				int bytesRecv = recv(conSocket, (char*)bufByte, sizeof(bufByte), 0); // recieve from enemy
-				waitEn = false, waiting = false;
+				waiting = false;
 
 
 				if (bytesRecv > 0) {
 
 					memcpy(&cData, bufByte, sizeof(cData));
 
+					if (cData.win) {
+						worldIsRun = false;
+						win = false;
+					}
+
 					wData.vBuf[cY][cX] = u' ';
 					cY = cData._y;
 					cX = cData._x;
 					wData.vBuf[cY][cX] = u'#' | (Purple << 8); // for seeing enemy cursor 
-
-					player->SetEnemyState(cData._prepare);
 					
 					if (!gameRun && cData._setShip) {
-						player->SetEnemyCoord(cData._x, cData._y, cData._shipCnt, cData._shipPos);
+						player->SetEnemyCoord(cData._x, cData._y, cData._shipPos);
 					}
+
+					player->SetEnemyState(cData._prepare);
 				}
 			}
 		}
 
 	} while (worldIsRun);
-
 
 	closesocket(conSocket);
 	WSACleanup();

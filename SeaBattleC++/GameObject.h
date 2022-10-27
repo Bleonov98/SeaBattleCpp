@@ -73,7 +73,7 @@ public:
 	bool isSet();
 
 	
-	void SetEnemyCoord(int x, int y, int shipCounter, int ship);
+	void SetEnemyCoord(int x, int y, int shipPos);
 
 
 	void SetEnemyState(bool rdy);

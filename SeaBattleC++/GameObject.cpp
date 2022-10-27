@@ -104,11 +104,12 @@ void Player::MoveCursor()
 
 
         if (GetAsyncKeyState(VK_RETURN) & 0x8000) {
-            Sleep(200);
             SetShip();
+            Sleep(200);
         }
         if (GetAsyncKeyState(VK_SPACE) & 0x8000) {
             RotateShip();
+            Sleep(50);
         }
 
         DrawShip();
@@ -254,8 +255,6 @@ void Player::ChangeShipType()
     }
     else if (_shipCnt == 7) {
         plReady = true;
-   
-        _x = 20, _y = 7;
     }
 }
 
@@ -504,23 +503,20 @@ void Player::SetShip()
         }
     }
 
-    _shipCnt++;
-    _setShip = true;
-
     if (_shipType == SINGLE) {
-        plShips[_shipCnt - 1].push_back(make_pair(_x, _y));
+        plShips[_shipCnt].push_back(make_pair(_x, _y));
     }
     else if (_shipType == DBL) {
         if (_position == VERTICAL) {
             for (int height = 0; height < 2; height++)
             {
-                plShips[_shipCnt - 1].push_back(make_pair(_x, _y + height));
+                plShips[_shipCnt].push_back(make_pair(_x, _y + height));
             }
         }
         else {
             for (int width = 0; width < 2; width++)
             {
-                plShips[_shipCnt - 1].push_back(make_pair(_x + width, _y));
+                plShips[_shipCnt].push_back(make_pair(_x + width, _y));
             }
         }
     } 
@@ -528,13 +524,13 @@ void Player::SetShip()
         if (_position == VERTICAL) {
             for (int height = 0; height < 3; height++)
             {
-                plShips[_shipCnt - 1].push_back(make_pair(_x, _y + height));
+                plShips[_shipCnt].push_back(make_pair(_x, _y + height));
             }
         }
         else {
             for (int width = 0; width < 3; width++)
             {
-                plShips[_shipCnt - 1].push_back(make_pair(_x + width, _y));
+                plShips[_shipCnt].push_back(make_pair(_x + width, _y));
             }
         }
     }
@@ -542,18 +538,21 @@ void Player::SetShip()
         if (_position == VERTICAL) {
             for (int height = 0; height < 4; height++)
             {
-                plShips[_shipCnt - 1].push_back(make_pair(_x, _y + height));
+                plShips[_shipCnt].push_back(make_pair(_x, _y + height));
             }
         }
         else {
             for (int width = 0; width < 4; width++)
             {
-                plShips[_shipCnt - 1].push_back(make_pair(_x + width, _y));
+                plShips[_shipCnt].push_back(make_pair(_x + width, _y));
             }
         }
     }
 
-    _x = 7, _y = 7;
+    _shipCnt++;
+
+    if (singlePlayer) _x = 7, _y = 7;
+    _setShip = true;
 
     ChangeShipType();
 }
@@ -745,14 +744,24 @@ bool Player::GetEndSet(bool &win)
 
 bool Player::isShot()
 {
+    if (_shot) {
+        _shot = false;
+        return true;
+    }
+
     return _shot;
-    _shot = false;
 }
 
 bool Player::isSet()
 {
+    if (_setShip) {
+        _setShip = false;
+        _x = 7, _y = 7;
+        ChangeShipType();
+        return true;
+    }
+
     return _setShip;
-    _setShip = false;
 }
 
 void Player::Computer()
@@ -1137,48 +1146,51 @@ void Player::SetCompShips()
     }
 }
 
-void Player::SetEnemyCoord(int x, int y, int shipCounter, int shipPos)
+void Player::SetEnemyCoord(int x, int y, int shipPos)
 {
-    _cmShipCnt = shipCounter;
-    if (shipCounter <= 1) {
-        cmShips[shipCounter].push_back(make_pair(x, y));
+    if (_cmShipCnt == 7) return;
+
+    if (_cmShipCnt <= 1) {
+        cmShips[_cmShipCnt].push_back(make_pair(x, y));
     }
-    else if (shipCounter <= 3) {
+    else if (_cmShipCnt <= 3) {
         if (shipPos == VERTICAL) {
-            cmShips[shipCounter].push_back(make_pair(x, y));
-            cmShips[shipCounter].push_back(make_pair(x, y + 1));
+            cmShips[_cmShipCnt].push_back(make_pair(x, y));
+            cmShips[_cmShipCnt].push_back(make_pair(x, y + 1));
         }
         else {
-            cmShips[shipCounter].push_back(make_pair(x, y));
-            cmShips[shipCounter].push_back(make_pair(x + 1, y));
+            cmShips[_cmShipCnt].push_back(make_pair(x, y));
+            cmShips[_cmShipCnt].push_back(make_pair(x + 1, y));
         }
     }
-    else if (shipCounter <= 5) {
+    else if (_cmShipCnt <= 5) {
         if (shipPos == VERTICAL) {
-            cmShips[shipCounter].push_back(make_pair(x, y));
-            cmShips[shipCounter].push_back(make_pair(x, y + 1));
-            cmShips[shipCounter].push_back(make_pair(x, y + 2));
+            cmShips[_cmShipCnt].push_back(make_pair(x, y));
+            cmShips[_cmShipCnt].push_back(make_pair(x, y + 1));
+            cmShips[_cmShipCnt].push_back(make_pair(x, y + 2));
         }
         else {
-            cmShips[shipCounter].push_back(make_pair(x, y));
-            cmShips[shipCounter].push_back(make_pair(x + 1, y));
-            cmShips[shipCounter].push_back(make_pair(x + 2, y));
+            cmShips[_cmShipCnt].push_back(make_pair(x, y));
+            cmShips[_cmShipCnt].push_back(make_pair(x + 1, y));
+            cmShips[_cmShipCnt].push_back(make_pair(x + 2, y));
         }
     }
-    else if (shipCounter == 6) {
+    else if (_cmShipCnt == 6) {
         if (shipPos == VERTICAL) {
-            cmShips[shipCounter].push_back(make_pair(x, y));
-            cmShips[shipCounter].push_back(make_pair(x, y + 1));
-            cmShips[shipCounter].push_back(make_pair(x, y + 2));
-            cmShips[shipCounter].push_back(make_pair(x, y + 3));
+            cmShips[_cmShipCnt].push_back(make_pair(x, y));
+            cmShips[_cmShipCnt].push_back(make_pair(x, y + 1));
+            cmShips[_cmShipCnt].push_back(make_pair(x, y + 2));
+            cmShips[_cmShipCnt].push_back(make_pair(x, y + 3));
         }
         else {
-            cmShips[shipCounter].push_back(make_pair(x, y));
-            cmShips[shipCounter].push_back(make_pair(x + 1, y));
-            cmShips[shipCounter].push_back(make_pair(x + 2, y));
-            cmShips[shipCounter].push_back(make_pair(x + 3, y));
+            cmShips[_cmShipCnt].push_back(make_pair(x, y));
+            cmShips[_cmShipCnt].push_back(make_pair(x + 1, y));
+            cmShips[_cmShipCnt].push_back(make_pair(x + 2, y));
+            cmShips[_cmShipCnt].push_back(make_pair(x + 3, y));
         }
     }
+
+    _cmShipCnt++;
 }
 
 void Player::SetEnemyState(bool rdy)
