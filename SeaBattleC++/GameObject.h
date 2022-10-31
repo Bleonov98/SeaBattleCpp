@@ -1,6 +1,13 @@
 #pragma once
 #include "Tools.h"
 
+enum algDir {
+	TOP,
+	RIGHT,
+	BOT,
+	LEFT
+};
+
 class GameObject
 {
 public:
@@ -162,7 +169,16 @@ private:
 	vector <pair<int, int>> missCmShips;
 
 	vector <pair<int, int>> checkAroudCrd;
-	bool algKill = false, enemyReady = false, plReady = false, _shot = false, _setShip = false;
+
+	pair<int, int> startPosAlg;
+	pair<int, int> prevPosAlg;
+
+	bool top, bot, left, right;
+	int prevDir;
+
+	bool algKill = false, finded = false, algDone = false;
+
+	bool enemyReady = false, plReady = false, _shot = false, _setShip = false;
 };
 
 

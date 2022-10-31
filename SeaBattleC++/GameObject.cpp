@@ -112,8 +112,7 @@ void Player::MoveCursor()
             Sleep(50);
         }
 
-        DrawShip();
-
+        if (_shipCnt < 7) DrawShip();
     }
     else {
         EraseCursor();
@@ -255,6 +254,8 @@ void Player::ChangeShipType()
     }
     else if (_shipCnt == 7) {
         plReady = true;
+
+        if (singlePlayer) _x = 20, _y = 7;
     }
 }
 
@@ -583,15 +584,11 @@ void Player::Shot()
     if (_player) {
         for (int i = 0; i < damageCmShips.size(); i++)
         {
-            if (_x == damageCmShips[i].first && _y == damageCmShips[i].second) {
-                return;
-            }
+            if (_x == damageCmShips[i].first && _y == damageCmShips[i].second) return;
         }
         for (int i = 0; i < missCmShips.size(); i++)
         {
-            if (_x == missCmShips[i].first && _y == missCmShips[i].second) {
-                return;
-            }
+            if (_x == missCmShips[i].first && _y == missCmShips[i].second) return;
         }
         for (int i = 0; i < cmShips.size(); i++)
         {
@@ -609,15 +606,12 @@ void Player::Shot()
     else {
         for (int i = 0; i < damagePlShips.size(); i++)
         {
-            if (_x == damagePlShips[i].first && _y == damagePlShips[i].second) {
-                return;
-            }
+            if (_x == damagePlShips[i].first && _y == damagePlShips[i].second) return;
         }
         for (int i = 0; i < missPlShips.size(); i++)
         {
-            if (_x == missPlShips[i].first && _y == missPlShips[i].second) {
-                return;
-            }
+            if (_x == missPlShips[i].first && _y == missPlShips[i].second) return;
+            if (_x > 12 || _x < 3 || _y < 3 || _y > 11) return;
         }
         if (singlePlayer) {
             for (int i = 0; i < plShips.size(); i++)
@@ -625,12 +619,30 @@ void Player::Shot()
                 bool brk = false;
                 for (int j = 0; j < plShips[i].size(); j++)
                 {
-                    if (_x == plShips[i][j].first && _y == plShips[i][j].second) {
+                    if (_x == plShips[i][j].first && _y == plShips[i][j].second && !algKill) {
+
                         damagePlShips.push_back(make_pair(plShips[i][j].first, plShips[i][j].second));
+
                         kill = true;
                         algKill = true;
+
                         checkAroudCrd.clear();
                         checkAroudCrd.push_back(make_pair(_x, _y));
+
+                        startPosAlg.first = _x, startPosAlg.second = _y;
+                        prevPosAlg.first = _x, prevPosAlg.second = _y;
+
+                        brk = true;
+                    }
+                    else if (_x == plShips[i][j].first && _y == plShips[i][j].second && algKill) {
+                        finded = true;
+                        damagePlShips.push_back(make_pair(plShips[i][j].first, plShips[i][j].second));
+                        if (_x > prevPosAlg.first) right = true;
+                        else if (_x < prevPosAlg.first) left = true;
+                        else if (_y > prevPosAlg.second) bot = true;
+                        else if (_y < prevPosAlg.second) top = true;
+                        prevPosAlg.first = _x, prevPosAlg.second = _y;
+                        kill = true;
                         brk = true;
                     }
                     if (brk) break;
@@ -656,7 +668,16 @@ void Player::Shot()
     }
     if (!kill) {
         if (_player) missCmShips.push_back(make_pair(_x, _y));
-        else missPlShips.push_back(make_pair(_x, _y));
+        else { 
+            missPlShips.push_back(make_pair(_x, _y)); 
+            if (finded) {
+                prevPosAlg = startPosAlg;
+                if (prevDir == TOP) bot = true;
+                else if (prevDir == BOT) top = true;
+                else if (prevDir == RIGHT) left = true;
+                else if (prevDir == LEFT) right = true;
+            }
+        }
         NextPlayer();
     }
 
@@ -682,6 +703,13 @@ void Player::Shot()
 
                     if (Cnt == plShips[i].size()) {
                         destroyedShips.push_back(i);
+                        if (singlePlayer) {
+                            algKill = false;
+                            finded = false;
+                            checkAroudCrd.clear();
+
+                            top = false, bot = false, left = false, right = false;
+                        }
                     }
 
                 }
@@ -768,59 +796,84 @@ void Player::Computer()
 {
     if (checkAroudCrd.empty()) {
         algKill = false;
+        algDone = true;
     }
 
     if (!algKill) {
         _x = 3 + rand() % 10;
         _y = 3 + rand() % 9;
     }
-    else if (algKill && checkAroudCrd.size() == 1) {
+    else if (algKill && !finded && algDone) {
+        algDone = false;
         if (checkAroudCrd[0].first + 1 <= 12) checkAroudCrd.push_back(make_pair(checkAroudCrd[0].first + 1, checkAroudCrd[0].second));
         if (checkAroudCrd[0].first - 1 > 3) checkAroudCrd.push_back(make_pair(checkAroudCrd[0].first - 1, checkAroudCrd[0].second));
         if (checkAroudCrd[0].second - 1 >= 3) checkAroudCrd.push_back(make_pair(checkAroudCrd[0].first, checkAroudCrd[0].second - 1));
-        if (checkAroudCrd[0].second + 1 <= 10) checkAroudCrd.push_back(make_pair(checkAroudCrd[0].first, checkAroudCrd[0].second + 1));
+        if (checkAroudCrd[0].second + 1 <= 11) checkAroudCrd.push_back(make_pair(checkAroudCrd[0].first, checkAroudCrd[0].second + 1));
 
         checkAroudCrd.erase(checkAroudCrd.begin());
     }
-
-    for (int i = 0; i < missPlShips.size(); i++)
-    {
-        if (_x == missPlShips[i].first && _y == missPlShips[i].second && !algKill) {
-            _x = 3 + rand() % 10;
-            _y = 3 + rand() % 9;
-            i = -1;
+    else if (algKill && finded) {
+        if (top) { 
+            _y = prevPosAlg.second - 1, _x = prevPosAlg.first; 
+            prevDir = TOP;
         }
-        else if (algKill && !checkAroudCrd.empty()) {
-            for (int j = 0; j < checkAroudCrd.size(); j++)
-            {
-                if (checkAroudCrd[j].first == missPlShips[i].first && checkAroudCrd[j].second == missPlShips[i].second && algKill) {
-                    checkAroudCrd.erase(checkAroudCrd.begin() + j);
-                    i = -1;
-                    break;
+        else if (bot) {
+            _y = prevPosAlg.second + 1, _x = prevPosAlg.first;
+            prevDir = BOT;
+        }
+        else if (right) {
+            _x = prevPosAlg.first + 1, _y = prevPosAlg.second;
+            prevDir = RIGHT;
+        }
+        else if (left) {
+            _x = prevPosAlg.first - 1, _y = prevPosAlg.second;
+            prevDir = LEFT;
+        } 
+
+        left = false, right = false, top = false, bot = false;
+    }
+
+    if (!algKill) {
+        for (int i = 0; i < missPlShips.size(); i++)
+        {
+            if (_x == missPlShips[i].first && _y == missPlShips[i].second && !algKill) {
+                _x = 3 + rand() % 10;
+                _y = 3 + rand() % 9;
+                i = -1;
+            }
+            else if (algKill && !checkAroudCrd.empty()) {
+                for (int j = 0; j < checkAroudCrd.size(); j++)
+                {
+                    if (checkAroudCrd[j].first == missPlShips[i].first && checkAroudCrd[j].second == missPlShips[i].second && algKill) {
+                        checkAroudCrd.erase(checkAroudCrd.begin() + j);
+                        i = -1;
+                        break;
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < damagePlShips.size(); i++)
+        {
+            if (_x == damagePlShips[i].first && _y == damagePlShips[i].second && !algKill) {
+                _x = 3 + rand() % 10;
+                _y = 3 + rand() % 9;
+                i = -1;
+            }
+            else if (algKill && !checkAroudCrd.empty()) {
+                for (int j = 0; j < checkAroudCrd.size(); j++)
+                {
+                    if (checkAroudCrd[j].first == damagePlShips[i].first && checkAroudCrd[j].second == damagePlShips[i].second && algKill) {
+                        checkAroudCrd.erase(checkAroudCrd.begin() + j);
+                        i = -1;
+                        break;
+                    }
                 }
             }
         }
     }
-    for (int i = 0; i < damagePlShips.size(); i++)
-    {
-        if (_x == damagePlShips[i].first && _y == damagePlShips[i].second && !algKill) {
-            _x = 3 + rand() % 10;
-            _y = 3 + rand() % 9;
-            i = -1;
-        }
-        else if (algKill && !checkAroudCrd.empty()) {
-            for (int j = 0; j < checkAroudCrd.size(); j++)
-            {
-                if (checkAroudCrd[j].first == damagePlShips[i].first && checkAroudCrd[j].second == damagePlShips[i].second && algKill) {
-                    checkAroudCrd.erase(checkAroudCrd.begin() + j);
-                    i = -1;
-                    break;
-                }
-            }
-        }
-    }
+    
 
-    if (algKill && !checkAroudCrd.empty()) {
+    if (algKill && !checkAroudCrd.empty() && !finded) {
         _x = checkAroudCrd.back().first;
         _y = checkAroudCrd.back().second;
         checkAroudCrd.pop_back();

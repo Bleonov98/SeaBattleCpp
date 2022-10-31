@@ -300,7 +300,6 @@ void Game::RunWorld(bool& restart)
 		{ ConnectW(); }
 	);
 
-
 	Sleep(1000);
 
 	while (worldIsRun) {
