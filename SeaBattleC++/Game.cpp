@@ -216,7 +216,11 @@ void Game::ConnectW()
 			cData._shipPos = player->GetShipPos();
 			cData._prepare = player->IsReady();
 
-			if (player->IsReady() && !player->GetEnemyState()) waiting = true;
+			if (player->IsReady() && !player->GetEnemyState()) {
+				waiting = true;
+				player->SetState(true);
+			}
+			else if (!player->IsReady() && player->GetEnemyState()) player->SetState(false);
 			else if (player->IsReady() && player->GetEnemyState()) {
 				waiting = false;
 				gameRun = true;
@@ -226,6 +230,7 @@ void Game::ConnectW()
 			cData._x = player->GetX() - 15;
 			cData._y = player->GetY();
 			cData.win = win;
+			cData._shot = player->isShot();
 		}
 
 		ZeroMemory(bufByte, sizeof(bufByte));
@@ -243,7 +248,6 @@ void Game::ConnectW()
 
 
 				if (bytesRecv > 0) {
-
 					memcpy(&cData, bufByte, sizeof(cData));
 
 					if (cData.win) {
@@ -256,11 +260,12 @@ void Game::ConnectW()
 					cX = cData._x;
 					wData.vBuf[cY][cX] = u'#' | (Purple << 8); // for seeing enemy cursor 
 					
+					if (gameRun && cData._shot) player->SetEnemyShot(cData._x, cData._y);
+
 					if (!gameRun && cData._setShip) {
 						player->SetEnemyCoord(cData._x, cData._y, cData._shipPos);
+						player->SetEnemyState(cData._prepare);
 					}
-
-					player->SetEnemyState(cData._prepare);
 				}
 			}
 		}

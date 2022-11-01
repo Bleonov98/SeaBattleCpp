@@ -119,7 +119,6 @@ void Player::MoveCursor()
 
         if (!_player) {
             if (singlePlayer) Computer();
-            else _player = !_player;
         }
         else {
             if ((GetAsyncKeyState(VK_RIGHT) & 0x8000) && _x <= 26) _x++;
@@ -255,7 +254,7 @@ void Player::ChangeShipType()
     else if (_shipCnt == 7) {
         plReady = true;
 
-        if (singlePlayer) _x = 20, _y = 7;
+        _x = 20, _y = 7;
     }
 }
 
@@ -284,14 +283,12 @@ void Player::ShowShips()
     {
         if (missPlShips[i].first <= 2 || missPlShips[i].first >= 13 || missPlShips[i].second <= 2 || missPlShips[i].second >= 12) continue;
         wData->vBuf[missPlShips[i].second][missPlShips[i].first] = u'X' | (Red << 8);
-        wData->grid[missPlShips[i].second][missPlShips[i].first] = 2;
     }
 
     for (int i = 0; i < missCmShips.size(); i++)
     {
         if (missCmShips[i].first <= 17 || missCmShips[i].first >= 28 || missCmShips[i].second <= 2 || missCmShips[i].second >= 12) continue;
         wData->vBuf[missCmShips[i].second][missCmShips[i].first] = u'X' | (Red << 8);
-        wData->grid[missCmShips[i].second][missCmShips[i].first] = 2;
     }
 
     for (int i = 0; i < damagePlShips.size(); i++)
@@ -316,29 +313,37 @@ void Player::ShowDstrShips()
         {
              if (wData->grid[plShips[destroyedShips[k]][i].second][plShips[destroyedShips[k]][i].first + 1] == 0) {
                   missPlShips.push_back(make_pair(plShips[destroyedShips[k]][i].first + 1, plShips[destroyedShips[k]][i].second));
+                  wData->grid[plShips[destroyedShips[k]][i].second][plShips[destroyedShips[k]][i].first + 1] = 2;
              }
              if (wData->grid[plShips[destroyedShips[k]][i].second][plShips[destroyedShips[k]][i].first - 1] == 0) {
                  missPlShips.push_back(make_pair(plShips[destroyedShips[k]][i].first - 1, plShips[destroyedShips[k]][i].second));
+                 wData->grid[plShips[destroyedShips[k]][i].second][plShips[destroyedShips[k]][i].first - 1] = 2;
              }
              if (wData->grid[plShips[destroyedShips[k]][i].second + 1][plShips[destroyedShips[k]][i].first + 1] == 0) {
                  missPlShips.push_back(make_pair(plShips[destroyedShips[k]][i].first, plShips[destroyedShips[k]][i].second + 1));
+                 wData->grid[plShips[destroyedShips[k]][i].second + 1][plShips[destroyedShips[k]][i].first + 1] = 2;
              }
              if (wData->grid[plShips[destroyedShips[k]][i].second - 1][plShips[destroyedShips[k]][i].first] == 0) {
                  missPlShips.push_back(make_pair(plShips[destroyedShips[k]][i].first, plShips[destroyedShips[k]][i].second - 1));
+                 wData->grid[plShips[destroyedShips[k]][i].second - 1][plShips[destroyedShips[k]][i].first] = 2;
              }
 
 
              if (wData->grid[plShips[destroyedShips[k]][i].second + 1][plShips[destroyedShips[k]][i].first + 1] == 0) {
                  missPlShips.push_back(make_pair(plShips[destroyedShips[k]][i].first + 1, plShips[destroyedShips[k]][i].second + 1));
+                 wData->grid[plShips[destroyedShips[k]][i].second + 1][plShips[destroyedShips[k]][i].first + 1] = 2;
              }
              if (wData->grid[plShips[destroyedShips[k]][i].second - 1][plShips[destroyedShips[k]][i].first - 1] == 0) {
                  missPlShips.push_back(make_pair(plShips[destroyedShips[k]][i].first - 1, plShips[destroyedShips[k]][i].second - 1));
+                 wData->grid[plShips[destroyedShips[k]][i].second - 1][plShips[destroyedShips[k]][i].first - 1] = 2;
              }
              if (wData->grid[plShips[destroyedShips[k]][i].second - 1][plShips[destroyedShips[k]][i].first + 1] == 0) {
                  missPlShips.push_back(make_pair(plShips[destroyedShips[k]][i].first + 1, plShips[destroyedShips[k]][i].second - 1));
+                 wData->grid[plShips[destroyedShips[k]][i].second - 1][plShips[destroyedShips[k]][i].first + 1] = 2;
              }
              if (wData->grid[plShips[destroyedShips[k]][i].second + 1][plShips[destroyedShips[k]][i].first - 1] == 0) {
                  missPlShips.push_back(make_pair(plShips[destroyedShips[k]][i].first - 1, plShips[destroyedShips[k]][i].second + 1));
+                 wData->grid[plShips[destroyedShips[k]][i].second + 1][plShips[destroyedShips[k]][i].first - 1] = 2;
              }
         } 
     }
@@ -350,29 +355,37 @@ void Player::ShowDstrShips()
         {
             if (wData->grid[cmShips[destroyedCmShips[k]][i].second][cmShips[destroyedCmShips[k]][i].first + 1] == 0) {
                 missCmShips.push_back(make_pair(cmShips[destroyedCmShips[k]][i].first + 1, cmShips[destroyedCmShips[k]][i].second));
+                wData->grid[cmShips[destroyedCmShips[k]][i].second][cmShips[destroyedCmShips[k]][i].first + 1] = 2;
             }
             if (wData->grid[cmShips[destroyedCmShips[k]][i].second][plShips[destroyedCmShips[k]][i].first - 1] == 0) {
                 missCmShips.push_back(make_pair(cmShips[destroyedCmShips[k]][i].first - 1, cmShips[destroyedCmShips[k]][i].second));
+                wData->grid[cmShips[destroyedCmShips[k]][i].second][plShips[destroyedCmShips[k]][i].first - 1] = 2;
             }
             if (wData->grid[cmShips[destroyedCmShips[k]][i].second + 1][plShips[destroyedCmShips[k]][i].first + 1] == 0) {
                 missCmShips.push_back(make_pair(cmShips[destroyedCmShips[k]][i].first, cmShips[destroyedCmShips[k]][i].second + 1));
+                wData->grid[cmShips[destroyedCmShips[k]][i].second + 1][plShips[destroyedCmShips[k]][i].first + 1] = 2;
             }
             if (wData->grid[cmShips[destroyedCmShips[k]][i].second - 1][plShips[destroyedCmShips[k]][i].first] == 0) {
                 missCmShips.push_back(make_pair(cmShips[destroyedCmShips[k]][i].first, cmShips[destroyedCmShips[k]][i].second - 1));
+                wData->grid[cmShips[destroyedCmShips[k]][i].second - 1][plShips[destroyedCmShips[k]][i].first] = 2;
             }
 
 
             if (wData->grid[cmShips[destroyedCmShips[k]][i].second + 1][cmShips[destroyedCmShips[k]][i].first + 1] == 0) {
                 missCmShips.push_back(make_pair(cmShips[destroyedCmShips[k]][i].first + 1, cmShips[destroyedCmShips[k]][i].second + 1));
+                wData->grid[cmShips[destroyedCmShips[k]][i].second + 1][cmShips[destroyedCmShips[k]][i].first + 1] = 2;
             }
             if (wData->grid[cmShips[destroyedCmShips[k]][i].second - 1][cmShips[destroyedCmShips[k]][i].first - 1] == 0) {
                 missCmShips.push_back(make_pair(cmShips[destroyedCmShips[k]][i].first - 1, cmShips[destroyedCmShips[k]][i].second - 1));
+                wData->grid[cmShips[destroyedCmShips[k]][i].second - 1][cmShips[destroyedCmShips[k]][i].first - 1] = 2;
             }
             if (wData->grid[cmShips[destroyedCmShips[k]][i].second - 1][cmShips[destroyedCmShips[k]][i].first + 1] == 0) {
                 missCmShips.push_back(make_pair(cmShips[destroyedCmShips[k]][i].first + 1, cmShips[destroyedCmShips[k]][i].second - 1));
+                wData->grid[cmShips[destroyedCmShips[k]][i].second - 1][cmShips[destroyedCmShips[k]][i].first + 1] = 2;
             }
             if (wData->grid[cmShips[destroyedCmShips[k]][i].second + 1][cmShips[destroyedCmShips[k]][i].first - 1] == 0) {
                 missCmShips.push_back(make_pair(cmShips[destroyedCmShips[k]][i].first - 1, cmShips[destroyedCmShips[k]][i].second + 1));
+                wData->grid[cmShips[destroyedCmShips[k]][i].second + 1][cmShips[destroyedCmShips[k]][i].first - 1] = 2;
             }
         }
     }
@@ -573,6 +586,11 @@ void Player::NextPlayer()
     }
 }
 
+void Player::SetState(bool turn)
+{
+    _player = turn;
+}
+
 bool Player::PlayerW()
 {
     return _player;
@@ -611,7 +629,14 @@ void Player::Shot()
         for (int i = 0; i < missPlShips.size(); i++)
         {
             if (_x == missPlShips[i].first && _y == missPlShips[i].second) return;
-            if (_x > 12 || _x < 3 || _y < 3 || _y > 11) return;
+            if (_x > 12 || _x < 3 || _y < 3 || _y > 11 && finded) { 
+                prevPosAlg = startPosAlg;
+                if (prevDir == TOP) bot = true;
+                else if (prevDir == BOT) top = true;
+                else if (prevDir == RIGHT) left = true;
+                else if (prevDir == LEFT) right = true;
+                return; 
+            }
         }
         if (singlePlayer) {
             for (int i = 0; i < plShips.size(); i++)
@@ -650,20 +675,6 @@ void Player::Shot()
                 if (brk) break;
             }
         }
-        else {
-            for (int i = 0; i < plShips.size(); i++)
-            {
-                for (int j = 0; j < plShips[i].size(); j++)
-                {
-                    if (_x == plShips[i][j].first && _y == plShips[i][j].second) {
-                        damagePlShips.push_back(make_pair(plShips[i][j].first, plShips[i][j].second));
-                        kill = true;
-                        break;
-                    }
-                }
-
-            }
-        }
         
     }
     if (!kill) {
@@ -681,42 +692,44 @@ void Player::Shot()
         NextPlayer();
     }
 
-    int Cnt = 0;
-    for (int i = 0; i < plShips.size(); i++)
-    {
-        bool next = false;
-        for (int dst = 0; dst < destroyedShips.size(); dst++)
+    if (singlePlayer) {
+        int Cnt = 0;
+        for (int i = 0; i < plShips.size(); i++)
         {
-            if (i == destroyedShips[dst]) {
-                next = true;
-            }
-        }
-        if (next) continue;
-        
-        for (int j = 0; j < plShips[i].size(); j++)
-        {
-            for (int k = 0; k < damagePlShips.size(); k++)
+            bool next = false;
+            for (int dst = 0; dst < destroyedShips.size(); dst++)
             {
-                
-                if (damagePlShips[k].first == plShips[i][j].first && damagePlShips[k].second == plShips[i][j].second) {
-                    Cnt++;
+                if (i == destroyedShips[dst]) {
+                    next = true;
+                }
+            }
+            if (next) continue;
 
-                    if (Cnt == plShips[i].size()) {
-                        destroyedShips.push_back(i);
-                        if (singlePlayer) {
+            for (int j = 0; j < plShips[i].size(); j++)
+            {
+                for (int k = 0; k < damagePlShips.size(); k++)
+                {
+
+                    if (damagePlShips[k].first == plShips[i][j].first && damagePlShips[k].second == plShips[i][j].second) {
+                        Cnt++;
+
+                        if (Cnt == plShips[i].size()) {
+                            destroyedShips.push_back(i);
+
                             algKill = false;
                             finded = false;
+
                             checkAroudCrd.clear();
 
                             top = false, bot = false, left = false, right = false;
                         }
+
                     }
 
                 }
-
             }
+            Cnt = 0;
         }
-        Cnt = 0;
     }
 
     int cmCnt = 0;
@@ -1244,6 +1257,68 @@ void Player::SetEnemyCoord(int x, int y, int shipPos)
     }
 
     _cmShipCnt++;
+}
+
+void Player::SetEnemyShot(int x, int y)
+{
+    bool kill = false;
+    for (int i = 0; i < damagePlShips.size(); i++)
+    {
+        if (x == damagePlShips[i].first && y == damagePlShips[i].second) return;
+    }
+    for (int i = 0; i < missPlShips.size(); i++)
+    {
+        if (x == missPlShips[i].first && y == missPlShips[i].second) return;
+    }
+
+    for (int i = 0; i < plShips.size(); i++)
+    {
+        for (int j = 0; j < plShips[i].size(); j++)
+        {
+            if (_x == plShips[i][j].first && _y == plShips[i][j].second) {
+                damagePlShips.push_back(make_pair(plShips[i][j].first, plShips[i][j].second));
+                kill = true;
+                break;
+            }
+        }
+
+    }
+
+    int Cnt = 0;
+    for (int i = 0; i < plShips.size(); i++)
+    {
+        bool next = false;
+        for (int dst = 0; dst < destroyedShips.size(); dst++)
+        {
+            if (i == destroyedShips[dst]) {
+                next = true;
+            }
+        }
+        if (next) continue;
+
+        for (int j = 0; j < plShips[i].size(); j++)
+        {
+            for (int k = 0; k < damagePlShips.size(); k++)
+            {
+
+                if (damagePlShips[k].first == plShips[i][j].first && damagePlShips[k].second == plShips[i][j].second) {
+                    Cnt++;
+
+                    if (Cnt == plShips[i].size()) {
+                        destroyedShips.push_back(i);
+                    }
+
+                }
+
+            }
+        }
+        Cnt = 0;
+    }
+
+    if (!kill) {
+        missPlShips.push_back(make_pair(_x, _y));
+        NextPlayer();
+    }
 }
 
 void Player::SetEnemyState(bool rdy)

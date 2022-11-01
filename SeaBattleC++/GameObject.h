@@ -73,6 +73,8 @@ public:
 	int GetShipPos();
 
 
+	void SetState(bool turn);
+
 	bool IsReady();
 
 	bool isShot();
@@ -81,6 +83,8 @@ public:
 
 	
 	void SetEnemyCoord(int x, int y, int shipPos);
+
+	void SetEnemyShot(int x, int y);
 
 
 	void SetEnemyState(bool rdy);
