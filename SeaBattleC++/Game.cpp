@@ -12,11 +12,6 @@ void Game::HotKeys(bool& pause)
 		if (GetAsyncKeyState(VK_ESCAPE) & 0x8000) {
 			worldIsRun = false;
 		}
-		else if (GetAsyncKeyState(0x50) & 0x8000) {
-			pause = !pause;
-
-			this_thread::sleep_for(milliseconds(1000));
-		}
 	}
 }
 
@@ -70,28 +65,29 @@ void Game::CreateWorld() {
 void Game::DrawEndInfo(bool& restart)
 {
 	if (win) {
-		SetPos(COLS + 1, 20);
+		SetPos(COLS/3 - 1, 20);
 		cout << "CONGRATULATION! YOU WIN!";
 	}
 	else {
-		SetPos(COLS + 7, 20);
+		SetPos(COLS/2 - 4, 20);
 		cout << "GAME OVER!";
 	}
 
-	SetPos(COLS + 1, 23);
+	SetPos(COLS/3, 23);
 	cout << "PRESS ENTER TO RESTART";
-	SetPos(COLS + 3, 24);
+	SetPos(COLS/3 + 2, 24);
 	cout << "PRESS ESC TO EXIT";
 
 	bool pressed = false;
 	restart = false;
 
 	while (!pressed) {
-		if (GetAsyncKeyState(VK_RETURN)) {
+		Sleep(1000);
+		if (GetAsyncKeyState(VK_RETURN) & 0x8000) {
 			restart = true;
 			pressed = true;
 		}
-		else if (GetAsyncKeyState(VK_ESCAPE)) {
+		else if (GetAsyncKeyState(VK_ESCAPE) & 0x8000) {
 			restart = false;
 			pressed = true;
 		}
@@ -168,14 +164,14 @@ void Game::ConnectW()
 	
 	int  wsResult = WSAStartup(ver, &wsData);
 	if (wsResult != 0) {
-		SetPos(30, 30);
+		SetPos(COLS/3, 30);
 		cout << "Failed to start wSock... ERROR: " << wsResult;
 		return;
 	}
 
 	SOCKET conSocket = socket(AF_INET, SOCK_STREAM, NULL);
 	if (conSocket == INVALID_SOCKET) {
-		SetPos(30, 30);
+		SetPos(COLS / 3, 30);
 		cout << "Socket can't be created... ERROR: " << WSAGetLastError();
 		return;
 	}
@@ -189,7 +185,7 @@ void Game::ConnectW()
 
 	int connRes = connect(conSocket, (sockaddr*)&hints, sizeof(hints));
 	if (connRes == SOCKET_ERROR) {
-		SetPos(30, 30);
+		SetPos(COLS / 3, 30);
 		cout << "Unable connect to server, ERROR: " << connRes;
 		closesocket(conSocket);
 		WSACleanup();
@@ -250,21 +246,23 @@ void Game::ConnectW()
 				if (bytesRecv > 0) {
 					memcpy(&cData, bufByte, sizeof(cData));
 
-					if (cData.win) {
-						worldIsRun = false;
-						win = false;
+					if (gameRun) {
+						wData.vBuf[cY][cX] = u' ';
+						cY = cData._y;
+						cX = cData._x;
+						wData.vBuf[cY][cX] = u'#' | (Purple << 8); // for seeing enemy cursor 
+
+						if (cData._shot) player->SetEnemyShot(cData._x, cData._y);
+
+						if (cData.win) {
+							worldIsRun = false;
+							win = false;
+						}
 					}
-
-					wData.vBuf[cY][cX] = u' ';
-					cY = cData._y;
-					cX = cData._x;
-					wData.vBuf[cY][cX] = u'#' | (Purple << 8); // for seeing enemy cursor 
-					
-					if (gameRun && cData._shot) player->SetEnemyShot(cData._x, cData._y);
-
-					if (!gameRun && cData._setShip) {
-						player->SetEnemyCoord(cData._x, cData._y, cData._shipPos);
+					else {
 						player->SetEnemyState(cData._prepare);
+
+						if (cData._setShip) player->SetEnemyCoord(cData._x, cData._y, cData._shipPos);
 					}
 				}
 			}
@@ -275,6 +273,7 @@ void Game::ConnectW()
 	closesocket(conSocket);
 	WSACleanup();
 }
+
 void Game::DrawToMem()
 {
 	for (int i = 0; i < allObjectList.size(); i++)
@@ -308,27 +307,13 @@ void Game::RunWorld(bool& restart)
 	Sleep(1000);
 
 	while (worldIsRun) {
-
-		if (pause) {
-
-			SetPos(COLS / 2 - 2, ROWS / 2);
-			cout << "PAUSED";
-
-			while (pause) {
-
-			}
-
-			SetPos(COLS / 2 - 2, ROWS / 2);
-			cout << "      ";
-
-		}
 		
 		if (!waiting) player->MoveCursor();
 		else {
-			SetPos(38, 30);
+			SetPos(35, 30);
 			cout << "Waiting for enemy...";
 			Sleep(700);
-			SetPos(38, 30);
+			SetPos(35, 30);
 			cout << "                    ";
 			Sleep(550);
 		}
@@ -347,6 +332,7 @@ void Game::RunWorld(bool& restart)
 	}
 
 	DrawEndInfo(restart);
+	Sleep(1000);
 
 	hotKeys.join();
 	mPlayer.join();

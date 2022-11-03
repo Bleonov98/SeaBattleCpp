@@ -44,7 +44,7 @@ private:
 
         HWND hWindowConsole = GetForegroundWindow();
 
-        int Width = 91, Height = 51, err = 30;
+        int Width = COLS + 1, Height = ROWS + 1, err = 30;
 
         bool Terminal() {
 

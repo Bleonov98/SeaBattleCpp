@@ -32,7 +32,7 @@ bool GameObject::IsObjectDelete()
 
 void GameObject::DrawCursor()
 {
-    wData->vBuf[_y][_x] = u'#' | (_color << 8);
+    wData->vBuf[_y][_x] = u'#' | (Red << 8);
 }
 
 void GameObject::EraseCursor()
@@ -140,13 +140,13 @@ void Player::DrawShip()
         if (_position == VERTICAL) {
             for (int height = 0; height < 2; height++)
             {
-                wData->vBuf[_y + height][_x] = dblShipVert[height][0] | (_color << 8);
+                wData->vBuf[_y + height][_x] = dblShipVert[height][0] | (Red << 8);
             }
         }
         else {
             for (int width = 0; width < 2; width++)
             {
-                wData->vBuf[_y][_x + width] = dblShipHor[0][width] | (_color << 8);
+                wData->vBuf[_y][_x + width] = dblShipHor[0][width] | (Red << 8);
             }
         }
     }
@@ -154,13 +154,13 @@ void Player::DrawShip()
         if (_position == VERTICAL) {
             for (int height = 0; height < 3; height++)
             {
-                wData->vBuf[_y + height][_x] = trplShipVert[height][0] | (_color << 8);
+                wData->vBuf[_y + height][_x] = trplShipVert[height][0] | (Red << 8);
             }
         }
         else {
             for (int width = 0; width < 3; width++)
             {
-                wData->vBuf[_y][_x + width] = trplShipHor[0][width] | (_color << 8);
+                wData->vBuf[_y][_x + width] = trplShipHor[0][width] | (Red << 8);
             }
         }
     }
@@ -168,13 +168,13 @@ void Player::DrawShip()
         if (_position == VERTICAL) {
             for (int height = 0; height < 4; height++)
             {
-                wData->vBuf[_y + height][_x] = bigShipVert[height][0] | (_color << 8);
+                wData->vBuf[_y + height][_x] = bigShipVert[height][0] | (Red << 8);
             }
         }
         else {
             for (int width = 0; width < 4; width++)
             {
-                wData->vBuf[_y][_x + width] = bigShipHor[0][width] | (_color << 8);
+                wData->vBuf[_y][_x + width] = bigShipHor[0][width] | (Red << 8);
             }
         }
     }
@@ -254,6 +254,8 @@ void Player::ChangeShipType()
     else if (_shipCnt == 7) {
         plReady = true;
 
+        if (!singlePlayer) Sleep(1000);
+
         _x = 20, _y = 7;
     }
 }
@@ -269,14 +271,14 @@ void Player::ShowShips()
         }
     }
 
-    for (int i = 0; i < cmShips.size(); i++)
+    /*for (int i = 0; i < cmShips.size(); i++)
     {
         for (int j = 0; j < cmShips[i].size(); j++)
         {
             wData->vBuf[cmShips[i][j].second][cmShips[i][j].first] = u'#' | (_color << 8);
             wData->grid[cmShips[i][j].second][cmShips[i][j].first] = 1;
         }
-    }
+    }*/
 
 
     for (int i = 0; i < missPlShips.size(); i++)
@@ -319,9 +321,9 @@ void Player::ShowDstrShips()
                  missPlShips.push_back(make_pair(plShips[destroyedShips[k]][i].first - 1, plShips[destroyedShips[k]][i].second));
                  wData->grid[plShips[destroyedShips[k]][i].second][plShips[destroyedShips[k]][i].first - 1] = 2;
              }
-             if (wData->grid[plShips[destroyedShips[k]][i].second + 1][plShips[destroyedShips[k]][i].first + 1] == 0) {
+             if (wData->grid[plShips[destroyedShips[k]][i].second + 1][plShips[destroyedShips[k]][i].first] == 0) {
                  missPlShips.push_back(make_pair(plShips[destroyedShips[k]][i].first, plShips[destroyedShips[k]][i].second + 1));
-                 wData->grid[plShips[destroyedShips[k]][i].second + 1][plShips[destroyedShips[k]][i].first + 1] = 2;
+                 wData->grid[plShips[destroyedShips[k]][i].second + 1][plShips[destroyedShips[k]][i].first] = 2;
              }
              if (wData->grid[plShips[destroyedShips[k]][i].second - 1][plShips[destroyedShips[k]][i].first] == 0) {
                  missPlShips.push_back(make_pair(plShips[destroyedShips[k]][i].first, plShips[destroyedShips[k]][i].second - 1));
@@ -361,9 +363,9 @@ void Player::ShowDstrShips()
                 missCmShips.push_back(make_pair(cmShips[destroyedCmShips[k]][i].first - 1, cmShips[destroyedCmShips[k]][i].second));
                 wData->grid[cmShips[destroyedCmShips[k]][i].second][plShips[destroyedCmShips[k]][i].first - 1] = 2;
             }
-            if (wData->grid[cmShips[destroyedCmShips[k]][i].second + 1][plShips[destroyedCmShips[k]][i].first + 1] == 0) {
+            if (wData->grid[cmShips[destroyedCmShips[k]][i].second + 1][plShips[destroyedCmShips[k]][i].first] == 0) {
                 missCmShips.push_back(make_pair(cmShips[destroyedCmShips[k]][i].first, cmShips[destroyedCmShips[k]][i].second + 1));
-                wData->grid[cmShips[destroyedCmShips[k]][i].second + 1][plShips[destroyedCmShips[k]][i].first + 1] = 2;
+                wData->grid[cmShips[destroyedCmShips[k]][i].second + 1][plShips[destroyedCmShips[k]][i].first] = 2;
             }
             if (wData->grid[cmShips[destroyedCmShips[k]][i].second - 1][plShips[destroyedCmShips[k]][i].first] == 0) {
                 missCmShips.push_back(make_pair(cmShips[destroyedCmShips[k]][i].first, cmShips[destroyedCmShips[k]][i].second - 1));
@@ -1275,13 +1277,13 @@ void Player::SetEnemyShot(int x, int y)
     {
         for (int j = 0; j < plShips[i].size(); j++)
         {
-            if (_x == plShips[i][j].first && _y == plShips[i][j].second) {
+            if (x == plShips[i][j].first && y == plShips[i][j].second) {
                 damagePlShips.push_back(make_pair(plShips[i][j].first, plShips[i][j].second));
                 kill = true;
                 break;
             }
         }
-
+        if (kill) break;
     }
 
     int Cnt = 0;
@@ -1316,7 +1318,7 @@ void Player::SetEnemyShot(int x, int y)
     }
 
     if (!kill) {
-        missPlShips.push_back(make_pair(_x, _y));
+        missPlShips.push_back(make_pair(x, y));
         NextPlayer();
     }
 }
