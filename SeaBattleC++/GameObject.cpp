@@ -243,22 +243,38 @@ int Player::GetShipPos()
 void Player::ChangeShipType()
 {
     if (_shipType == SINGLE && _shipCnt == 2) {
-        Sleep(1000);
         _shipType = DBL;
-        if (_x > 11 && _position == HORIZONTAL) _x--;
-        if (_y > 10 && _position == VERTICAL) _y--;
+        if (_x > 11 && _position == HORIZONTAL) {
+            
+        }
+        if (_y > 10 && _position == VERTICAL) {
+            Sleep(1500);
+            _y--;
+        }
     }
     else if (_shipType == DBL && _shipCnt == 4) {
         Sleep(1000);
         _shipType = TRPL;
-        if (_x > 10 && _position == HORIZONTAL) _x--;
-        if (_y > 9 && _position == VERTICAL) _y--;
+        if (_x > 10 && _position == HORIZONTAL) {
+            Sleep(1500);
+            _x--;
+        }
+        if (_y > 9 && _position == VERTICAL) {
+            Sleep(1500);
+            _y--;
+        }
     }
     else if (_shipType == TRPL && _shipCnt == 6) {
         Sleep(1000);
         _shipType = BIG;
-        if (_x > 9 && _position == HORIZONTAL) _x--;
-        if (_y > 8 && _position == VERTICAL) _y--;
+        if (_x > 9 && _position == HORIZONTAL) {
+            Sleep(1500);
+            _x--;
+        }
+        if (_y > 8 && _position == VERTICAL) {
+            Sleep(1500);
+            _y--;
+        }
     }
     else if (_shipCnt == 7) {
         plReady = true;
@@ -280,14 +296,14 @@ void Player::ShowShips()
         }
     }
 
-    /*for (int i = 0; i < cmShips.size(); i++)
+    for (int i = 0; i < cmShips.size(); i++)
     {
         for (int j = 0; j < cmShips[i].size(); j++)
         {
             wData->vBuf[cmShips[i][j].second][cmShips[i][j].first] = u'#' | (_color << 8);
             wData->grid[cmShips[i][j].second][cmShips[i][j].first] = 1;
         }
-    }*/
+    }
 
 
     for (int i = 0; i < missPlShips.size(); i++)

@@ -178,7 +178,7 @@ private:
 	pair<int, int> prevPosAlg;
 
 	bool top, bot, left, right;
-	int prevDir, prevX, prevY;
+	int prevDir, prevX = 20, prevY = 7;
 
 	bool algKill = false, finded = false, algDone = false;
 
