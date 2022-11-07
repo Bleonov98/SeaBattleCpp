@@ -50,4 +50,18 @@
   <ItemGroup>
     <Text Include="..\SeaBattleArea.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <Media Include="..\mixkit-jump-into-the-water-1180.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="mixkit-jump-into-the-water-1180.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="..\mixkit-short-explosion-1694.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="..\mixkit-masive-explosion-in-battle-2777.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+  </ItemGroup>
 </Project>

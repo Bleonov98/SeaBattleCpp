@@ -62,6 +62,18 @@ LANGUAGE LANG_UKRAINIAN, SUBLANG_DEFAULT
 
 IDR_TEXT1               TEXT                    "C:\\Users\\Borys\\source\\repos\\SeaBattleC++\\SeaBattleArea.txt"
 
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// WAVE
+//
+
+IDR_WAVE1               WAVE                    "..\\SeaBattleC++\\mixkit-jump-into-the-water-1180.wav"
+
+IDR_WAVE2               WAVE                    "C:\\Users\\Borys\\source\\repos\\SeaBattleC++\\mixkit-short-explosion-1694.wav"
+
+IDR_WAVE3               WAVE                    "C:\\Users\\Borys\\source\\repos\\SeaBattleC++\\mixkit-masive-explosion-in-battle-2777.wav"
+
 #endif    // Ukrainian (Ukraine) resources
 /////////////////////////////////////////////////////////////////////////////
 

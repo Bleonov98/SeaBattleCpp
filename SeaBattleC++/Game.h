@@ -12,7 +12,7 @@ private:
     char16_t prevBuf[ROWS][COLS];
     char coord[100];
 
-    bool worldIsRun = true, win = false, waiting = false;
+    bool worldIsRun = true, win = false, waiting = false, singlePlayer = true;
 
     // CONNECTION SETTING
     string ipAdd = "192.168.0.156";
@@ -145,6 +145,8 @@ protected:
     void SetPos(int x, int y);
 
     void DrawArea();
+
+    void MainMenu();
 
     void CreateWorld();
 

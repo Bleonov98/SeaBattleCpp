@@ -156,6 +156,12 @@
   <ItemGroup>
     <Text Include="..\SeaBattleArea.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <Media Include="..\mixkit-jump-into-the-water-1180.wav" />
+    <Media Include="..\mixkit-masive-explosion-in-battle-2777.wav" />
+    <Media Include="..\mixkit-short-explosion-1694.wav" />
+    <Media Include="mixkit-jump-into-the-water-1180.wav" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -50,6 +50,36 @@ void Game::DrawArea()
 	setvbuf(stdout, NULL, _IONBF, 0);
 }
 
+void Game::MainMenu()
+{
+	Sleep(100);
+	int mX = COLS / 2 - 3, mY = ROWS / 2, SP = ROWS / 2, MP = ROWS / 2 + 2;
+
+	SetPos(COLS / 2, ROWS / 2);
+	cout << "SINGLEPLAYER";
+	SetPos(COLS / 2, ROWS / 2 + 2);
+	cout << "MULTIPLAYER";
+	while (true) {
+		if (GetAsyncKeyState(VK_RETURN) & 0x8000) {
+			if (mY == SP) singlePlayer = true;
+			else singlePlayer = false;
+			break;
+		}
+		SetPos(mX, mY);
+		cout << "  ";
+		if (GetAsyncKeyState(VK_UP) & 0x8000) mY = SP;
+		if (GetAsyncKeyState(VK_DOWN) & 0x8000) mY = MP;
+		SetPos(mX, mY);
+		cout << "->";
+		Sleep(10);
+	}
+
+	SetPos(mX, SP);
+	cout << "                    ";
+	SetPos(mX, MP);
+	cout << "                    ";
+}
+
 void Game::CreateWorld() {
 
 	term.Terminal();  // Set virtual terminal settings
@@ -60,6 +90,7 @@ void Game::CreateWorld() {
 	printf(CSI "?25l"); // hide cursor blinking
 
 	DrawArea();
+	MainMenu();
 }
 
 void Game::DrawEndInfo(bool& restart)
@@ -74,20 +105,13 @@ void Game::DrawEndInfo(bool& restart)
 	}
 
 	SetPos(COLS/3, 23);
-	cout << "PRESS ENTER TO RESTART";
-	SetPos(COLS/3 + 2, 24);
 	cout << "PRESS ESC TO EXIT";
 
 	bool pressed = false;
 	restart = false;
 
 	while (!pressed) {
-		Sleep(1000);
-		if (GetAsyncKeyState(VK_RETURN) & 0x8000) {
-			restart = true;
-			pressed = true;
-		}
-		else if (GetAsyncKeyState(VK_ESCAPE) & 0x8000) {
+		if (GetAsyncKeyState(VK_ESCAPE) & 0x8000) {
 			restart = false;
 			pressed = true;
 		}
@@ -294,15 +318,16 @@ void Game::RunWorld(bool& restart)
 		{ HotKeys(pause); }
 	);
 
-	
-
 	player = new Player(&wData, 7, 7, Blue);
 	playerList.push_back(player);
 	allObjectList.push_back(player);
 	
-	thread mPlayer([&]
-		{ ConnectW(); }
-	);
+	if (!singlePlayer) {
+		thread mPlayer([&]
+			{ ConnectW(); }
+		);
+		mPlayer.detach();
+	}
 
 	Sleep(1000);
 
@@ -335,7 +360,6 @@ void Game::RunWorld(bool& restart)
 	Sleep(1000);
 
 	hotKeys.join();
-	mPlayer.join();
 
 	printf(CSI "?1049l");
 }

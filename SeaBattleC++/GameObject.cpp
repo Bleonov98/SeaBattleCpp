@@ -125,8 +125,8 @@ void Player::MoveCursor()
             else if ((GetAsyncKeyState(VK_LEFT) & 0x8000) && _x > 18) _x--;
             else if ((GetAsyncKeyState(VK_UP) & 0x8000) && _y >= 4) _y--;
             else if ((GetAsyncKeyState(VK_DOWN) & 0x8000) && _y <= 10) _y++;
-
             else if (GetAsyncKeyState(VK_RETURN) & 0x8000) Shot();
+            prevX = _x, prevY = _y;
         }
     }
 }
@@ -243,18 +243,27 @@ int Player::GetShipPos()
 void Player::ChangeShipType()
 {
     if (_shipType == SINGLE && _shipCnt == 2) {
+        Sleep(1000);
         _shipType = DBL;
+        if (_x > 11 && _position == HORIZONTAL) _x--;
+        if (_y > 10 && _position == VERTICAL) _y--;
     }
     else if (_shipType == DBL && _shipCnt == 4) {
+        Sleep(1000);
         _shipType = TRPL;
+        if (_x > 10 && _position == HORIZONTAL) _x--;
+        if (_y > 9 && _position == VERTICAL) _y--;
     }
     else if (_shipType == TRPL && _shipCnt == 6) {
+        Sleep(1000);
         _shipType = BIG;
+        if (_x > 9 && _position == HORIZONTAL) _x--;
+        if (_y > 8 && _position == VERTICAL) _y--;
     }
     else if (_shipCnt == 7) {
         plReady = true;
 
-        if (!singlePlayer) Sleep(1000);
+        Sleep(1000);
 
         _x = 20, _y = 7;
     }
@@ -567,7 +576,6 @@ void Player::SetShip()
 
     _shipCnt++;
 
-    if (singlePlayer) _x = 7, _y = 7;
     _setShip = true;
 
     ChangeShipType();
@@ -583,8 +591,8 @@ void Player::NextPlayer()
     _player = !_player;
     EraseCursor();
     if (_player) {
-        _x = 18;
-        _y = 3;
+        _x = prevX;
+        _y = prevY;
     }
 }
 
@@ -680,6 +688,7 @@ void Player::Shot()
         
     }
     if (!kill) {
+        PlaySound(MAKEINTRESOURCE(IDR_WAVE1), NULL, SND_RESOURCE | SND_ASYNC);
         if (_player) missCmShips.push_back(make_pair(_x, _y));
         else { 
             missPlShips.push_back(make_pair(_x, _y)); 
@@ -692,6 +701,9 @@ void Player::Shot()
             }
         }
         NextPlayer();
+    }
+    else {
+        PlaySound(MAKEINTRESOURCE(IDR_WAVE2), NULL, SND_RESOURCE | SND_ASYNC);
     }
 
     if (singlePlayer) {
@@ -717,6 +729,8 @@ void Player::Shot()
 
                         if (Cnt == plShips[i].size()) {
                             destroyedShips.push_back(i);
+
+                            PlaySound(MAKEINTRESOURCE(IDR_WAVE3), NULL, SND_RESOURCE | SND_ASYNC);
 
                             algKill = false;
                             finded = false;
@@ -756,6 +770,7 @@ void Player::Shot()
 
                     if (cmCnt == cmShips[i].size()) {
                         destroyedCmShips.push_back(i);
+                        PlaySound(MAKEINTRESOURCE(IDR_WAVE3), NULL, SND_RESOURCE | SND_ASYNC);
                     }
 
                 }
@@ -799,7 +814,6 @@ bool Player::isSet()
 {
     if (_setShip) {
         _setShip = false;
-        _x = 7, _y = 7;
         ChangeShipType();
         return true;
     }
