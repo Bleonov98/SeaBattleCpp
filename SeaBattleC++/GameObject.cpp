@@ -296,14 +296,14 @@ void Player::ShowShips()
         }
     }
 
-    for (int i = 0; i < cmShips.size(); i++)
+    /*for (int i = 0; i < cmShips.size(); i++)
     {
         for (int j = 0; j < cmShips[i].size(); j++)
         {
             wData->vBuf[cmShips[i][j].second][cmShips[i][j].first] = u'#' | (_color << 8);
             wData->grid[cmShips[i][j].second][cmShips[i][j].first] = 1;
         }
-    }
+    }*/
 
 
     for (int i = 0; i < missPlShips.size(); i++)
