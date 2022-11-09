@@ -12,10 +12,12 @@ private:
     char16_t prevBuf[ROWS][COLS];
     char coord[100];
 
-    bool worldIsRun = true, win = false, waiting = false, singlePlayer = true;
+    bool worldIsRun = true, win = false, waiting = false, singlePlayer = true, exit = false;
 
     // CONNECTION SETTING
-    string ipAdd = "192.168.0.156";
+    bool create = false, joinS = false, connectionReady = false;
+
+    string ipAdd;
 
     struct PacketData {
         int _x = 7;
@@ -158,7 +160,9 @@ protected:
 
     void DrawChanges();
 
-    void ConnectW();
+    void ConnectHost();
+
+    void ConnectPlayer();
 
 public:
 
