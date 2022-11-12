@@ -271,6 +271,7 @@ void Game::ConnectHost()
 	sockaddr_in hints;
 	ZeroMemory(&hints, sizeof(hints));
 
+
 	hints.sin_family = AF_INET;
 	hints.sin_port = htons(DEFAULT_PORT);
 	hints.sin_addr.S_un.S_addr = INADDR_ANY;
@@ -306,6 +307,9 @@ void Game::ConnectHost()
 	bool gameRun = false, enemyRd = false;
 
 	char bufByte[1024];
+
+	SetPos(COLS / 3, 30);
+	cout << "Connection Successful";
 
 	do
 	{
@@ -345,7 +349,6 @@ void Game::ConnectHost()
 				ZeroMemory(bufByte, sizeof(bufByte));
 				int bytesRecv = recv(clSock, (char*)bufByte, sizeof(bufByte), 0); // recieve from enemy
 				waiting = false;
-
 
 				if (bytesRecv > 0) {
 					memcpy(&cData, bufByte, sizeof(cData));
@@ -423,6 +426,9 @@ void Game::ConnectPlayer()
 	bool gameRun = false, enemyRd = false;
 
 	char bufByte[1024];
+
+	SetPos(COLS / 3, 30);
+	cout << "Connection Successful";
 
 	do
 	{
@@ -532,7 +538,7 @@ void Game::RunWorld(bool& restart)
 		mPlayer.detach();
 	}
 
-	Sleep(200);
+	Sleep(1000);
 
 	while (worldIsRun) {
 		
