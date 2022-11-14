@@ -303,7 +303,7 @@ void Game::ConnectHost()
 	PacketData cData;
 
 	int cX = 0, cY = 0;
-	bool gameRun = false, enemyRd = false;
+	bool gameRun = false, conReady = false;
 
 	char bufByte[1024];
 
@@ -345,7 +345,10 @@ void Game::ConnectHost()
 
 				ZeroMemory(bufByte, sizeof(bufByte));
 				int bytesRecv = recv(clSock, (char*)bufByte, sizeof(bufByte), 0); // recieve from enemy
-				waiting = false;
+				if (!conReady) {
+					waiting = false;
+					conReady = true;
+				}
 
 				if (bytesRecv > 0) {
 					memcpy(&cData, bufByte, sizeof(cData));
@@ -420,7 +423,7 @@ void Game::ConnectPlayer()
 	PacketData cData;
 
 	int cX = 0, cY = 0;
-	bool gameRun = false, enemyRd = false;
+	bool gameRun = false;
 
 	char bufByte[1024];
 
@@ -462,8 +465,6 @@ void Game::ConnectPlayer()
 
 				ZeroMemory(bufByte, sizeof(bufByte));
 				int bytesRecv = recv(conSocket, (char*)bufByte, sizeof(bufByte), 0); // recieve from enemy
-				waiting = false;
-
 
 				if (bytesRecv > 0) {
 					memcpy(&cData, bufByte, sizeof(cData));
