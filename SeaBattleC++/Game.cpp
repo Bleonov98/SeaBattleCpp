@@ -251,6 +251,8 @@ void Game::DrawChanges()
 
 void Game::ConnectHost()
 {
+	waiting = true;
+
 	WSAData wsData;
 	WORD ver = MAKEWORD(2, 2);
 
@@ -271,7 +273,6 @@ void Game::ConnectHost()
 	sockaddr_in hints;
 	ZeroMemory(&hints, sizeof(hints));
 
-
 	hints.sin_family = AF_INET;
 	hints.sin_port = htons(DEFAULT_PORT);
 	hints.sin_addr.S_un.S_addr = INADDR_ANY;
@@ -289,8 +290,6 @@ void Game::ConnectHost()
 		cout << "listen error";
 		return;
 	}
-
-	waiting = true;
 
 	SOCKET clSock = accept(conSocket, nullptr, nullptr);
 	if (clSock == INVALID_SOCKET) {
@@ -311,6 +310,8 @@ void Game::ConnectHost()
 	SetPos(COLS / 3, 30);
 	cout << "Connection Successful";
 
+	player->SetState(true);
+
 	do
 	{
 		if (!gameRun) {
@@ -320,11 +321,7 @@ void Game::ConnectHost()
 			cData._shipPos = player->GetShipPos();
 			cData._prepare = player->IsReady();
 
-			if (player->IsReady() && !player->GetEnemyState()) {
-				waiting = true;
-				player->SetState(true);
-			}
-			else if (!player->IsReady() && player->GetEnemyState()) player->SetState(false);
+			if (player->IsReady() && !player->GetEnemyState()) waiting = true;
 			else if (player->IsReady() && player->GetEnemyState()) {
 				waiting = false;
 				gameRun = true;
@@ -383,6 +380,8 @@ void Game::ConnectHost()
 
 void Game::ConnectPlayer()
 {
+	waiting = true;
+
 	WSAData wsData;
 	WORD ver = MAKEWORD(2, 2);
 
@@ -420,8 +419,6 @@ void Game::ConnectPlayer()
 
 	PacketData cData;
 
-	waiting = true;
-
 	int cX = 0, cY = 0;
 	bool gameRun = false, enemyRd = false;
 
@@ -429,6 +426,8 @@ void Game::ConnectPlayer()
 
 	SetPos(COLS / 3, 30);
 	cout << "Connection Successful";
+
+	player->SetState(false);
 
 	do
 	{
@@ -439,11 +438,7 @@ void Game::ConnectPlayer()
 			cData._shipPos = player->GetShipPos();
 			cData._prepare = player->IsReady();
 
-			if (player->IsReady() && !player->GetEnemyState()) {
-				waiting = true;
-				player->SetState(true);
-			}
-			else if (!player->IsReady() && player->GetEnemyState()) player->SetState(false);
+			if (player->IsReady() && !player->GetEnemyState()) waiting = true;
 			else if (player->IsReady() && player->GetEnemyState()) {
 				waiting = false;
 				gameRun = true;
@@ -524,7 +519,7 @@ void Game::RunWorld(bool& restart)
 	player = new Player(&wData, 7, 7, Blue);
 	playerList.push_back(player);
 	allObjectList.push_back(player);
-	
+
 	if (!singlePlayer && create) {
 		thread mPlayer([&]
 			{ ConnectHost(); }

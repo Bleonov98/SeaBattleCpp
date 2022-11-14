@@ -84,7 +84,7 @@ private:
                 if (!SetConsoleMode(hOut, dwOutMode))
                 {
                     // Failed to set any VT mode, can't do anything here.
-                    return -1;
+                    return false;
                 }
             }
 
@@ -92,10 +92,10 @@ private:
             if (!SetConsoleMode(hIn, dwInMode))
             {
                 // Failed to set VT input mode, can't do anything here.
-                return -1;
+                return false;
             }
 
-            return 0;
+            return true;
         }
 
         void SetScreenSize() {

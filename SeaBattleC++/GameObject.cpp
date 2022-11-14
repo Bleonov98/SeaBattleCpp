@@ -420,18 +420,10 @@ void Player::ShowDstrShips()
 
 void Player::RotateShip()
 {
-    if (_player) {
-        if (_position == 0 && _x <= 9) {
-            _position++;
-        }
-        else if (_position == 1 && _y < 9) _position = 0;
+    if (_position == 0 && _x <= 9) {
+        _position++;
     }
-    else {
-        if (_cmPos == 0 && _x <= 24) {
-            _cmPos++;
-        }
-        else if (_cmPos == 1 && _y < 9) _cmPos = 0;
-    }
+    else if (_position == 1 && _y < 9) _position = 0;
 }
 
 void Player::SetShip()
