@@ -12,10 +12,10 @@ private:
     char16_t prevBuf[ROWS][COLS];
     char coord[100];
 
-    bool worldIsRun = true, win = false, waiting = false, singlePlayer = true, exit = false;
+    bool worldIsRun = true, waiting = false, singlePlayer = true, exit = false;
 
     // CONNECTION SETTING
-    bool create = false, joinS = false, connectionReady = false;
+    bool create = false, joinS = false;
 
     string ipAdd;
 
@@ -26,7 +26,6 @@ private:
         bool _shot = false;
         bool _prepare = false;
         bool _setShip = false;
-        bool win = false;
     };
     // ----------
 

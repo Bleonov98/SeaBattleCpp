@@ -163,7 +163,7 @@ void Game::CreateWorld() {
 
 void Game::DrawEndInfo(bool& restart)
 {
-	if (win) {
+	if (player->isWin()) {
 		SetPos(COLS/3 - 1, 20);
 		cout << "CONGRATULATION! YOU WIN!";
 	}
@@ -306,6 +306,7 @@ void Game::ConnectHost()
 	bool gameRun = false, conReady = false;
 
 	char bufByte[1024];
+	char recvByte[1024];
 
 	SetPos(COLS / 3, 30);
 	cout << "Connection Successful";
@@ -322,15 +323,12 @@ void Game::ConnectHost()
 			cData._prepare = player->IsReady();
 
 			if (player->IsReady() && !player->GetEnemyState()) waiting = true;
-			else if (player->IsReady() && player->GetEnemyState()) {
-				waiting = false;
-				gameRun = true;
-			}
+			else if (player->IsReady() && player->GetEnemyState()) gameRun = true;
 		}
 		else {
+			waiting = false;
 			cData._x = player->GetX() - 15;
 			cData._y = player->GetY();
-			cData.win = win;
 			cData._shot = player->isShot();
 		}
 
@@ -343,15 +341,15 @@ void Game::ConnectHost()
 
 			if (sendRes != SOCKET_ERROR) {
 
-				ZeroMemory(bufByte, sizeof(bufByte));
-				int bytesRecv = recv(clSock, (char*)bufByte, sizeof(bufByte), 0); // recieve from enemy
+				ZeroMemory(recvByte, sizeof(recvByte));
+				int bytesRecv = recv(clSock, (char*)recvByte, sizeof(recvByte), 0); // recieve from enemy
 				if (!conReady) {
 					waiting = false;
 					conReady = true;
 				}
 
 				if (bytesRecv > 0) {
-					memcpy(&cData, bufByte, sizeof(cData));
+					memcpy(&cData, recvByte, sizeof(cData));
 
 					if (gameRun) {
 						wData.vBuf[cY][cX] = u' ';
@@ -360,11 +358,6 @@ void Game::ConnectHost()
 						wData.vBuf[cY][cX] = u'#' | (Purple << 8); // for seeing enemy cursor 
 
 						if (cData._shot) player->SetEnemyShot(cData._x, cData._y);
-
-						if (cData.win) {
-							worldIsRun = false;
-							win = false;
-						}
 					}
 					else {
 						player->SetEnemyState(cData._prepare);
@@ -424,6 +417,7 @@ void Game::ConnectPlayer()
 	bool gameRun = false;
 
 	char bufByte[1024];
+	char recvByte[1024];
 
 	SetPos(COLS / 3, 30);
 	cout << "Connection Successful";
@@ -440,15 +434,12 @@ void Game::ConnectPlayer()
 			cData._prepare = player->IsReady();
 
 			if (player->IsReady() && !player->GetEnemyState()) waiting = true;
-			else if (player->IsReady() && player->GetEnemyState()) {
-				waiting = false;
-				gameRun = true;
-			}
+			else if (player->IsReady() && player->GetEnemyState()) gameRun = true;
 		}
 		else {
+			waiting = false;
 			cData._x = player->GetX() - 15;
 			cData._y = player->GetY();
-			cData.win = win;
 			cData._shot = player->isShot();
 		}
 
@@ -461,11 +452,11 @@ void Game::ConnectPlayer()
 
 			if (sendRes != SOCKET_ERROR) {
 
-				ZeroMemory(bufByte, sizeof(bufByte));
-				int bytesRecv = recv(conSocket, (char*)bufByte, sizeof(bufByte), 0); // recieve from enemy
+				ZeroMemory(recvByte, sizeof(recvByte));
+				int bytesRecv = recv(conSocket, (char*)recvByte, sizeof(recvByte), 0); // recieve from enemy
 
 				if (bytesRecv > 0) {
-					memcpy(&cData, bufByte, sizeof(cData));
+					memcpy(&cData, recvByte, sizeof(cData));
 
 					if (gameRun) {
 						wData.vBuf[cY][cX] = u' ';
@@ -474,11 +465,6 @@ void Game::ConnectPlayer()
 						wData.vBuf[cY][cX] = u'#' | (Purple << 8); // for seeing enemy cursor 
 
 						if (cData._shot) player->SetEnemyShot(cData._x, cData._y);
-
-						if (cData.win) {
-							worldIsRun = false;
-							win = false;
-						}
 					}
 					else {
 						player->SetEnemyState(cData._prepare);
@@ -554,7 +540,7 @@ void Game::RunWorld(bool& restart)
 
 		tick++;
 
-		if (player->GetEndSet(win)) {
+		if (player->GetEndSet()) {
 			worldIsRun = false;
 		}
 	}

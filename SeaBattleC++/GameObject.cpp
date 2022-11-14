@@ -791,21 +791,22 @@ void Player::Shot()
     _shot = true;
 }
 
-bool Player::GetEndSet(bool &win)
+bool Player::GetEndSet()
 {
     if (damagePlShips.size() >= 16) {
-        _plWin = false;
-        _cmWin = true;
-        win = false;
-        return _cmWin;
+        _winner = false;
+        return true;
     }
     else if (damageCmShips.size() >= 16) {
-        _plWin = true;
-        _cmWin = true;
-        win = true;
-        return _plWin;
+        _winner = true;
+        return true;
     }
     else return false;
+}
+
+int Player::isWin()
+{
+    return _winner;
 }
 
 bool Player::isShot()

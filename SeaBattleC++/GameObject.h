@@ -94,7 +94,9 @@ public:
 	
 	void SetPlState(bool multiplayer);
 
-	bool GetEndSet(bool& win);
+	bool GetEndSet();
+
+	int isWin();
 
 
 private:
@@ -129,7 +131,7 @@ private:
 	void Shot();
 
 
-	bool _player = true, _plWin = false, _cmWin = false, singlePlayer = true;
+	bool _player = true, singlePlayer = true, _winner = false;
 
 	int _shipType = SINGLE, _shipCnt = 0, _position = VERTICAL;
 	int _cmShipType = SINGLE, _cmShipCnt = 0, _cmPos = VERTICAL;
