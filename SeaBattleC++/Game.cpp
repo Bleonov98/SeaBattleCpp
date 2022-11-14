@@ -383,8 +383,6 @@ void Game::ConnectHost()
 
 void Game::ConnectPlayer()
 {
-	waiting = true;
-
 	WSAData wsData;
 	WORD ver = MAKEWORD(2, 2);
 
