@@ -306,15 +306,15 @@ void Game::ConnectHost()
 	bool gameRun = false, conReady = false;
 
 	char bufByte[1024];
-	char recvByte[1024];
 
-	SetPos(COLS / 3, 30);
+	SetPos(COLS / 3, 32);
 	cout << "Connection Successful";
 
 	player->SetState(true);
 
 	do
 	{
+		this_thread::sleep_for(milliseconds(5));
 		if (!gameRun) {
 			cData._x = player->GetX() + 15;
 			cData._y = player->GetY();
@@ -326,7 +326,7 @@ void Game::ConnectHost()
 			else if (player->IsReady() && player->GetEnemyState()) gameRun = true;
 		}
 		else {
-			waiting = false;
+			if (waiting) waiting = false;
 			cData._x = player->GetX() - 15;
 			cData._y = player->GetY();
 			cData._shot = player->isShot();
@@ -341,15 +341,15 @@ void Game::ConnectHost()
 
 			if (sendRes != SOCKET_ERROR) {
 
-				ZeroMemory(recvByte, sizeof(recvByte));
-				int bytesRecv = recv(clSock, (char*)recvByte, sizeof(recvByte), 0); // recieve from enemy
+				ZeroMemory(bufByte, sizeof(bufByte));
+				int bytesRecv = recv(clSock, (char*)bufByte, sizeof(bufByte), 0); // recieve from enemy
 				if (!conReady) {
 					waiting = false;
 					conReady = true;
 				}
 
 				if (bytesRecv > 0) {
-					memcpy(&cData, recvByte, sizeof(cData));
+					memcpy(&cData, bufByte, sizeof(cData));
 
 					if (gameRun) {
 						wData.vBuf[cY][cX] = u' ';
@@ -419,13 +419,14 @@ void Game::ConnectPlayer()
 	char bufByte[1024];
 	char recvByte[1024];
 
-	SetPos(COLS / 3, 30);
+	SetPos(COLS / 3, 32);
 	cout << "Connection Successful";
 
 	player->SetState(false);
 
 	do
 	{
+		this_thread::sleep_for(milliseconds(5));
 		if (!gameRun) {
 			cData._x = player->GetX() + 15;
 			cData._y = player->GetY();
@@ -452,11 +453,11 @@ void Game::ConnectPlayer()
 
 			if (sendRes != SOCKET_ERROR) {
 
-				ZeroMemory(recvByte, sizeof(recvByte));
-				int bytesRecv = recv(conSocket, (char*)recvByte, sizeof(recvByte), 0); // recieve from enemy
+				ZeroMemory(bufByte, sizeof(bufByte));
+				int bytesRecv = recv(conSocket, (char*)bufByte, sizeof(bufByte), 0); // recieve from enemy
 
 				if (bytesRecv > 0) {
-					memcpy(&cData, recvByte, sizeof(cData));
+					memcpy(&cData, bufByte, sizeof(cData));
 
 					if (gameRun) {
 						wData.vBuf[cY][cX] = u' ';
